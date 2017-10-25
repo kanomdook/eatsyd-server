@@ -76,6 +76,12 @@ var UserSchema = new Schema({
   },
   providerData: {},
   additionalProvidersData: {},
+  mobile: {
+    type: String
+  },
+  dateOfBirth: {
+    type: Date
+  },
   roles: {
     type: [{
       type: String,
