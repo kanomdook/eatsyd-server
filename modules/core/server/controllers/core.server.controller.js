@@ -48,12 +48,14 @@ exports.renderNotFound = function (req, res) {
  * Require login token routing middleware
  */
 exports.requiresLoginToken = function (req, res, next) {
-  console.log('=====================TOKEN=====================');
   //check for login token here
   if (!req.headers.authorization) {
     next();
   } else {
     var loginToken = req.headers.authorization.replace('Bearer ', '');
+    console.log('=========================TOKEN=============================');
+    console.log(loginToken);
+    console.log('=======================================================');
 
     // query DB for the user corresponding to the token and act accordingly
     User.findOne({
@@ -75,7 +77,7 @@ exports.requiresLoginToken = function (req, res, next) {
 
       // bind user object to request and continue
       req.user = user;
-      console.log('=========================Apple=========================');
+      console.log('======================================================');
       console.log(req.user);
       console.log('=======================================================');
       //res.json(user);
