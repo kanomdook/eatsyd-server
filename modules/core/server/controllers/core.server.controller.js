@@ -52,7 +52,7 @@ exports.requiresLoginToken = function (req, res, next) {
   if (!req.headers.authorization) {
     next();
   } else {
-    var loginToken = req.headers.authorization.replace('Bearer ', '');
+    var loginToken = req.headers.authorization[0].replace('Bearer ', '');
     console.log('=========================TOKEN=============================');
     console.log(loginToken);
     console.log('=======================================================');
