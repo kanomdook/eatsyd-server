@@ -99,8 +99,5 @@ exports.changeProfilePicture = function (req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-  console.log('=========================Apple=========================');
-  console.log(req.user);
   res.json(req.user);
-  console.log('=======================================================');  
 };

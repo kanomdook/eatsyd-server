@@ -74,6 +74,9 @@ exports.requiresLoginToken = function (req, res, next) {
 
       // bind user object to request and continue
       req.user = user;
+      console.log('=========================Apple=========================');
+      console.log(req.user);
+      console.log('=======================================================');
       //res.json(user);
       next();
     });
