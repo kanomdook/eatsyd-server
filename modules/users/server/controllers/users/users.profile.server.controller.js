@@ -58,13 +58,13 @@ exports.changeProfilePicture = function (req, res) {
   var message = null;
   var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
 
   if (user) {
     upload(req, res, function (uploadError) {
-      if(uploadError) {
+      if (uploadError) {
         return res.status(400).send({
           message: 'Error occurred while uploading profile picture'
         });
@@ -99,5 +99,5 @@ exports.changeProfilePicture = function (req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-  res.json(req.user || null);
+  res.json(req.user);
 };
