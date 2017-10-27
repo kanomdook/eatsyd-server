@@ -99,5 +99,7 @@ exports.changeProfilePicture = function (req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-  res.json(req.user);
+  var loginToken = req.headers.authorization.replace('Bearer ', '');
+  console.log(loginToken);
+  res.json(req.user || null);
 };
