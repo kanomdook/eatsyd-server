@@ -48,6 +48,7 @@ exports.renderNotFound = function (req, res) {
  * Require login token routing middleware
  */
 exports.requiresLoginToken = function (req, res, next) {
+  console.log('=====================TOKEN=====================');
   //check for login token here
   if (!req.headers.authorization) {
     next();
