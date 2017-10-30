@@ -79,14 +79,14 @@ exports.signin = function (req, res, next) {
           });
         } else { //register
           var tokenPayload = {
-            username: req.facebookData.email ? req.facebookData.email : req.facebookData.id,
+            username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
             loginExpires: Date.now()
           };
 
           var user = new User({
-            displayName: req.facebookData.name,
-            email: req.facebookData.email ? req.facebookData.email : req.facebookData.id + '@gmail.com',
-            username: req.facebookData.email ? req.facebookData.email : req.facebookData.id,
+            displayName: req.body.facebookData.name,
+            email: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id + '@gmail.com',
+            username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
             provider: 'facebook',
             loginToken: jwt.sign(tokenPayload, secret),
             loginExpires: Date.now() + (2 * 60 * 60 * 1000)
