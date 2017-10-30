@@ -60,7 +60,7 @@ exports.signup = function (req, res) {
  */
 exports.signin = function (req, res, next) {
   if (req.body.facebookLogin ? req.body.facebookLogin : false) {
-    User.findOne({ 'email': req.body.email }).exec(function (err, user) { //facebook login process
+    User.findOne({ 'email': req.body.facebookData.email }).exec(function (err, user) { //facebook login process
       if (err) {
         res.status(400).send(err);
       } else {
