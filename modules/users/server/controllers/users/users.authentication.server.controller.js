@@ -7,8 +7,11 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  ///custom///////////////////
+  jwt = require('jsonwebtoken'),
   User = mongoose.model('User');
 
+var secret = 'keepitquiet';
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
   '/authentication/signin',
@@ -41,7 +44,7 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      req.login(user, function (err,resp) {
+      req.login(user, function (err, resp) {
         if (err) {
           res.status(400).send(err);
         } else {
@@ -56,23 +59,68 @@ exports.signup = function (req, res) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
-    if (err || !user) {
-      res.status(400).send(info);
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+  if (req.body.facebookLogin ? req.body.facebookLogin : false) {
+    User.findOne({ 'email': req.body.email }).exec(function (err, user) { //facebook login process
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        if (user) {
+          var tokenPayload = {
+            username: user.username,
+            loginExpires: user.loginExpires
+          };
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
+          User.findByIdAndUpdate(user._id, { 'loginToken': jwt.sign(tokenPayload, secret), 'loginExpires': Date.now() + (2 * 60 * 60 * 1000) }).exec(function (err, user) {
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              res.json(user);
+            }
+          });
+        } else { //register
+          var tokenPayload = {
+            username: req.facebookData.email ? req.facebookData.email : req.facebookData.id,
+            loginExpires: Date.now()
+          };
+
+          var user = new User({
+            displayName: req.facebookData.name,
+            email: req.facebookData.email ? req.facebookData.email : req.facebookData.id + '@gmail.com',
+            username: req.facebookData.email ? req.facebookData.email : req.facebookData.id,
+            provider: 'facebook',
+            loginToken: jwt.sign(tokenPayload, secret),
+            loginExpires: Date.now() + (2 * 60 * 60 * 1000)
+          });
+
+          user.save(function (err, user) {
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              res.json(user);
+            }
+          });
         }
-      });
-    }
-  })(req, res, next);
+      }
+    });
+  } else {
+    passport.authenticate('local', function (err, user, info) {
+      if (err || !user) {
+        res.status(400).send(info);
+      } else {
+        // Remove sensitive data before login
+        user.password = undefined;
+        user.salt = undefined;
+
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      }
+    })(req, res, next);
+  }
 };
 
 /**
