@@ -78,17 +78,17 @@ exports.signin = function (req, res, next) {
             }
           });
         } else { //register
-          var tokenPayload = {
+          var tokenPayload2 = {
             username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
             loginExpires: Date.now()
           };
 
-          var user = new User({
+          var user2 = new User({
             displayName: req.body.facebookData.name,
             email: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id + '@gmail.com',
             username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
             provider: 'facebook',
-            loginToken: jwt.sign(tokenPayload, secret),
+            loginToken: jwt.sign(tokenPayload2, secret),
             loginExpires: Date.now() + (2 * 60 * 60 * 1000)
           });
 
