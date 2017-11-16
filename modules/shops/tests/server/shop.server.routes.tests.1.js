@@ -163,6 +163,130 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
+  it('should be able to get By ID a Shop if logged in with token', function (done) {
+    // Save a new Shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.get('/api/shops/' + shopSaveRes.body._id)
+          // .send(shop)
+          // .expect(200)
+          .end(function (shopGetErr, shopsGetRes) {
+            // Handle shop save error
+            if (shopGetErr) {
+              return done(shopGetErr);
+            }
+            // Get shop list
+            var shops = shopsGetRes.body;
+
+            // Set assertions
+            //(products[0].user.loginToken).should.equal(token);
+            shops.should.be.instanceof(Object).and.have.property('name', shop.name);
+            done();
+          });
+      });
+  });
+
+  it('should be able to update a Shop if logged in with token', function (done) {
+    // Save a new shops
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+
+        shop.name = "test Shop";
+        agent.put('/api/shops/' + shopSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .send(shop)
+          .expect(200)
+          .end(function (shopUpdateErr, shopUpdateRes) {
+            // Handle shop save error
+            if (shopUpdateErr) {
+              return done(shopUpdateErr);
+            }
+            // Get a list of shop
+            agent.get('/api/shops')
+              .end(function (shopsGetErr, shopsGetRes) {
+                // Handle shop save error
+                if (shopsGetErr) {
+                  return done(shopsGetErr);
+                }
+
+                // Get shop list
+                var shops = shopsGetRes.body;
+
+                // Set assertions
+                //(products[0].user.loginToken).should.equal(token);
+                (shops[0].name).should.match('test Shop');
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('should be able to delete a Shop if logged in with token', function (done) {
+    // Save a new shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+
+        agent.delete('/api/shops/' + shopSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .send(shop)
+          .expect(200)
+          .end(function (shopUpdateErr, shopUpdateRes) {
+            // Handle shop save error
+            if (shopUpdateErr) {
+              return done(shopUpdateErr);
+            }
+            // Get a list of shop
+            agent.get('/api/shops')
+              .end(function (shopsGetErr, shopsGetRes) {
+                // Handle shop save error
+                if (shopsGetErr) {
+                  return done(shopsGetErr);
+                }
+
+                // Get shop list
+                var shops = shopsGetRes.body;
+
+                // Set assertions
+                //(products[0].user.loginToken).should.equal(token);
+                (shops.length).should.match(0);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+  
+  // it('save items in array', function (done) {
+  //   var items = [
+      
+  //   ]
+  // });
+  
+
 
   afterEach(function (done) {
     User.remove().exec(function () {
