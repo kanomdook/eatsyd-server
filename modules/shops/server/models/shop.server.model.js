@@ -44,7 +44,7 @@ var ShopSchema = new Schema({
   },
   isactiveshop: {
     type: Boolean,
-    default: no
+    default: false
   },
   importform: {
     type: String,
