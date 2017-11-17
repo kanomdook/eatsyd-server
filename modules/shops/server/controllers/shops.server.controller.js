@@ -99,25 +99,16 @@ exports.delete = function (req, res) {
  */
 
 exports.cookingListShop = function (req, res, next) {
-  Shop.find({}, '_id name tel address importform').sort('-created').populate('user', 'displayName').exec(function (err, shops) {
+  Shop.find().exec(function (err, result) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+      return next(err);
+    } else if (!shop) {
+      return res.status(404).send({
+        message: 'No Shop with that identifier has been found'
       });
-    } else {
-      var dataShops = [];
-      shops.forEach(function (shop) {
-        dataShops.push({
-          _id: shop._id,
-          name: shop.name,
-          tel: shop.tel,
-          address: shop.address,
-          importform: shop.importform
-        });
-      });
-      req.shops = dataShops;
-      next();
     }
+    req.shops = result;
+    next();
   });
 };
 
