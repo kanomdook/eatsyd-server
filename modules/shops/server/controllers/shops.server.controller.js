@@ -12,8 +12,25 @@ var path = require('path'),
 /**
  * Create a Shop
  */
+
+exports.cookingBeforeCreate = function (req, res, next) {
+  req.shop = {
+    name: req.body.name,
+    address: {
+      address: req.body.vicinity,
+      lat: req.body.lat,
+      lng: req.body.lng
+    },
+    tel: req.body.phone,
+    coverimage: req.body.img,
+    importform: req.body.importForm
+  };
+  next();
+};
+
+
 exports.create = function (req, res) {
-  var shop = new Shop(req.body);
+  var shop = new Shop(req.shop);
   shop.user = req.user;
 
   shop.save(function (err) {
