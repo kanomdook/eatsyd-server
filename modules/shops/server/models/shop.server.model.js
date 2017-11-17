@@ -32,8 +32,7 @@ var ShopSchema = new Schema({
   },
   tel: {
     type: String,
-    default: '',
-    required: 'Please fill Shop tel'
+    default: ''
   },
   profileimage: {
     type: String,
