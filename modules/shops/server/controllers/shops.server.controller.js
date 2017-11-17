@@ -102,7 +102,7 @@ exports.cookingListShop = function (req, res, next) {
   Shop.find().exec(function (err, result) {
     if (err) {
       return next(err);
-    } else if (!shop) {
+    } else if (!result) {
       return res.status(404).send({
         message: 'No Shop with that identifier has been found'
       });
