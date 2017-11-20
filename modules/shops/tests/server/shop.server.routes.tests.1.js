@@ -49,6 +49,7 @@ describe('Shop CRUD token tests', function () {
       provider: 'local'
     });
 
+    token = '';
     // Save a user to the test db and create new Shop
     user.save(function () {
       shop = {
@@ -86,7 +87,7 @@ describe('Shop CRUD token tests', function () {
     });
   });
 
-  it('should be have Token logged in', function (done) {
+  it('should be have Token logged in with token', function (done) {
     token.should.not.be.empty();
     done();
   });
@@ -154,7 +155,7 @@ describe('Shop CRUD token tests', function () {
             (shops[0].tel).should.match(shop.tel);
             (shops[0].address).should.match(shop.address);
             (shops[0].importform).should.match(shop.importform);
-            
+
 
 
             // Call the assertion callback
@@ -279,13 +280,13 @@ describe('Shop CRUD token tests', function () {
           });
       });
   });
-  
+
   // it('save items in array', function (done) {
   //   var items = [
-      
+
   //   ]
   // });
-  
+
 
 
   afterEach(function (done) {

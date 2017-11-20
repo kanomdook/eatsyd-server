@@ -51,7 +51,14 @@ describe('Product CRUD tests', function () {
     // Save a user to the test db and create new Product
     user.save(function () {
       product = {
-        name: 'Product name'
+        name: 'Product name',
+        detail: 'Product datail',
+        category: 'Product category',
+        price: 100,
+        stock: 10,
+        priority: 1,
+        images: ['Product image'],
+        user: user
       };
 
       done();
@@ -94,7 +101,7 @@ describe('Product CRUD tests', function () {
 
                 // Set assertions
                 (products[0].user._id).should.equal(userId);
-                (products[0].name).should.match('Product name');
+                (products[0].name).should.match(product.name);
 
                 // Call the assertion callback
                 done();
