@@ -13,7 +13,7 @@ module.exports = function (app) {
   app.route('/api/products') //.all(productsPolicy.isAllowed)
     .get(products.list);
 
-  app.route('/api/products').all(core.requiresLoginToken, sproductsPolicy.isAllowed)
+  app.route('/api/products').all(core.requiresLoginToken, productsPolicy.isAllowed)
     .post(products.create);
 
   app.route('/api/products/:productId').all(core.requiresLoginToken, productsPolicy.isAllowed)

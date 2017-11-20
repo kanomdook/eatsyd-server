@@ -86,16 +86,6 @@ describe('Shop Model Unit Tests:', function () {
     });
 
 
-    it('should be able to show an error when try to save without tel', function (done) {
-      shop.tel = '';
-
-      return shop.save(function (err) {
-        should.exist(err);
-        done();
-      });
-    });
-
-
   });
 
   afterEach(function (done) {
