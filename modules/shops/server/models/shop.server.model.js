@@ -32,8 +32,7 @@ var ShopSchema = new Schema({
   },
   tel: {
     type: String,
-    default: '',
-    required: 'Please fill Shop tel'
+    default: ''
   },
   profileimage: {
     type: String,
@@ -44,8 +43,8 @@ var ShopSchema = new Schema({
     default: ''
   },
   isactiveshop: {
-    type: String,
-    default: 'active'
+    type: Boolean,
+    default: false
   },
   importform: {
     type: String,
