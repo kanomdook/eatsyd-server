@@ -46,6 +46,16 @@ describe('Shop Model Unit Tests:', function () {
         coverimage: 'coverimage',
         isactiveshop: 'active',
         importform: 'manual',
+        products: [{
+          name: 'Product name',
+          detail: 'Product detail',
+          category: 'Product category',
+          price: 500,
+          stock: 10,
+          priority: 1,
+          images: ['image'],
+          user: user
+        }],
         user: user
       });
 

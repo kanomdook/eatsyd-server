@@ -69,6 +69,16 @@ describe('Shop CRUD token tests', function () {
         coverimage: 'coverimage',
         isactiveshop: 'active',
         importform: 'manual',
+        products: [{
+          name: 'Product name',
+          detail: 'Product detail',
+          category: 'Product category',
+          price: 500,
+          stock: 10,
+          priority: 1,
+          images: ['image','image2'],
+          user: user
+        }],
         user: user
       };
 
@@ -117,7 +127,8 @@ describe('Shop CRUD token tests', function () {
 
             // Set assertions
             //(products[0].user.loginToken).should.equal(token);
-            (shops[0].name).should.match(shop.name);
+            (shops[0].name).should.match(shop.name);      
+            // (shops[0].products.length).should.match(1);     
 
 
             // Call the assertion callback
@@ -151,12 +162,13 @@ describe('Shop CRUD token tests', function () {
 
             // Set assertions
             // (shops).should.match('');
-            
+
             (shops[0].name).should.match(shop.name);
+
             // (shops[0].tel).should.match(shop.tel);
             // (shops[0].address).should.match(shop.address);
             // (shops[0].importform).should.match(shop.importform);
-            
+
 
 
             // Call the assertion callback
@@ -190,6 +202,7 @@ describe('Shop CRUD token tests', function () {
             // Set assertions
             //(products[0].user.loginToken).should.equal(token);
             shops.should.be.instanceof(Object).and.have.property('name', shop.name);
+
             done();
           });
       });
@@ -281,13 +294,6 @@ describe('Shop CRUD token tests', function () {
           });
       });
   });
-
-  // it('save items in array', function (done) {
-  //   var items = [
-
-  //   ]
-  // });
-
 
 
   afterEach(function (done) {

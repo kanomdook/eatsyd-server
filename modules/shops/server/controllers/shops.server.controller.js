@@ -30,7 +30,7 @@ exports.cookingBeforeCreate = function (req, res, next) {
 
 
 exports.create = function (req, res) {
-  var shop = new Shop(req.shop);
+  var shop = new Shop(req.body);
   shop.user = req.user;
 
   shop.save(function (err) {
@@ -39,6 +39,7 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      // console.log('shop' + shop);
       res.jsonp(shop);
     }
   });
@@ -113,6 +114,7 @@ exports.cookingListShop = function (req, res, next) {
 };
 
 exports.list = function (req, res) {
+  // console.log('get list' + req.shops);
   res.jsonp(req.shops);
 };
 
