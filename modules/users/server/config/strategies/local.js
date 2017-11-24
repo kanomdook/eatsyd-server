@@ -10,16 +10,20 @@ var passport = require('passport'),
 
 var secret = 'keepitquiet';
 
-module.exports = function() {
+module.exports = function () {
     // Use local strategy
     passport.use('local', new LocalStrategy({
             usernameField: 'username',
             passwordField: 'password'
         },
-        function(username, password, done) {
+        function (username, password, done) {
             User.findOne({
-                username: username
-            }, function(err, user) {
+                $or: [{
+                    username: username
+                }, {
+                    mobile: username
+                }]
+            }, function (err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -44,8 +48,8 @@ module.exports = function() {
                 user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
 
                 // save user object to update database
-                user.save(function(err) {
-                    if(err){
+                user.save(function (err) {
+                    if (err) {
                         done(err);
                     } else {
                         done(null, user);
