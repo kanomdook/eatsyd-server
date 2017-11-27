@@ -6,6 +6,8 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Product = mongoose.model('Product'),
+  Category = mongoose.model('Category'),
+  Currency = mongoose.model('Currency'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -15,6 +17,8 @@ var app,
   agent,
   credentials,
   user,
+  currencies,
+  category,
   product;
 
 /**
@@ -48,13 +52,38 @@ describe('Product CRUD tests', function () {
       provider: 'local'
     });
 
+    category = new Category({
+      name: 'เครื่องดื่ม'
+    });
+
+    currencies = new Currency({
+      name: 'THB'
+    });
     // Save a user to the test db and create new Product
     user.save(function () {
-      product = {
-        name: 'Product name'
-      };
+      currencies.save(function () {
+        category.save(function () {
+          product = {
+            name: 'Product name',
+            name_eng: 'Product Name english',
+            detail: 'Product detail',
+            categories: category,
+            currency: currencies,
+            prices: [{
+              name: 'hot',
+              price: 50
+            }],
+            stock: 10,
+            priority: 1,
+            images: ['image'],
+            user: user
+          };
+          done();
 
-      done();
+        });
+
+      });
+
     });
   });
 
@@ -405,7 +434,11 @@ describe('Product CRUD tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Product.remove().exec(done);
+      Currency.remove().exec(function () {
+        Category.remove().exec(function () {
+          Product.remove().exec(done);
+        });
+      });
     });
   });
 });

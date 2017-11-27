@@ -14,7 +14,40 @@ var ProductSchema = new Schema({
     type: String,
     default: '',
     required: 'Please fill Product name',
+    unique: true,
     trim: true
+  },
+  name_eng: {
+    type: String,
+    default: ''
+  },
+  detail: {
+    type: String,
+    default: ''
+  },
+  categories: {
+    type: Schema.ObjectId,
+    ref: 'Category'
+  },
+  currency: {
+    type: Schema.ObjectId,
+    ref: 'Currency'
+  },
+  prices: {
+    type: [{
+      name: String,
+      price: Number
+    }],
+    required: 'Please fill prices'
+  },
+  stock: {
+    type: Number
+  },
+  priority: {
+    type: Number
+  },
+  images: {
+    type: [String]
   },
   created: {
     type: Date,
