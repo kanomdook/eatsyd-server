@@ -54,6 +54,7 @@ describe('Shop CRUD token tests', function () {
     user.save(function () {
       shop = {
         name: 'Shop name',
+        name_eng: 'Shop name english',
         detail: 'Shop Detail',
         address: {
           address: '77/7',
@@ -65,20 +66,13 @@ describe('Shop CRUD token tests', function () {
           lng: '100.6827773'
         },
         tel: '0894447208',
+        tel2: '0894447209',
+        timeopen: Date.now(),
+        timeclose: Date.now(),
         profileimage: 'profileimage',
         coverimage: 'coverimage',
         isactiveshop: 'active',
         importform: 'manual',
-        products: [{
-          name: 'Product name',
-          detail: 'Product detail',
-          category: 'Product category',
-          price: 500,
-          stock: 10,
-          priority: 1,
-          images: ['image','image2'],
-          user: user
-        }],
         user: user
       };
 
@@ -127,7 +121,7 @@ describe('Shop CRUD token tests', function () {
 
             // Set assertions
             //(products[0].user.loginToken).should.equal(token);
-            (shops[0].name).should.match(shop.name);      
+            (shops[0].name).should.match(shop.name);
             // (shops[0].products.length).should.match(1);     
 
 

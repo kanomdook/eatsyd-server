@@ -17,6 +17,10 @@ var ShopSchema = new Schema({
     unique: true,
     trim: true
   },
+  name_eng: {
+    type: String,
+    default: ''
+  },
   detail: {
     type: String,
     default: ''
@@ -31,6 +35,10 @@ var ShopSchema = new Schema({
     lng: String
   },
   tel: {
+    type: String,
+    default: ''
+  },
+  tel2: {
     type: String,
     default: ''
   },
@@ -50,45 +58,13 @@ var ShopSchema = new Schema({
     type: String,
     default: 'manual'
   },
-  products: {
-    type: [{
-      name: {
-        type: String,
-        default: '',
-        // required: 'Please fill Product name',
-        trim: true
-      },
-      detail: {
-        type: String,
-        default: ''
-      },
-      category: {
-        type: String,
-        default: ''
-      },
-      price: {
-        type: Number,
-        // required: 'Please fill Product price'
-      },
-      stock: {
-        type: Number,
-      },
-      priority: {
-        type: Number
-      },
-      images: {
-        type: [String],
-        // required: 'Please fill Product image'
-      },
-      created: {
-        type: Date,
-        default: Date.now
-      },
-      user: {
-        type: Schema.ObjectId,
-        ref: 'User'
-      }
-    }]
+  timeopen: {
+    type: Date,
+    default: Date.now
+  },
+  timeclose: {
+    type: Date,
+    default: Date.now
   },
   created: {
     type: Date,
