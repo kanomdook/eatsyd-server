@@ -16,6 +16,17 @@ var CategoryproductSchema = new Schema({
     required: 'Please fill Categoryproduct name',
     trim: true
   },
+  image: {
+    type: String,
+    default: ''
+  },
+  priority: {
+    type: Number
+  },
+  shop: {
+    type: Schema.ObjectId,
+    ref: 'Shop'
+  },
   created: {
     type: Date,
     default: Date.now
