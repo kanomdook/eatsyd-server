@@ -324,13 +324,6 @@ describe('Product CRUD tests with token', function () {
             (products.name).should.match('Product name');
             (products.shop.name).should.match(shop.name);
             (products.categories.name).should.match(product.categories.name);
-            // (product.promotionprice).should.match(productObj.promotionprice);
-            // (product.percentofdiscount).should.match(productObj.percentofdiscount);
-            // (product.currency).should.match(productObj.currency);
-            // (product.rate).should.match(5);
-            // (product.shippings.length).should.match(1);
-            // (product.shippings[0]._id).should.match(shipping.id);
-            // (product.shippings[0].name).should.match(shipping.name);
 
             done();
           });
