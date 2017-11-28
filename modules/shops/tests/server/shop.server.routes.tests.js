@@ -6,6 +6,7 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Shop = mongoose.model('Shop'),
+  Categoryshop = mongoose.model('Categoryshop'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -14,6 +15,7 @@ var should = require('should'),
 var app,
   agent,
   credentials,
+  categoryshop,
   user,
   shop;
 
@@ -37,6 +39,9 @@ describe('Shop CRUD tests', function () {
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
+    categoryshop = new Categoryshop({
+      name: 'อาหารและเครื่องดื่ม'
+    });
     // Create a new user
     user = new User({
       firstName: 'Full',
@@ -50,27 +55,41 @@ describe('Shop CRUD tests', function () {
 
     // Save a user to the test db and create new Shop
     user.save(function () {
-      shop = {
-        name: 'Shop name',
-        detail: 'Shop Detail',
-        address: {
-          address: '77/7',
-          subdistinct: 'Lumlukka',
-          distinct: 'Lumlukka',
-          province: 'BKK',
-          postcode: '12150',
-          lat: '13.9338949',
-          lng: '100.6827773'
-        },
-        tel: '0894447208',
-        profileimage: 'profileimage',
-        coverimage: 'coverimage',
-        isactiveshop: 'active',
-        importform: 'manual',
-        user: user
-      };
+      categoryshop.save(function () {
+        shop = {
+          name: 'Shop name',
+          name_eng: 'Shop name english',
+          detail: 'Shop Detail',
+          tel: '0894447208',
+          email: 'test@gmail.com',
+          facebook: 'facebook.com',
+          line: '@lineid',
+          address: {
+            address: '77/7',
+            addressdetail: 'in font of 7-eleven',
+            subdistinct: 'Lumlukka',
+            distinct: 'Lumlukka',
+            province: 'BKK',
+            postcode: '12150',
+            lat: '13.9338949',
+            lng: '100.6827773'
+          },
+          times: [{
+            description: 'all days',
+            timestart: '08.00',
+            timeend: '20.00',
+            days: ['mon', 'thu', 'sun']
+          }],
+          coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
+          promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
+          isactiveshop: false,
+          importform: 'manual',
+          categories: categoryshop,
+          user: user
+        };
 
-      done();
+        done();
+      });
     });
   });
 
@@ -159,6 +178,35 @@ describe('Shop CRUD tests', function () {
       });
   });
 
+  it('should not be able to save an Shop if no email is provided', function (done) {
+    // Invalidate name field
+    shop.email = '';
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new Shop
+        agent.post('/api/shops')
+          .send(shop)
+          .expect(400)
+          .end(function (shopSaveErr, shopSaveRes) {
+            // Set message assertion
+            (shopSaveRes.body.message).should.match('Please fill Shop email');
+
+            // Handle Shop save error
+            done(shopSaveErr);
+          });
+      });
+  });
   it('should be able to update an Shop if signed in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -421,7 +469,9 @@ describe('Shop CRUD tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Shop.remove().exec(done);
+      Categoryshop.remove().exec(function () {
+        Shop.remove().exec(done);
+      });
     });
   });
 });

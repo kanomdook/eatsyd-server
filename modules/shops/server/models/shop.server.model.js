@@ -26,24 +26,34 @@ var ShopSchema = new Schema({
     default: ''
   },
   address: {
+    addressdetail: String,
     address: String,
     subdistinct: String,
     distinct: String,
     province: String,
     postcode: String,
     lat: String,
-    lng: String
+    lng: String,
   },
   tel: {
     type: String,
     default: ''
   },
-  tel2: {
+  email: {
+    type: String,
+    default: '',
+    required: 'Please fill Shop email'
+  },
+  facebook: {
     type: String,
     default: ''
   },
-  profileimage: {
+  line: {
     type: String,
+    default: ''
+  },
+  promoteimage: {
+    type: [String],
     default: ''
   },
   coverimage: {
@@ -58,13 +68,17 @@ var ShopSchema = new Schema({
     type: String,
     default: 'manual'
   },
-  timeopen: {
-    type: Date,
-    default: Date.now
+  times: {
+    type: [{
+      description: String,
+      timestart: String,
+      timeend: String,
+      days: [String]
+    }]
   },
-  timeclose: {
-    type: Date,
-    default: Date.now
+  categories: {
+    type: Schema.ObjectId,
+    ref: 'Categoryshop'
   },
   created: {
     type: Date,

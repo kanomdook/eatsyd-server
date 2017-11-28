@@ -6,12 +6,14 @@
 var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop');
 
 /**
  * Globals
  */
 var user,
+  categoryshop,
   shop;
 
 /**
@@ -28,32 +30,46 @@ describe('Shop Model Unit Tests:', function () {
       password: 'password'
     });
 
+    categoryshop = new Categoryshop({
+      name: 'อาหารและเครื่องดื่ม'
+    });
     user.save(function () {
-      shop = new Shop({
-        name: 'Shop name',
-        name_eng: 'Shop name english',
-        detail: 'Shop Detail',
-        address: {
-          address: '77/7',
-          subdistinct: 'Lumlukka',
-          distinct: 'Lumlukka',
-          province: 'BKK',
-          postcode: '12150',
-          lat: '13.9338949',
-          lng: '100.6827773'
-        },
-        tel: '0894447208',
-        tel2: '0894447209',
-        timeopen: Date.now(),
-        timeclose: Date.now(),
-        profileimage: 'profileimage',
-        coverimage: 'coverimage',
-        isactiveshop: 'active',
-        importform: 'manual',
-        user: user
+      categoryshop.save(function () {
+        shop = new Shop({
+          name: 'Shop name',
+          name_eng: 'Shop name english',
+          detail: 'Shop Detail',
+          tel: '0894447208',
+          email: 'test@gmail.com',
+          facebook: 'facebook.com',
+          line: '@lineid',
+          address: {
+            address: '77/7',
+            addressdetail: 'in font of 7-eleven',
+            subdistinct: 'Lumlukka',
+            distinct: 'Lumlukka',
+            province: 'BKK',
+            postcode: '12150',
+            lat: '13.9338949',
+            lng: '100.6827773'
+          },
+          times: [{
+            description: 'all days',
+            timestart: '08.00',
+            timeend: '20.00',
+            days: ['mon', 'thu', 'sun']
+          }],
+          coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
+          promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
+          isactiveshop: false,
+          importform: 'manual',
+          categories: categoryshop,
+          user: user
+        });
+
+        done();
       });
 
-      done();
     });
   });
 
@@ -94,8 +110,10 @@ describe('Shop Model Unit Tests:', function () {
 
   afterEach(function (done) {
     Shop.remove().exec(function () {
-      User.remove().exec(function () {
-        done();
+      Categoryshop.remove().exec(function () {
+        User.remove().exec(function () {
+          done();
+        });
       });
     });
   });

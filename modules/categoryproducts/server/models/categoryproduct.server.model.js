@@ -7,13 +7,13 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Product Schema
+ * Categoryproduct Schema
  */
-var ProductSchema = new Schema({
+var CategoryproductSchema = new Schema({
   name: {
     type: String,
     default: '',
-    required: 'Please fill Product name',
+    required: 'Please fill Categoryproduct name',
     trim: true
   },
   created: {
@@ -26,4 +26,4 @@ var ProductSchema = new Schema({
   }
 });
 
-mongoose.model('Product', ProductSchema);
+mongoose.model('Categoryproduct', CategoryproductSchema);

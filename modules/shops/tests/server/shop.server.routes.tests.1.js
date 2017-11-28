@@ -6,6 +6,7 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Shop = mongoose.model('Shop'),
+  Categoryshop = mongoose.model('Categoryshop'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -16,6 +17,7 @@ var app,
   credentials,
   user,
   token,
+  categoryshop,
   shop;
 
 /**
@@ -38,6 +40,9 @@ describe('Shop CRUD token tests', function () {
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
+    categoryshop = new Categoryshop({
+      name: 'อาหารและเคื่องดื่ม'
+    });
     // Create a new user
     user = new User({
       firstName: 'Full',
@@ -52,29 +57,40 @@ describe('Shop CRUD token tests', function () {
     token = '';
     // Save a user to the test db and create new Shop
     user.save(function () {
-      shop = {
-        name: 'Shop name',
-        name_eng: 'Shop name english',
-        detail: 'Shop Detail',
-        address: {
-          address: '77/7',
-          subdistinct: 'Lumlukka',
-          distinct: 'Lumlukka',
-          province: 'BKK',
-          postcode: '12150',
-          lat: '13.9338949',
-          lng: '100.6827773'
-        },
-        tel: '0894447208',
-        tel2: '0894447209',
-        timeopen: Date.now(),
-        timeclose: Date.now(),
-        profileimage: 'profileimage',
-        coverimage: 'coverimage',
-        isactiveshop: 'active',
-        importform: 'manual',
-        user: user
-      };
+      categoryshop.save(function () {
+        shop = {
+          name: 'Shop name',
+          name_eng: 'Shop name english',
+          detail: 'Shop Detail',
+          tel: '0894447208',
+          email: 'test@gmail.com',
+          facebook: 'facebook.com',
+          line: '@lineid',
+          address: {
+            address: '77/7',
+            addressdetail: 'in font of 7-eleven',
+            subdistinct: 'Lumlukka',
+            distinct: 'Lumlukka',
+            province: 'BKK',
+            postcode: '12150',
+            lat: '13.9338949',
+            lng: '100.6827773'
+          },
+          times: [{
+            description: 'all days',
+            timestart: '08.00',
+            timeend: '20.00',
+            days: ['mon', 'thu', 'sun']
+          }],
+          coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
+          promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
+          isactiveshop: false,
+          importform: 'manual',
+          categories: categoryshop,
+          user: user
+        };
+      });
+
 
       agent.post('/api/auth/signin')
         .send(credentials)
@@ -292,7 +308,9 @@ describe('Shop CRUD token tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Shop.remove().exec(done);
+      Categoryshop.remove().exec(function () {
+        Shop.remove().exec(done);
+      });
     });
   });
 });

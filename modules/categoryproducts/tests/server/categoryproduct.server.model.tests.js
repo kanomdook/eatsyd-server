@@ -6,18 +6,18 @@
 var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
-  Product = mongoose.model('Product');
+  Categoryproduct = mongoose.model('Categoryproduct');
 
 /**
  * Globals
  */
 var user,
-  product;
+  categoryproduct;
 
 /**
  * Unit tests
  */
-describe('Product Model Unit Tests:', function() {
+describe('Categoryproduct Model Unit Tests:', function() {
   beforeEach(function(done) {
     user = new User({
       firstName: 'Full',
@@ -29,8 +29,8 @@ describe('Product Model Unit Tests:', function() {
     });
 
     user.save(function() {
-      product = new Product({
-        name: 'Product Name',
+      categoryproduct = new Categoryproduct({
+        name: 'Categoryproduct Name',
         user: user
       });
 
@@ -41,16 +41,16 @@ describe('Product Model Unit Tests:', function() {
   describe('Method Save', function() {
     it('should be able to save without problems', function(done) {
       this.timeout(0);
-      return product.save(function(err) {
+      return categoryproduct.save(function(err) {
         should.not.exist(err);
         done();
       });
     });
 
     it('should be able to show an error when try to save without name', function(done) {
-      product.name = '';
+      categoryproduct.name = '';
 
-      return product.save(function(err) {
+      return categoryproduct.save(function(err) {
         should.exist(err);
         done();
       });
@@ -58,7 +58,7 @@ describe('Product Model Unit Tests:', function() {
   });
 
   afterEach(function(done) {
-    Product.remove().exec(function() {
+    Categoryproduct.remove().exec(function() {
       User.remove().exec(function() {
         done();
       });
