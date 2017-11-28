@@ -21,6 +21,11 @@ module.exports = function (app) {
   app.route('/api/products/:productId').all(core.requiresLoginToken, productsPolicy.isAllowed)
     .put(products.update)
     .delete(products.delete);
+
+  app.route('/api/productsbyshop/:productbyshopId').all(core.requiresLoginToken, productsPolicy.isAllowed)
+    .get(products.cookingProductList, products.productByShop);
   // Finish by binding the Product middleware
   app.param('productId', products.productByID);
+  app.param('productbyshopId', products.shopID);
+
 };

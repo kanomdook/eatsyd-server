@@ -207,6 +207,7 @@ describe('Shop CRUD token tests', function () {
               return done(shopGetErr);
             }
             // Get shop list
+            // console.log(JSON.stringify(shopsGetRes.body));
             var shops = shopsGetRes.body;
 
             // Set assertions

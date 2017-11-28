@@ -316,7 +316,7 @@ describe('Product CRUD tests with token', function () {
               return done(productGetErr);
             }
             // Get Products list
-            console.log(JSON.stringify(productsGetRes.body));
+            // console.log(JSON.stringify(productsGetRes.body));
             var products = productsGetRes.body;
 
             // Set assertions
@@ -327,6 +327,33 @@ describe('Product CRUD tests with token', function () {
 
             done();
           });
+      });
+  });
+
+  it('should be able to get List a Product by Shop if logged in with token', function (done) {
+    var ProductObj = new Product(product);
+    // Get a list of Products
+    ProductObj.save();
+    agent.get('/api/productsbyshop/' + shop.id)
+      .set('authorization', 'Bearer ' + token)
+      .end(function (productsGetErr, productsGetRes) {
+        // Handle Products save error
+        if (productsGetErr) {
+          return done(productsGetErr);
+        }
+
+        // Get Products list
+        var products = productsGetRes.body;
+
+        // Set assertions
+        //(products[0].user.loginToken).should.equal(token);
+        (products.items.length).should.match(1);
+        (products.items[0].name).should.match(product.name);
+        (products.items[0].images).should.match(product.images[0]);
+        (products.items[0].price).should.match(product.price);
+        (products.items[0].priorityofcate).should.match(product.priorityofcate);
+        (products.items[0].categories.name).should.match(product.categories.name);
+        done();
       });
   });
 
