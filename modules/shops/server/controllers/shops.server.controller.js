@@ -14,7 +14,7 @@ var path = require('path'),
 
 
 exports.mailer = function (req, res) {
-  console.log('mail' + req.shop);
+  // console.log('mail' + req.shop);
   var data = req.shop.user;
   var smtpTransport = nodemailer.createTransport("SMTP", {
     service: "Gmail",

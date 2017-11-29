@@ -31,26 +31,14 @@ exports.create = function (req, res) {
  * Show the current Categoryproduct
  */
 exports.read = function (req, res) {
-  Categoryproduct.find({
-    shop: req.categoryproduct
-  }).sort('-created').populate('user', 'displayName').exec(function (err, result) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // console.log(result);
-      res.jsonp(result);
-    }
-  });
   // convert mongoose document to JSON
-  // var categoryproduct = req.categoryproduct ? req.categoryproduct.toJSON() : {};
+  var categoryproduct = req.categoryproduct ? req.categoryproduct.toJSON() : {};
 
-  // // Add a custom field to the Article, for determining if the current User is the "owner".
-  // // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  // categoryproduct.isCurrentUserOwner = req.user && categoryproduct.user && categoryproduct.user._id.toString() === req.user._id.toString();
-
-  // res.jsonp(categoryproduct);
+  // Add a custom field to the Article, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+  categoryproduct.isCurrentUserOwner = req.user && categoryproduct.user && categoryproduct.user._id.toString() === req.user._id.toString();
+  // console.log('read -  -------' + JSON.stringify(categoryproduct));
+  res.jsonp(categoryproduct);
 };
 
 /**
@@ -93,7 +81,7 @@ exports.delete = function (req, res) {
  * List of Categoryproducts
  */
 exports.list = function (req, res) {
-  Categoryproduct.find().sort('-created').populate('user', 'displayName').exec(function (err, categoryproducts) {
+  Categoryproduct.find().sort('-created').populate('user', 'displayName').populate('shop').exec(function (err, categoryproducts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -115,7 +103,7 @@ exports.categoryproductByID = function (req, res, next, id) {
     });
   }
 
-  Categoryproduct.findById(id).populate('user', 'displayName').exec(function (err, categoryproduct) {
+  Categoryproduct.findById(id).populate('user', 'displayName').populate('shop').exec(function (err, categoryproduct) {
     if (err) {
       return next(err);
     } else if (!categoryproduct) {
