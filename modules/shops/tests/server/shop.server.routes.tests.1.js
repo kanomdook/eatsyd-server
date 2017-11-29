@@ -51,7 +51,8 @@ describe('Shop CRUD token tests', function () {
       email: 'test@test.com',
       username: credentials.username,
       password: credentials.password,
-      provider: 'local'
+      provider: 'local',
+      roles: ['admin']
     });
 
     token = '';
@@ -63,7 +64,7 @@ describe('Shop CRUD token tests', function () {
           name_eng: 'Shop name english',
           detail: 'Shop Detail',
           tel: '0894447208',
-          email: 'test@gmail.com',
+          email: 'testshop@gmail.com',
           facebook: 'facebook.com',
           line: '@lineid',
           address: {
@@ -298,6 +299,48 @@ describe('Shop CRUD token tests', function () {
                 // Set assertions
                 //(products[0].user.loginToken).should.equal(token);
                 (shops.length).should.match(0);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('is active shop generate user shop with token', function (done) {
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        // shop.isactiveshop = true;
+        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .send(shop)
+          .expect(200)
+          .end(function (shopUpdateErr, shopUpdateRes) {
+            // Handle shop save error
+            if (shopUpdateErr) {
+              return done(shopUpdateErr);
+            }
+            // Get a list of shop
+            agent.get('/api/shops')
+              .end(function (shopsGetErr, shopsGetRes) {
+                // Handle shop save error
+                if (shopsGetErr) {
+                  return done(shopsGetErr);
+                }
+
+                // Get shop list
+                // console.log('new user by shop'+ JSON.stringify(shopsGetRes.body));
+                var shops = shopsGetRes.body;
+
+                // Set assertions
+                (shops[0].isactiveshop).should.match(true);
 
                 // Call the assertion callback
                 done();

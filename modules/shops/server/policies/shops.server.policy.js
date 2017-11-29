@@ -20,6 +20,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/shops/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/shops/createusershop/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],

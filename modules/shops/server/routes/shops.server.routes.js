@@ -22,6 +22,9 @@ module.exports = function (app) {
     .put(shops.update)
     .delete(shops.delete);
 
+  app.route('/api/shops/createusershop/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.createUserByShop, shops.updateUserShop);
+
   // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

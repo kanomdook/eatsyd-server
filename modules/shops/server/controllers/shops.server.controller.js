@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Shop = mongoose.model('Shop'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -129,7 +130,7 @@ exports.shopByID = function (req, res, next, id) {
     });
   }
 
-  Shop.findById(id).populate('user', 'displayName').exec(function (err, shop) {
+  Shop.findById(id).populate('user').exec(function (err, shop) {
     if (err) {
       return next(err);
     } else if (!shop) {
@@ -139,5 +140,55 @@ exports.shopByID = function (req, res, next, id) {
     }
     req.shop = shop;
     next();
+  });
+};
+
+
+exports.createUserByShop = function (req, res, next) {
+  var shop = req.shop;
+  if (req.user && req.user.roles[0] === 'admin') {
+    var firstname = shop.name ? shop.name : shop.name;
+    var lastname = shop.name ? shop.name : shop.name;
+    var newUser = new User({
+      firstName: firstname,
+      lastName: lastname,
+      displayName: firstname + ' ' + lastname,
+      email: shop.email,
+      mobile: shop.tel,
+      username: shop.email,
+      password: 'user1234',
+      provider: 'local',
+      roles: ['shop']
+    });
+    newUser.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.usernew = newUser;
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+};
+
+exports.updateUserShop = function (req, res) {
+  // console.log('user new!!' + req.usernew);
+  var shop = req.shop;
+
+  // shop = _.extend(shop, req.body);
+  Shop.findByIdAndUpdate(shop._id,{$set:{user:req.usernew._id,isactiveshop:true}},{new:true}).populate('user').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shop = shops;
+      console.log('update shop isactive = true',req.shop);
+      res.jsonp(req.shop);
+    }
   });
 };
