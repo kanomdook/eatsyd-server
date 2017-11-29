@@ -23,8 +23,10 @@ module.exports = function (app) {
     .delete(shops.delete);
 
   app.route('/api/shops/createusershop/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .put(shops.createUserByShop, shops.updateUserShop);
+    .put(shops.createUserByShop, shops.updateUserShop, shops.mailer);
 
+  // app.route('/api/mailtest') //.all(core.requiresLoginToken, shopsPolicy.isAllowed)
+  //   .get(shops.mailer);
   // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

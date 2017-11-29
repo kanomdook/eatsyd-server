@@ -7,9 +7,40 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Shop = mongoose.model('Shop'),
   User = mongoose.model('User'),
+  nodemailer = require('nodemailer'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
+
+
+exports.mailer = function (req, res) {
+  console.log('mail' + req.shop);
+  var data = req.shop.user;
+  var smtpTransport = nodemailer.createTransport("SMTP", {
+    service: "Gmail",
+    auth: {
+      user: "mynameissarawut@gmail.com",
+      pass: "097154642"
+    }
+  });
+
+  var mailOptions = {
+    from: "EatsyD ✔ <mynameissarawut@gmail.com>", // sender address✔
+    to: data.email, // list of receivers
+    subject: "Username & password for shop", // Subject line
+    html: "<p><b>" + "username" +" : "+ data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
+
+  };
+  smtpTransport.sendMail(mailOptions, function (error, response) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Message sent: " + response.message);
+      res.jsonp(req.shop);
+    }
+
+  });
+};
 /**
  * Create a Shop
  */
@@ -175,20 +206,28 @@ exports.createUserByShop = function (req, res, next) {
   }
 };
 
-exports.updateUserShop = function (req, res) {
+exports.updateUserShop = function (req, res, next) {
   // console.log('user new!!' + req.usernew);
   var shop = req.shop;
 
   // shop = _.extend(shop, req.body);
-  Shop.findByIdAndUpdate(shop._id,{$set:{user:req.usernew._id,isactiveshop:true}},{new:true}).populate('user').exec(function (err, shops) {
+  Shop.findByIdAndUpdate(shop._id, {
+    $set: {
+      user: req.usernew._id,
+      isactiveshop: true
+    }
+  }, {
+    new: true
+  }).populate('user').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
       req.shop = shops;
-      console.log('update shop isactive = true',req.shop);
-      res.jsonp(req.shop);
+      // console.log('update shop isactive = true', req.shop);
+      // res.jsonp(req.shop);
+      next();
     }
   });
 };
