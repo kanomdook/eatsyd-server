@@ -15,7 +15,7 @@ module.exports = function (app) {
   app.route('/api/categoryproducts').all(core.requiresLoginToken, categoryproductsPolicy.isAllowed)
     .post(categoryproducts.create);
 
-  app.route('/api/categoryproducts/:categoryproductId') //.all(core.requiresLoginToken, categoryproductsPolicy.isAllowed)
+  app.route('/api/categoryproducts/:categoryproductId').all(core.requiresLoginToken, categoryproductsPolicy.isAllowed)
     .get(categoryproducts.read);
 
   app.route('/api/categoryproducts/:categoryproductId').all(core.requiresLoginToken, categoryproductsPolicy.isAllowed)
