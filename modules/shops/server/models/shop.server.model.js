@@ -54,7 +54,7 @@ var ShopSchema = new Schema({
   },
   promoteimage: {
     type: [String],
-    default: ''
+    default: []
   },
   coverimage: {
     type: String,
