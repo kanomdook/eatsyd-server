@@ -20,6 +20,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/categoryproducts/:categoryproductId',
       permissions: '*'
+    }, {
+      resources: '/api/categoryproductsbyshop/:categorybyshopId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -28,6 +31,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/categoryproducts/:categoryproductId',
+      permissions: ['get']
+    }, {
+      resources: '/api/categoryproductsbyshop/:categorybyshopId',
       permissions: ['get']
     }]
   }, {

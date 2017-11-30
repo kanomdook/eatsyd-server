@@ -115,3 +115,46 @@ exports.categoryproductByID = function (req, res, next, id) {
     next();
   });
 };
+
+exports.shopID = function (req, res, next, shopid) {
+  Categoryproduct.find({
+    shop: shopid
+  }, '_id name image price priority').sort('-created').populate('user', 'displayName').exec(function (err, categoryproducts) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.categoryproducts = categoryproducts;
+      next();
+    }
+  });
+};
+
+exports.cookingCategoryProductList = function (req, res, next) {
+  var categoryproducts = [];
+  // console.log(req.products);
+  req.categoryproducts.forEach(function (element) {
+    // var categories = [];
+    // element.categories.forEach(function (cate) {
+    //   categories.push({
+    //     name: cate.name
+    //   });
+    // });
+    categoryproducts.push({
+      _id: element._id,
+      name: element.name,
+      image: element.image,
+      priority: element.priority
+    });
+  });
+  req.categoriesCookingList = categoryproducts;
+  next();
+};
+
+exports.categoryProductByShop = function (req, res) {
+  // console.log('data' + JSON.stringify(req.productsCookingList));
+  res.jsonp({
+    items: req.categoriesCookingList ? req.categoriesCookingList : []
+  });
+};

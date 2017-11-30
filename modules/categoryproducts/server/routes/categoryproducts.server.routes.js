@@ -22,6 +22,11 @@ module.exports = function (app) {
     .put(categoryproducts.update)
     .delete(categoryproducts.delete);
 
+  app.route('/api/categoryproductsbyshop/:categorybyshopId').all(core.requiresLoginToken, categoryproductsPolicy.isAllowed)
+    .get(categoryproducts.cookingCategoryProductList, categoryproducts.categoryProductByShop);
+
   // Finish by binding the Categoryproduct middleware
   app.param('categoryproductId', categoryproducts.categoryproductByID);
+  app.param('categorybyshopId', categoryproducts.shopID);
+
 };
