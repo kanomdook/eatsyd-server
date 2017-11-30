@@ -42,7 +42,6 @@ var ShopSchema = new Schema({
   email: {
     type: String,
     default: '',
-    required: 'Please fill Shop email'
   },
   facebook: {
     type: String,
