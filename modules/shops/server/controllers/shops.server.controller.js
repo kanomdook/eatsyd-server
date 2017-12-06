@@ -131,24 +131,24 @@ exports.delete = function (req, res) {
  * List of Shops
  */
 
-exports.cookingListShop = function (req, res, next) {
-  Shop.find().sort('name').exec(function (err, result) {
-    if (err) {
-      return next(err);
-    } else if (!result) {
-      return res.status(404).send({
-        message: 'No Shop with that identifier has been found'
-      });
-    }
-    req.shops = result;
-    next();
-  });
-};
+// exports.cookingListShop = function (req, res, next) {
+//   Shop.find().sort('name').exec(function (err, result) {
+//     if (err) {
+//       return next(err);
+//     } else if (!result) {
+//       return res.status(404).send({
+//         message: 'No Shop with that identifier has been found'
+//       });
+//     }
+//     req.shops = result;
+//     next();
+//   });
+// };
 
 exports.list = function (req, res) {
   // console.log('get list' + req.shops);
 
-  Shop.find().populate('user', 'firstName').exec(function (err, shop) {
+  Shop.find().sort('name').populate('user', 'firstName').exec(function (err, shop) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

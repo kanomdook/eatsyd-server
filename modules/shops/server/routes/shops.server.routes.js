@@ -10,7 +10,7 @@ var shopsPolicy = require('../policies/shops.server.policy'),
 module.exports = function (app) {
   // Shops Routes
   app.route('/api/shops') //.all(shopsPolicy.isAllowed)
-    .get(shops.cookingListShop, shops.list);
+    .get(shops.list);
 
   app.route('/api/shops').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .post(shops.create);
