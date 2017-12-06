@@ -357,6 +357,23 @@ describe('Product CRUD tests with token', function () {
       });
   });
 
+  // it('should be able to change profile picture if signed in', function (done) {
+
+  //   agent.post('/api/products_picture')
+  //     .attach('newProfilePicture', './modules/users/client/img/profile/default.png')
+  //     .expect(200)
+  //     .end(function (userInfoErr, userInfoRes) {
+  //       // Handle change profile picture error
+  //       if (userInfoErr) {
+  //         return done(userInfoErr);
+  //       }
+
+  //       (userInfoRes.body.imageURL).should.not.match(null);
+
+  //       return done();
+
+  //     });
+  // });
 
   afterEach(function (done) {
     User.remove().exec(function () {

@@ -16,36 +16,36 @@ var path = require('path'),
  * Upload Images Product
  */
 exports.changeProductPicture = function (req, res) {
-  var user = req.user;
+  // var user = req.user;
   var message = null;
   var upload = multer(config.uploads.productUpload).single('newProfilePicture');
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
 
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
-  if (user) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading profile picture'
+  // if (user) {
+  upload(req, res, function (uploadError) {
+    if (uploadError) {
+      return res.status(400).send({
+        message: 'Error occurred while uploading profile picture'
+      });
+    } else {
+      var cloudImageURL = './public/' + req.file.filename;
+      cloudinary.uploader.upload(cloudImageURL, function (result) {
+        var imageURL = result.url;
+        res.json({
+          status: '000',
+          message: 'success',
+          imageURL: imageURL
         });
-      } else {
-        var cloudImageURL = './public/' + req.file.filename;
-        cloudinary.uploader.upload(cloudImageURL, function (result) {
-          var imageURL = result.url;
-          res.json({
-            status: '000',
-            message: 'success',
-            imageURL: imageURL
-          });
-        });
-      }
-    });
-  } else {
-    res.status(400).send({
-      message: 'User is not signed in'
-    });
-  }
+      });
+    }
+  });
+  // } else {
+  //   res.status(400).send({
+  //     message: 'User is not signed in'
+  //   });
+  // }
 };
 
 
