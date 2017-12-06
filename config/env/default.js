@@ -1,4 +1,5 @@
 'use strict';
+var multer = require('multer');
 
 module.exports = {
   app: {
@@ -31,10 +32,37 @@ module.exports = {
   favicon: 'modules/core/client/img/brand/favicon.ico',
   uploads: {
     profileUpload: {
-      dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
+      // dest: './public/', // Profile upload to public folder   
+      // dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
+      storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, './public/');
+        },
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + '.jpg');
+
+        }
+      }),
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
       }
+    },
+    productUpload: {
+      // dest: './public/', // Profile upload to public folder         
+      // dest: './modules/products/client/img/uploads/', // Profile upload destination path
+      storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, './public/');
+        },
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + '.jpg');
+
+        }
+      }),
+      limits: {
+        fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
+      }
+
     }
   }
 };

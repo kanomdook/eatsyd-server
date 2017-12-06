@@ -24,6 +24,8 @@ module.exports = function (app) {
 
   app.route('/api/productsbyshop/:productbyshopId').all(core.requiresLoginToken, productsPolicy.isAllowed)
     .get(products.cookingProductList, products.productByShop);
+
+  app.route('/api/products_picture').post(products.changeProductPicture);
   // Finish by binding the Product middleware
   app.param('productId', products.productByID);
   app.param('productbyshopId', products.shopID);
