@@ -147,7 +147,7 @@ exports.cookingListShop = function (req, res, next) {
 
 exports.list = function (req, res) {
   // console.log('get list' + req.shops);
-  Shop.find().populate('user', 'displayName').exec(function (err, shop) {
+  Shop.find().populate('user', 'firstName').exec(function (err, shop) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
