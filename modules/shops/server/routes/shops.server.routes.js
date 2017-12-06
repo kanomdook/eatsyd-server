@@ -12,6 +12,9 @@ module.exports = function (app) {
   app.route('/api/shops') //.all(shopsPolicy.isAllowed)
     .get(shops.list);
 
+  app.route('/api/shopsnew') //.all(shopsPolicy.isAllowed)
+    .get(shops.listShopNew);
+
   app.route('/api/shops').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .post(shops.create);
 

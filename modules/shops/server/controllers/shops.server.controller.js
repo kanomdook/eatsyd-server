@@ -160,6 +160,21 @@ exports.list = function (req, res) {
   });
 };
 
+exports.listShopNew = function (req, res) {
+  // console.log('get list' + req.shops);
+
+  Shop.find().sort('-created').populate('user', 'firstName').exec(function (err, shop) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shops = shop;
+      res.jsonp(req.shops);
+    }
+  });
+};
+
 /**
  * Shop middleware
  */
