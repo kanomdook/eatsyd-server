@@ -132,7 +132,7 @@ exports.delete = function (req, res) {
  */
 
 exports.cookingListShop = function (req, res, next) {
-  Shop.find().exec(function (err, result) {
+  Shop.find().sort('name').exec(function (err, result) {
     if (err) {
       return next(err);
     } else if (!result) {
@@ -147,7 +147,7 @@ exports.cookingListShop = function (req, res, next) {
 
 exports.list = function (req, res) {
   // console.log('get list' + req.shops);
-  
+
   Shop.find().populate('user', 'firstName').exec(function (err, shop) {
     if (err) {
       return res.status(400).send({
