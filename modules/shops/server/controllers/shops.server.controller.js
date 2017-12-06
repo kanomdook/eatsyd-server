@@ -28,7 +28,7 @@ exports.mailer = function (req, res) {
     from: "EatsyD ✔ <mynameissarawut@gmail.com>", // sender address✔
     to: data.email, // list of receivers
     subject: "Username & password for shop", // Subject line
-    html: "<p><b>" + "username" +" : "+ data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
+    html: "<p><b>" + "username" + " : " + data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
 
   };
   smtpTransport.sendMail(mailOptions, function (error, response) {
@@ -147,7 +147,16 @@ exports.cookingListShop = function (req, res, next) {
 
 exports.list = function (req, res) {
   // console.log('get list' + req.shops);
-  res.jsonp(req.shops);
+  Shop.find().populate('user', 'displayName').exec(function (err, shop) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shops = shop;
+      res.jsonp(req.shops);
+    }
+  });
 };
 
 /**
