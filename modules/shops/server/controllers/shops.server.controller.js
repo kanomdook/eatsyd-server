@@ -220,7 +220,7 @@ exports.createUserByShop = function (req, res, next) {
     newUser.save(function (err) {
       if (err) {
         return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+          message: 'genUser ' + errorHandler.getErrorMessage(err)
         });
       } else {
         req.usernew = newUser;
@@ -235,25 +235,38 @@ exports.createUserByShop = function (req, res, next) {
 exports.updateUserShop = function (req, res, next) {
   // console.log('user new!!' + req.usernew);
   var shop = req.shop;
-
+  // $set: {
+  //   user: req.usernew._id,
+  //   issendmail: true
+  // }
   // shop = _.extend(shop, req.body);
-  Shop.findByIdAndUpdate(shop._id, {
-    $set: {
-      user: req.usernew._id,
-      issendmail: true
-    }
-  }, {
-    new: true
-  }).populate('user').exec(function (err, shops) {
+  Shop.findById(shop._id).populate('user').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: 'Update Shop ' + errorHandler.getErrorMessage(err)
       });
     } else {
-      req.shop = shops;
+      shops.user = req.usernew;
+      shops.issendmail = true;
+
+      // req.shop = shops;
+      shops.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          User.populate(shops, {
+            path: "user"
+          }, function (err, shopsRes) {
+            req.shop = shopsRes;
+            next();
+          });
+        }
+      });
       // console.log('update shop isactive = true', req.shop);
       // res.jsonp(req.shop);
-      next();
+      // next();
     }
   });
 };
