@@ -63,6 +63,10 @@ var ShopSchema = new Schema({
     type: Boolean,
     default: false
   },
+  issendmail: {
+    type: Boolean,
+    default: false
+  },
   importform: {
     type: String,
     default: 'manual'

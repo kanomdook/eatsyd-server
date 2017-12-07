@@ -239,7 +239,7 @@ exports.updateUserShop = function (req, res, next) {
   Shop.findByIdAndUpdate(shop._id, {
     $set: {
       user: req.usernew._id,
-      isactiveshop: true
+      issendmail: true
     }
   }, {
     new: true
