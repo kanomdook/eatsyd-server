@@ -86,6 +86,7 @@ describe('Shop CRUD token tests', function () {
           coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
           promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
           isactiveshop: false,
+          issendmail: false,
           importform: 'manual',
           categories: categoryshop,
           user: user
@@ -340,7 +341,7 @@ describe('Shop CRUD token tests', function () {
   //               var shops = shopsGetRes.body;
 
   //               // Set assertions
-  //               (shops[0].isactiveshop).should.match(true);
+  //               (shops[0].issendmail).should.match(true);
 
   //               // Call the assertion callback
   //               done();

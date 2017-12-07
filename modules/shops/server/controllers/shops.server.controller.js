@@ -26,7 +26,8 @@ exports.mailer = function (req, res) {
 
   var mailOptions = {
     from: "EatsyD ✔ <mynameissarawut@gmail.com>", // sender address✔
-    to: data.email, // list of receivers
+    // to: data.email, // list of receivers
+    to: 'mynameissarawut@gmail.com',
     subject: "Username & password for shop", // Subject line
     html: "<p><b>" + "username" + " : " + data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
 
