@@ -350,8 +350,8 @@ describe('Shop CRUD token tests', function () {
   //         });
   //     });
   // });
-
   it('get category filter', function (done) {
+
     agent.post('/api/shops')
       .set('authorization', 'Bearer ' + token)
       .send(shop)
@@ -375,10 +375,14 @@ describe('Shop CRUD token tests', function () {
 
             // Set assertions
 
-            (shops.filtercate[0].name).should.match('all');
-            (shops.filtercate[1].name).should.match('new');
+            (shops.filtercate[0].name).should.match('รายการร้านค้า');
+            (shops.filtercate[0].items.length).should.match(1);
+            (shops.filtercate[1].name).should.match('ร้านค้าใหม่');
+            (shops.filtercate[1].items.length).should.match(1);
             (shops.filtercate[2].name).should.match('official');
-            (shops.filtercate[3].name).should.match('consignment');
+            (shops.filtercate[2].items.length).should.match(0);
+            (shops.filtercate[3].name).should.match('ร้านฝากซื้อ');
+            (shops.filtercate[3].items.length).should.match(1);            
 
 
             // Call the assertion callback

@@ -276,113 +276,92 @@ exports.updateUserShop = function (req, res, next) {
 exports.getShop = function (req, res, next) {
   // var shop = req.shops;
   // var name = ['all', 'new', 'official', 'consignment'];
+  req.shopRes = [{
+    name: 'รายการร้านค้า',
+    items: []
+  }, {
+    name: 'ร้านค้าใหม่',
+    items: []
+  }, {
+    name: 'official',
+    items: []
+  }, {
+    name: 'ร้านฝากซื้อ',
+    items: []
+  }];
+  next();
+};
+
+exports.cookingAll = function (req, res, next) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shopRes[0].items = shops;
+      next();
+    }
+  });
+};
+
+exports.cookingNew = function (req, res, next) {
   Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('-created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      req.shops = shops;
+      req.shopRes[1].items = shops;
       next();
     }
   });
 };
 
-exports.cookingAll = function (req, res, next) {
-  var dataall = [];
-  req.shops.forEach(function (shop) {
-    dataall.push(shop);
-  });
-
-  Shop.find({
-    '_id': {
-      $in: dataall
-    }
-  }, function (err, shops) {
-    var datas = [];
-    shops.forEach(function (shop) {
-      datas.push(shop);
-    });
-    req.all = datas;
-    next();
-  });
-};
-
-exports.cookingNew = function (req, res, next) {
-  var datanew = [];
-  req.shops.forEach(function (shop) {
-    datanew.push(shop);
-  });
-
-  Shop.find({
-    '_id': {
-      $in: datanew
-    }
-  }, function (err, shops) {
-    var datas = [];
-    shops.forEach(function (shop) {
-      datas.push(shop);
-    });
-    req.new = datas;
-    next();
-  });
-};
-
 exports.cookingOfficial = function (req, res, next) {
-  var dataofficial = [];
-  req.shops.forEach(function (shop) {
-    dataofficial.push(shop);
-  });
-
-  Shop.find({
-    '_id': {
-      $in: dataofficial
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (shops && shops.length > 0) {
+        shops.forEach(function (shop) {
+          if (shop.issendmail === true) {
+            req.shopRes[2].items.push(shop);
+          }
+        });
+        next();
+      } else {
+        next();
+      }
     }
-  }, function (err, shops) {
-    var datas = [];
-    shops.forEach(function (shop) {
-      datas.push(shop);
-    });
-    req.official = datas;
-    next();
   });
 };
 
 exports.cookingConsignment = function (req, res, next) {
-  var dataconsignment = [];
-  req.shops.forEach(function (shop) {
-    dataconsignment.push(shop);
-  });
-
-  Shop.find({
-    '_id': {
-      $in: dataconsignment
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (shops && shops.length > 0) {
+        shops.forEach(function (shop) {
+          if (shop.issendmail === false && shop.isactiveshop === true) {
+            req.shopRes[3].items.push(shop);
+          }
+        });
+        next();
+      } else {
+        next();
+      }
     }
-  }, function (err, shops) {
-    var datas = [];
-    shops.forEach(function (shop) {
-      datas.push(shop);
-    });
-    req.consignment = datas;
-    next();
   });
 };
 
 exports.listFilter = function (req, res) {
-  // var name = ['all', 'new', 'official', 'consignment'];
   res.jsonp({
-    filtercate: [{
-      name: 'all',
-      items: req.all
-    }, {
-      name: 'new',
-      items: req.new
-    }, {
-      name: 'official',
-      items: req.official
-    }, {
-      name: 'consignment',
-      items: req.consignment
-    }]
+    filtercate: req.shopRes
   });
 };
