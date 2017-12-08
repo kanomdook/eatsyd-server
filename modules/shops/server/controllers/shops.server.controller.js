@@ -276,7 +276,7 @@ exports.updateUserShop = function (req, res, next) {
 exports.getShop = function (req, res, next) {
   // var shop = req.shops;
   // var name = ['all', 'new', 'official', 'consignment'];
-  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('-created').populate('categories').exec(function (err, shops) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('-created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -371,7 +371,7 @@ exports.cookingConsignment = function (req, res, next) {
 exports.listFilter = function (req, res) {
   // var name = ['all', 'new', 'official', 'consignment'];
   res.jsonp({
-    filter: [{
+    filtercate: [{
       name: 'all',
       items: req.all
     }, {

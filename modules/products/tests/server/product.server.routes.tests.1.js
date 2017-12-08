@@ -358,7 +358,7 @@ describe('Product CRUD tests with token', function () {
   });
 
   // it('should be able to change profile picture if signed in', function (done) {
-  //   var data = ;
+  //   var data = '';
   //   agent.post('/api/products_picture')
   //     // .attach('newProfilePicture', './modules/users/client/img/profile/default.png')
   //     .sent(data)
@@ -371,7 +371,7 @@ describe('Product CRUD tests with token', function () {
 
   //       (userInfoRes.body.imageURL).should.match('');
 
-  //       return done();
+  //       done();
 
   //     });
   // });

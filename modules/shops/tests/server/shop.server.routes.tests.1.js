@@ -375,10 +375,10 @@ describe('Shop CRUD token tests', function () {
 
             // Set assertions
 
-            (shops.filter[0].name).should.match('all');
-            (shops.filter[1].name).should.match('new');
-            (shops.filter[2].name).should.match('official');
-            (shops.filter[3].name).should.match('consignment');
+            (shops.filtercate[0].name).should.match('all');
+            (shops.filtercate[1].name).should.match('new');
+            (shops.filtercate[2].name).should.match('official');
+            (shops.filtercate[3].name).should.match('consignment');
 
 
             // Call the assertion callback
