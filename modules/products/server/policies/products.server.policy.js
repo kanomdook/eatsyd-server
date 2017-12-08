@@ -25,6 +25,18 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
+    roles: ['shop'],
+    allows: [{
+      resources: '/api/products',
+      permissions: '*'
+    }, {
+      resources: '/api/products/:productId',
+      permissions: '*'
+    }, {
+      resources: '/api/productsbyshop/:productbyshopId',
+      permissions: '*'
+    }]
+  }, {
     roles: ['user'],
     allows: [{
       resources: '/api/products',
