@@ -358,9 +358,10 @@ describe('Product CRUD tests with token', function () {
   });
 
   // it('should be able to change profile picture if signed in', function (done) {
-
+  //   var data = ;
   //   agent.post('/api/products_picture')
-  //     .attach('newProfilePicture', './modules/users/client/img/profile/default.png')
+  //     // .attach('newProfilePicture', './modules/users/client/img/profile/default.png')
+  //     .sent(data)
   //     .expect(200)
   //     .end(function (userInfoErr, userInfoRes) {
   //       // Handle change profile picture error
@@ -368,7 +369,7 @@ describe('Product CRUD tests with token', function () {
   //         return done(userInfoErr);
   //       }
 
-  //       (userInfoRes.body.imageURL).should.not.match(null);
+  //       (userInfoRes.body.imageURL).should.match('');
 
   //       return done();
 

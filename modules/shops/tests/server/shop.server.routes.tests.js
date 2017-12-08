@@ -178,35 +178,35 @@ describe('Shop CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an Shop if no email is provided', function (done) {
-    // Invalidate name field
-    shop.email = '';
+  // it('should not be able to save an Shop if no email is provided', function (done) {
+  //   // Invalidate name field
+  //   shop.email = '';
 
-    agent.post('/api/auth/signin')
-      .send(credentials)
-      .expect(200)
-      .end(function (signinErr, signinRes) {
-        // Handle signin error
-        if (signinErr) {
-          return done(signinErr);
-        }
+  //   agent.post('/api/auth/signin')
+  //     .send(credentials)
+  //     .expect(200)
+  //     .end(function (signinErr, signinRes) {
+  //       // Handle signin error
+  //       if (signinErr) {
+  //         return done(signinErr);
+  //       }
 
-        // Get the userId
-        var userId = user.id;
+  //       // Get the userId
+  //       var userId = user.id;
 
-        // Save a new Shop
-        agent.post('/api/shops')
-          .send(shop)
-          .expect(400)
-          .end(function (shopSaveErr, shopSaveRes) {
-            // Set message assertion
-            (shopSaveRes.body.message).should.match('Please fill Shop email');
+  //       // Save a new Shop
+  //       agent.post('/api/shops')
+  //         .send(shop)
+  //         .expect(400)
+  //         .end(function (shopSaveErr, shopSaveRes) {
+  //           // Set message assertion
+  //           (shopSaveRes.body.message).should.match('Please fill Shop email');
 
-            // Handle Shop save error
-            done(shopSaveErr);
-          });
-      });
-  });
+  //           // Handle Shop save error
+  //           done(shopSaveErr);
+  //         });
+  //     });
+  // });
   it('should be able to update an Shop if signed in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)

@@ -24,7 +24,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/shops/createusershop/:shopId',
       permissions: '*'
     }, {
-      resources: '/api/shopsnew',
+      resources: '/api/shops/categories',
       permissions: '*'
     }]
   }, {
@@ -36,7 +36,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/shops/:shopId',
       permissions: ['get']
     }, {
-      resources: '/api/shopsnew',
+      resources: '/api/shops/categories',
       permissions: ['get', 'post']
     }]
   }, {
@@ -48,7 +48,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/shops/:shopId',
       permissions: ['get']
     }, {
-      resources: '/api/shopsnew',
+      resources: '/api/shops/categories',
       permissions: ['get']
     }]
   }]);

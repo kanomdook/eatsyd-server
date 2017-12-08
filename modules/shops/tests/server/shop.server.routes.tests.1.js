@@ -308,7 +308,50 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
-  it('is active shop generate user shop with token', function (done) {
+  // it('is active shop generate user shop with token', function (done) {
+  //   agent.post('/api/shops')
+  //     .set('authorization', 'Bearer ' + token)
+  //     .send(shop)
+  //     .expect(200)
+  //     .end(function (shopSaveErr, shopSaveRes) {
+  //       // Handle shop save error
+  //       if (shopSaveErr) {
+  //         return done(shopSaveErr);
+  //       }
+  //       // shop.isactiveshop = true;
+  //       agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+  //         .set('authorization', 'Bearer ' + token)
+  //         .send(shop)
+  //         .expect(200)
+  //         .end(function (shopUpdateErr, shopUpdateRes) {
+  //           // Handle shop save error
+  //           if (shopUpdateErr) {
+  //             return done(shopUpdateErr);
+  //           }
+  //           // Get a list of shop
+  //           agent.get('/api/shops')
+  //             .end(function (shopsGetErr, shopsGetRes) {
+  //               // Handle shop save error
+  //               if (shopsGetErr) {
+  //                 return done(shopsGetErr);
+  //               }
+
+  //               // Get shop list
+  //               // console.log('new user by shop'+ JSON.stringify(shopsGetRes.body));
+  //               var shops = shopsGetRes.body;
+
+  //               // Set assertions
+  //               (shops.length).should.match(1);
+  //               (shops[0].issendmail).should.match(true);
+
+  //               // Call the assertion callback
+  //               done();
+  //             });
+  //         });
+  //     });
+  // });
+
+  it('get category filter', function (done) {
     agent.post('/api/shops')
       .set('authorization', 'Bearer ' + token)
       .send(shop)
@@ -318,35 +361,28 @@ describe('Shop CRUD token tests', function () {
         if (shopSaveErr) {
           return done(shopSaveErr);
         }
-        // shop.isactiveshop = true;
-        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
-          .set('authorization', 'Bearer ' + token)
-          .send(shop)
-          .expect(200)
-          .end(function (shopUpdateErr, shopUpdateRes) {
+
+        // Get a list of shops
+        agent.get('/api/shops/categories')
+          .end(function (shopsGetErr, shopsGetRes) {
             // Handle shop save error
-            if (shopUpdateErr) {
-              return done(shopUpdateErr);
+            if (shopsGetErr) {
+              return done(shopsGetErr);
             }
-            // Get a list of shop
-            agent.get('/api/shops')
-              .end(function (shopsGetErr, shopsGetRes) {
-                // Handle shop save error
-                if (shopsGetErr) {
-                  return done(shopsGetErr);
-                }
 
-                // Get shop list
-                // console.log('new user by shop'+ JSON.stringify(shopsGetRes.body));
-                var shops = shopsGetRes.body;
+            // Get shops list
+            var shops = shopsGetRes.body;
 
-                // Set assertions
-                (shops.length).should.match(1);
-                (shops[0].issendmail).should.match(true);
+            // Set assertions
 
-                // Call the assertion callback
-                done();
-              });
+            (shops.filter[0].name).should.match('all');
+            (shops.filter[1].name).should.match('new');
+            (shops.filter[2].name).should.match('official');
+            (shops.filter[3].name).should.match('consignment');
+
+
+            // Call the assertion callback
+            done();
           });
       });
   });
