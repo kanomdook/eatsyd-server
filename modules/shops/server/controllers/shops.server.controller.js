@@ -293,12 +293,13 @@ exports.getShop = function (req, res, next) {
 };
 
 exports.cookingAll = function (req, res, next) {
-  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories user').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      console.log(shops);
       req.shopRes[0].items = shops;
       next();
     }
@@ -306,7 +307,7 @@ exports.cookingAll = function (req, res, next) {
 };
 
 exports.cookingNew = function (req, res, next) {
-  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('-created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories user').sort('-created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -319,7 +320,7 @@ exports.cookingNew = function (req, res, next) {
 };
 
 exports.cookingOfficial = function (req, res, next) {
-  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories user').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -340,7 +341,7 @@ exports.cookingOfficial = function (req, res, next) {
 };
 
 exports.cookingConsignment = function (req, res, next) {
-  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+  Shop.find({}, '_id name name_eng detail address tel email facebook line promoteimage coverimage isactiveshop issendmail importform times categories user').sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
