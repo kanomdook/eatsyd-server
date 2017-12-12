@@ -71,6 +71,29 @@ var ShopSchema = new Schema({
     type: String,
     default: 'manual'
   },
+  items: {
+    type: [{
+      catename: {
+        type: String
+      },
+      image: {
+        type: String
+      },
+      items: {
+        type: [{
+          name: {
+            type: String
+          },
+          price: {
+            type: Number
+          },
+          image: {
+            type: [String]
+          }
+        }]
+      }
+    }]
+  },
   times: {
     type: [{
       description: String,

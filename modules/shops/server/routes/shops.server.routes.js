@@ -19,7 +19,7 @@ module.exports = function (app) {
     .post(shops.create);
 
   app.route('/api/shops/:shopId') //.all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .get(shops.read);
+    .get(shops.read);v 
 
   app.route('/api/shops/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.update)
@@ -28,8 +28,10 @@ module.exports = function (app) {
   app.route('/api/shops/createusershop/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.createUserByShop, shops.updateUserShop, shops.mailer);
 
-  // app.route('/api/mailtest') //.all(core.requiresLoginToken, shopsPolicy.isAllowed)
-  //   .get(shops.mailer);
+  //get home shops
+  app.route('/api/shopshome').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .get(shops.cookingHomeShop, shops.resHomeShop);
+
   // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

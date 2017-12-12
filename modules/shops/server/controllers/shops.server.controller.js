@@ -132,22 +132,8 @@ exports.delete = function (req, res) {
  * List of Shops
  */
 
-// exports.cookingListShop = function (req, res, next) {
-//   Shop.find().sort('name').exec(function (err, result) {
-//     if (err) {
-//       return next(err);
-//     } else if (!result) {
-//       return res.status(404).send({
-//         message: 'No Shop with that identifier has been found'
-//       });
-//     }
-//     req.shops = result;
-//     next();
-//   });
-// };
 
 exports.list = function (req, res) {
-  // console.log('get list' + req.shops);
 
   Shop.find().sort('name').populate('user', 'firstName').exec(function (err, shop) {
     if (err) {
@@ -161,20 +147,6 @@ exports.list = function (req, res) {
   });
 };
 
-exports.listShopNew = function (req, res) {
-  // console.log('get list' + req.shops);
-
-  Shop.find().sort('-created').populate('user', 'firstName').exec(function (err, shop) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      req.shops = shop;
-      res.jsonp(req.shops);
-    }
-  });
-};
 
 /**
  * Shop middleware
@@ -217,29 +189,40 @@ exports.createUserByShop = function (req, res, next) {
       provider: 'local',
       roles: ['shop']
     });
-    newUser.save(function (err) {
+    User.find({
+      username: newUser.username
+    }).exec(function (err, users) {
       if (err) {
         return res.status(400).send({
-          message: 'genUser ' + errorHandler.getErrorMessage(err)
+          message: errorHandler.getErrorMessage(err)
         });
       } else {
-        req.usernew = newUser;
-        next();
+        if (users && users.length > 0) {
+          req.usernew = users[0];
+          next();
+        } else {
+          newUser.save(function (err) {
+            if (err) {
+              return res.status(400).send({
+                message: 'genUser ' + errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.usernew = newUser;
+              next();
+            }
+          });
+        }
+        // res.jsonp(req.shops);
       }
     });
+
   } else {
     next();
   }
 };
 
 exports.updateUserShop = function (req, res, next) {
-  // console.log('user new!!' + req.usernew);
   var shop = req.shop;
-  // $set: {
-  //   user: req.usernew._id,
-  //   issendmail: true
-  // }
-  // shop = _.extend(shop, req.body);
   Shop.findById(shop._id).populate('user').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
@@ -249,7 +232,6 @@ exports.updateUserShop = function (req, res, next) {
       shops.user = req.usernew;
       shops.issendmail = true;
 
-      // req.shop = shops;
       shops.save(function (err) {
         if (err) {
           return res.status(400).send({
@@ -264,9 +246,6 @@ exports.updateUserShop = function (req, res, next) {
           });
         }
       });
-      // console.log('update shop isactive = true', req.shop);
-      // res.jsonp(req.shop);
-      // next();
     }
   });
 };
@@ -274,8 +253,6 @@ exports.updateUserShop = function (req, res, next) {
 
 ///////////////// filter /////////////////////
 exports.getShop = function (req, res, next) {
-  // var shop = req.shops;
-  // var name = ['all', 'new', 'official', 'consignment'];
   req.shopRes = [{
     name: 'รายการร้านค้า',
     items: []
@@ -299,7 +276,6 @@ exports.cookingAll = function (req, res, next) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      console.log(shops);
       req.shopRes[0].items = shops;
       next();
     }
@@ -365,4 +341,35 @@ exports.listFilter = function (req, res) {
   res.jsonp({
     filtercate: req.shopRes
   });
+};
+
+
+exports.cookingHomeShop = function (req, res, next) {
+  // console.log(req.user._id);
+  Shop.find({
+    user: req.user._id
+  }).sort('-created').populate('categories').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (shops && shops.length > 0) {
+        req.shop = shops[0];
+        next();
+      } else {
+        res.jsonp([]);
+      }
+    }
+  });
+};
+
+exports.resHomeShop = function (req, res) {
+  var shop = req.shop ? req.shop.toJSON() : {};
+  shop.items.forEach(function (itm) {
+    itm.items.forEach(function(i){
+      i.image = i.image && i.image.length > 0 ? i.image[0] : 'noimage';      
+    });
+  });
+  res.jsonp(shop);
 };
