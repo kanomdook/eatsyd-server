@@ -100,7 +100,8 @@ module.exports.initMiddleware = function (app) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: '15mb' }));
+  app.use(bodyParser.urlencoded({ limit: '15mb', extended: true }));
   app.use(methodOverride());
 
   // Add the cookie parser and flash middleware
