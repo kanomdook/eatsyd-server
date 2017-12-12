@@ -417,8 +417,8 @@ exports.sortName = function (req, res, next) {
   var firstIndex = 0;
   var lastIndex = 10;
   if (req.body.currentpage > 1) {
-    firstIndex = (req.body.currentpage - 1) * 10;
-    lastIndex = (req.body.currentpage * 10) - 1;
+    firstIndex = ((req.body.currentpage - 1) * 10);
+    lastIndex = (req.body.currentpage * 10);
   }
   if (req.body.typename === 'รายการร้านค้า') {
     var numpage = [];
