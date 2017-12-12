@@ -19,7 +19,7 @@ module.exports = function (app) {
     .post(shops.create);
 
   app.route('/api/shops/:shopId') //.all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .get(shops.read);v 
+    .get(shops.read);
 
   app.route('/api/shops/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.update)
@@ -32,6 +32,12 @@ module.exports = function (app) {
   app.route('/api/shopshome').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .get(shops.cookingHomeShop, shops.resHomeShop);
 
-  // Finish by binding the Shop middleware
+  app.route('/api/adminhome').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .get(shops.cookingAdminHome, shops.countPaging, shops.listHome);
+
+  // /:currentpage/:keyword
+  app.route('/api/filtershop').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .post(shops.filterPage);
+  // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

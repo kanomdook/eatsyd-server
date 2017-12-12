@@ -367,9 +367,57 @@ exports.cookingHomeShop = function (req, res, next) {
 exports.resHomeShop = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
   shop.items.forEach(function (itm) {
-    itm.items.forEach(function(i){
-      i.image = i.image && i.image.length > 0 ? i.image[0] : 'noimage';      
+    itm.items.forEach(function (i) {
+      i.image = i.image && i.image.length > 0 ? i.image[0] : 'noimage';
     });
   });
   res.jsonp(shop);
+};
+
+
+exports.cookingAdminHome = function (req, res, next) {
+  var listname = ['รายการร้านค้า', 'ร้านค้าใหม่', 'official', 'ร้านฝากซื้อ'];
+
+  req.listhome = listname;
+  next();
+};
+
+exports.countPaging = function (req, res, next) {
+  var numpage = [];
+  Shop.find().sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (shops && shops.length > 0) {
+        var pages = shops.length / 10;
+        var pagings = Math.ceil(pages);
+        req.items = shops.slice(0, 10);
+        for (var i = 0; i < pagings; i++) {
+          numpage.push(i + 1);
+        }
+
+      }
+      req.paging = numpage;
+      next();
+    }
+  });
+};
+
+exports.listHome = function (req, res) {
+  res.jsonp({
+    name: req.listhome,
+    pagings: req.paging,
+    items: req.items
+  });
+};
+
+exports.filterPage = function (req, res) {
+  var data = req.body;
+  res.jsonp({
+    name: data.typename,
+    page: data.currentpage,
+    keyword: data.keyword
+  });
 };

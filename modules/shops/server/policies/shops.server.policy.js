@@ -29,6 +29,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/shopshome',
       permissions: '*'
+    }, {
+      resources: '/api/adminhome',
+      permissions: '*'
+    }, {
+      resources: '/api/filtershop',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
