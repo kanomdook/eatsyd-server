@@ -648,7 +648,7 @@ describe('Shop CRUD token tests', function () {
 
         // Set assertions
         // shops.should.be.instanceof(Object).and.have.property('name', shop.name);
-        (shops.items.length).should.match(3);
+        (shops.items.length).should.match(2);
 
         done();
       });
