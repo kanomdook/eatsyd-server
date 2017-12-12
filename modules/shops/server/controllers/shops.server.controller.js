@@ -413,11 +413,34 @@ exports.listHome = function (req, res) {
   });
 };
 
+exports.sortName = function (req, res, next) {
+  var firstIndex = 0;
+  var lastIndex = 10;
+  if (req.body.currentpage > 1) {
+    firstIndex = ((req.body.currentpage - 1) * 10) - 1;
+    lastIndex = req.body.currentpage * 10;
+  }
+  if (req.body.typename.toString() === 'รายการร้านค้า') {
+    var numpage = [];
+    Shop.find().sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.items = shops.slice(firstIndex, lastIndex);
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+
+};
+
 exports.filterPage = function (req, res) {
   var data = req.body;
   res.jsonp({
-    name: data.typename,
-    page: data.currentpage,
-    keyword: data.keyword
+    items: req.items
   });
 };

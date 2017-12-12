@@ -521,9 +521,50 @@ describe('Shop CRUD token tests', function () {
 
 
   it('filter current page no keyword', function (done) {
+
+    var shop1 = new Shop(shop);
+    var shop2 = new Shop(shop);
+    var shop3 = new Shop(shop);
+    var shop4 = new Shop(shop);
+    var shop5 = new Shop(shop);
+    var shop6 = new Shop(shop);
+    var shop7 = new Shop(shop);
+    var shop8 = new Shop(shop);
+    var shop9 = new Shop(shop);
+    var shop10 = new Shop(shop);
+    var shop11 = new Shop(shop);
+    var shop12 = new Shop(shop);
+
+    shop1.name = 'shop01';
+    shop2.name = 'shop02';
+    shop3.name = 'shop03';
+    shop4.name = 'shop04';
+    shop5.name = 'shop05';
+    shop6.name = 'shop06';
+    shop7.name = 'shop07';
+    shop8.name = 'shop08';
+    shop9.name = 'shop09';
+    shop10.name = 'shop10';
+    shop11.name = 'shop11';
+    shop12.name = 'shop12';
+
+    shop1.save();
+    shop2.save();
+    shop3.save();
+    shop4.save();
+    shop5.save();
+    shop6.save();
+    shop7.save();
+    shop8.save();
+    shop9.save();
+    shop10.save();
+    shop11.save();
+    shop12.save();
+
+
     var data = {
       typename: 'รายการร้านค้า',
-      currentpage: 1,
+      currentpage: null,
       keyword: null
     };
     agent.post('/api/filtershop/')
@@ -540,7 +581,74 @@ describe('Shop CRUD token tests', function () {
 
         // Set assertions
         // shops.should.be.instanceof(Object).and.have.property('name', shop.name);
-        (shops.name).should.match(data.typename);
+        (shops.items.length).should.match(10);
+
+        done();
+      });
+  });
+
+  it('filter current page no keyword page 2', function (done) {
+
+    var shop1 = new Shop(shop);
+    var shop2 = new Shop(shop);
+    var shop3 = new Shop(shop);
+    var shop4 = new Shop(shop);
+    var shop5 = new Shop(shop);
+    var shop6 = new Shop(shop);
+    var shop7 = new Shop(shop);
+    var shop8 = new Shop(shop);
+    var shop9 = new Shop(shop);
+    var shop10 = new Shop(shop);
+    var shop11 = new Shop(shop);
+    var shop12 = new Shop(shop);
+
+    shop1.name = 'shop01';
+    shop2.name = 'shop02';
+    shop3.name = 'shop03';
+    shop4.name = 'shop04';
+    shop5.name = 'shop05';
+    shop6.name = 'shop06';
+    shop7.name = 'shop07';
+    shop8.name = 'shop08';
+    shop9.name = 'shop09';
+    shop10.name = 'shop10';
+    shop11.name = 'shop11';
+    shop12.name = 'shop12';
+
+    shop1.save();
+    shop2.save();
+    shop3.save();
+    shop4.save();
+    shop5.save();
+    shop6.save();
+    shop7.save();
+    shop8.save();
+    shop9.save();
+    shop10.save();
+    shop11.save();
+    shop12.save();
+
+
+    var data = {
+      typename: 'รายการร้านค้า',
+      currentpage: 2,
+      keyword: null
+    };
+    agent.post('/api/filtershop/')
+      .set('authorization', 'Bearer ' + token)
+      .send(data)
+      .expect(200)
+      .end(function (shopGetErr, shopsGetRes) {
+        // Handle shop save error
+        if (shopGetErr) {
+          return done(shopGetErr);
+        }
+        // Get shop list
+        var shops = shopsGetRes.body;
+
+        // Set assertions
+        // shops.should.be.instanceof(Object).and.have.property('name', shop.name);
+        (shops.items.length).should.match(3);
 
         done();
       });
