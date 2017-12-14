@@ -81,7 +81,8 @@ var ShopSchema = new Schema({
         type: [{
           type: Schema.ObjectId,
           ref: 'Product'
-        }]
+        }],
+        default: []
       }
     }]
   },

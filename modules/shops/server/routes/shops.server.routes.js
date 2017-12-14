@@ -46,11 +46,12 @@ module.exports = function (app) {
   app.route('/api/addpromote/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.addPromote, shops.resShopData);
 
-  // app.route('/api/createcate/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
-  //   .put(shops.createCate, shops.resShopData);
-  
+  app.route('/api/createcate/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.createCate, shops.addCateToShop, shops.resShopData);
 
+  app.route('/api/createproduct/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.createProduct, shops.addProductToShop, shops.resShopData);
 
-    // // Finish by binding the Shop middleware
-    app.param('shopId', shops.shopByID);
+  // // Finish by binding the Shop middleware
+  app.param('shopId', shops.shopByID);
 };

@@ -8,6 +8,7 @@ var path = require('path'),
   Shop = mongoose.model('Shop'),
   User = mongoose.model('User'),
   Categoryproduct = mongoose.model('Categoryproduct'),
+  Product = mongoose.model('Product'),
   nodemailer = require('nodemailer'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
@@ -662,9 +663,106 @@ exports.addPromote = function (req, res, next) {
   });
 };
 
-// exports.createCate = function (req, res, next) {
-//   var cate = new Categoryproduct(req.body);
-// };
+exports.createCate = function (req, res, next) {
+  var cate = new Categoryproduct(req.body);
+  cate.shop = req.shop;
+  cate.user = req.user;
+  cate.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.cate = cate;
+      next();
+    }
+  });
+};
+
+exports.addCateToShop = function (req, res, next) {
+  var shop = req.shop;
+  shop.items.push({
+    cate: req.cate,
+    products: []
+  });
+  shop.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+
+
+      Shop.findById(shop._id).populate('user').populate('categories').populate({
+        path: 'items', populate: [
+          { path: 'cate', model: 'Categoryproduct' },
+          { path: 'products', model: 'Product' }
+        ]
+      }).exec(function (err, shop) {
+        if (err) {
+          return next(err);
+        } else if (!shop) {
+          return res.status(404).send({
+            message: 'No Shop with that identifier has been found'
+          });
+        }
+        req.shop = shop;
+        next();
+      });
+    }
+  });
+};
+
+exports.createProduct = function (req, res, next) {
+  var product = new Product(req.body);
+  product.shop = req.shop;
+  product.user = req.user;
+  product.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.product = product;
+      next();
+    }
+  });
+};
+
+exports.addProductToShop = function (req, res, next) {
+  var shop = req.shop;
+  shop.items.forEach(function (itm) {
+    if (req.product.categories.toString() === itm.cate._id.toString()) {
+      itm.products.push(req.product);
+    }
+  });
+  shop.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+
+
+      Shop.findById(shop._id).populate('user').populate('categories').populate({
+        path: 'items', populate: [
+          { path: 'cate', model: 'Categoryproduct' },
+          { path: 'products', model: 'Product' }
+        ]
+      }).exec(function (err, shop) {
+        if (err) {
+          return next(err);
+        } else if (!shop) {
+          return res.status(404).send({
+            message: 'No Shop with that identifier has been found'
+          });
+        }
+        req.shop = shop;
+        next();
+      });
+    }
+  });
+};
 
 //count page
 function countPage(shops) {

@@ -59,6 +59,15 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/changecover/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/addpromote/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/createcate/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/createproduct/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
