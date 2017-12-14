@@ -378,12 +378,44 @@ exports.cookingHomeShop = function (req, res, next) {
 
 exports.resHomeShop = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
+  var items = [];
   shop.items.forEach(function (itm) {
+    var cookingItem = {
+      cate: {
+        _id: itm.cate._id,
+        name: itm.cate.name,
+        image: itm.cate.image
+      },
+      products: []
+    };
     itm.products.forEach(function (i) {
-      i.image = i.images && i.images.length > 0 ? i.images[0] : 'noimage';
+      cookingItem.products.push({
+        _id: i._id,
+        name: i.name,
+        image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
+        price: i.price
+      });
     });
+    items.push(cookingItem);
   });
-  res.jsonp(shop);
+  var resShop = {
+    _id: shop._id,
+    name: shop.name,
+    detail: shop.detail,
+    address: shop.address,
+    tel: shop.tel,
+    email: shop.email,
+    facebook: shop.facebook || '',
+    line: shop.line || '',
+    promoteimage: shop.promoteimage,
+    items: items,
+    coverimage: shop.coverimage,
+    isactiveshop: shop.isactiveshop,
+    issendmail: shop.issendmail,
+    importform: shop.importform,
+    times: shop.times
+  };
+  res.jsonp(resShop);
 };
 
 
@@ -570,12 +602,44 @@ exports.changeCover = function (req, res, next) {
 
 exports.resShopData = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
+  var items = [];
   shop.items.forEach(function (itm) {
+    var cookingItem = {
+      cate: {
+        _id: itm.cate._id,
+        name: itm.cate.name,
+        image: itm.cate.image
+      },
+      products: []
+    };
     itm.products.forEach(function (i) {
-      i.image = i.images && i.images.length > 0 ? i.images[0] : 'noimage';
+      cookingItem.products.push({
+        _id: i._id,
+        name: i.name,
+        image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
+        price: i.price
+      });
     });
+    items.push(cookingItem);
   });
-  res.jsonp(shop);
+  var resShop = {
+    _id: shop._id,
+    name: shop.name,
+    detail: shop.detail,
+    address: shop.address,
+    tel: shop.tel,
+    email: shop.email,
+    facebook: shop.facebook || '',
+    line: shop.line || '',
+    promoteimage: shop.promoteimage,
+    items: items,
+    coverimage: shop.coverimage,
+    isactiveshop: shop.isactiveshop,
+    issendmail: shop.issendmail,
+    importform: shop.importform,
+    times: shop.times
+  };
+  res.jsonp(resShop);
 };
 
 exports.addPromote = function (req, res, next) {
