@@ -39,7 +39,18 @@ module.exports = function (app) {
   app.route('/api/filtershop').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .post(shops.sortName, shops.sortDate, shops.sortOfficial, shops.sortUnofficial, shops.filterPage);
 
+  // /:currentpage/:keyword
+  app.route('/api/changecover/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.changeCover, shops.resShopData);
 
-  // // Finish by binding the Shop middleware
-  app.param('shopId', shops.shopByID);
+  app.route('/api/addpromote/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.addPromote, shops.resShopData);
+
+  // app.route('/api/createcate/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+  //   .put(shops.createCate, shops.resShopData);
+  
+
+
+    // // Finish by binding the Shop middleware
+    app.param('shopId', shops.shopByID);
 };

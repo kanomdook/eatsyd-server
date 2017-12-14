@@ -35,6 +35,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/filtershop',
       permissions: '*'
+    }, {
+      resources: '/api/changecover/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -52,6 +55,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/shopshome',
+      permissions: '*'
+    }, {
+      resources: '/api/changecover/:shopId',
       permissions: '*'
     }]
   }, {

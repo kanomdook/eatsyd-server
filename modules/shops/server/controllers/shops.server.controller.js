@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Shop = mongoose.model('Shop'),
   User = mongoose.model('User'),
+  Categoryproduct = mongoose.model('Categoryproduct'),
   nodemailer = require('nodemailer'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
@@ -160,7 +161,12 @@ exports.shopByID = function (req, res, next, id) {
     });
   }
 
-  Shop.findById(id).populate('user').exec(function (err, shop) {
+  Shop.findById(id).populate('user').populate('categories').populate({
+    path: 'items', populate: [
+      { path: 'cate', model: 'Categoryproduct' },
+      { path: 'products', model: 'Product' }
+    ]
+  }).exec(function (err, shop) {
     if (err) {
       return next(err);
     } else if (!shop) {
@@ -546,6 +552,55 @@ exports.filterPage = function (req, res) {
     pagings: req.pagings
   });
 };
+
+exports.changeCover = function (req, res, next) {
+  var shop = req.shop;
+  shop.coverimage = req.body.data;
+  shop.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shop = shop;
+      next();
+    }
+  });
+};
+
+exports.resShopData = function (req, res) {
+  var shop = req.shop ? req.shop.toJSON() : {};
+  shop.items.forEach(function (itm) {
+    itm.products.forEach(function (i) {
+      i.image = i.images && i.images.length > 0 ? i.images[0] : 'noimage';
+    });
+  });
+  res.jsonp(shop);
+};
+
+exports.addPromote = function (req, res, next) {
+  var shop = req.shop;
+  shop.promoteimage.push(req.body.data);
+  if (shop.promoteimage.length > 10) {
+    return res.status(400).send({
+      message: 'Promote images is limited.'
+    });
+  }
+  shop.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shop = shop;
+      next();
+    }
+  });
+};
+
+// exports.createCate = function (req, res, next) {
+//   var cate = new Categoryproduct(req.body);
+// };
 
 //count page
 function countPage(shops) {
