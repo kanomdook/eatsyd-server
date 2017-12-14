@@ -422,12 +422,107 @@ exports.sortName = function (req, res, next) {
   }
   if (req.body.typename === 'รายการร้านค้า') {
     var numpage = [];
-    Shop.find().sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    var keywords = {};
+    if (req.body.keyword) {
+      keywords = searchKeyword(req.body.keyword);
+    }
+    Shop.find(keywords).sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        req.pagings = countPage(shops);
+        req.items = shops.slice(firstIndex, lastIndex);
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+
+};
+
+exports.sortDate = function (req, res, next) {
+  var firstIndex = 0;
+  var lastIndex = 10;
+  if (req.body.currentpage > 1) {
+    firstIndex = ((req.body.currentpage - 1) * 10);
+    lastIndex = (req.body.currentpage * 10);
+  }
+  if (req.body.typename === 'ร้านค้าใหม่') {
+    var numpage = [];
+    var keywords = {};
+    if (req.body.keyword) {
+      keywords = searchKeyword(req.body.keyword);
+    }
+    Shop.find(keywords).sort('created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.pagings = countPage(shops);
+        req.items = shops.slice(firstIndex, lastIndex);
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+
+};
+
+exports.sortOfficial = function (req, res, next) {
+  var firstIndex = 0;
+  var lastIndex = 10;
+  if (req.body.currentpage > 1) {
+    firstIndex = ((req.body.currentpage - 1) * 10);
+    lastIndex = (req.body.currentpage * 10);
+  }
+  if (req.body.typename === 'official') {
+    var numpage = [];
+    var keywords = {};
+    if (req.body.keyword) {
+      keywords = searchKeyword(req.body.keyword);
+    }
+    Shop.find(keywords).sort('name').where('issendmail').equals(true).populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.pagings = countPage(shops);
+        req.items = shops.slice(firstIndex, lastIndex);
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+
+};
+
+exports.sortUnofficial = function (req, res, next) {
+  var firstIndex = 0;
+  var lastIndex = 10;
+  if (req.body.currentpage > 1) {
+    firstIndex = ((req.body.currentpage - 1) * 10);
+    lastIndex = (req.body.currentpage * 10);
+  }
+  if (req.body.typename === 'ร้านฝากซื้อ') {
+    var numpage = [];
+    var keywords = {};
+    if (req.body.keyword) {
+      keywords = searchKeyword(req.body.keyword);
+    }
+    Shop.find(keywords).sort('name').where('issendmail').equals(false).populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.pagings = countPage(shops);
         req.items = shops.slice(firstIndex, lastIndex);
         next();
       }
@@ -441,6 +536,47 @@ exports.sortName = function (req, res, next) {
 exports.filterPage = function (req, res) {
   var data = req.body;
   res.jsonp({
-    items: req.items
+    items: req.items,
+    pagings: req.pagings
   });
 };
+
+//count page
+function countPage(shops) {
+  var numpage = [];
+  if (shops && shops.length > 0) {
+    var pages = shops.length / 10;
+    var pagings = Math.ceil(pages);
+    for (var i = 0; i < pagings; i++) {
+      numpage.push(i + 1);
+    }
+
+  }
+  return numpage;
+}
+
+//search keyword
+function searchKeyword(keyWord) {
+  var keyword = {
+    $or: [{
+        'name': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'detail': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'tel': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      }
+    ]
+  };
+  return keyword;
+}

@@ -37,7 +37,9 @@ module.exports = function (app) {
 
   // /:currentpage/:keyword
   app.route('/api/filtershop').all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .post(shops.sortName, shops.filterPage);
+    .post(shops.sortName, shops.sortDate, shops.sortOfficial, shops.sortUnofficial, shops.filterPage);
+
+
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };
