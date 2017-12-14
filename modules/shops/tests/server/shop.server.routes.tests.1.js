@@ -88,7 +88,7 @@ describe('Shop CRUD token tests', function () {
               name_eng: 'Shop name english',
               detail: 'Shop Detail',
               tel: '0894447208',
-              email: 'followingkon@gmail.com',
+              email: 'test@gmail.com',
               facebook: 'facebook.com',
               line: '@lineid',
               address: {
