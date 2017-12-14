@@ -348,7 +348,7 @@ exports.cookingHomeShop = function (req, res, next) {
   // console.log(req.user._id);
   Shop.find({
     user: req.user._id
-  }).sort('-created').populate('categories').exec(function (err, shops) {
+  }).sort('-created').populate('categories').populate('items.cate').populate('items.products').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -367,7 +367,7 @@ exports.cookingHomeShop = function (req, res, next) {
 exports.resHomeShop = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
   shop.items.forEach(function (itm) {
-    itm.items.forEach(function (i) {
+    itm.products.forEach(function (i) {
       i.image = i.image && i.image.length > 0 ? i.image[0] : 'noimage';
     });
   });
@@ -456,7 +456,7 @@ exports.sortDate = function (req, res, next) {
     if (req.body.keyword) {
       keywords = searchKeyword(req.body.keyword);
     }
-    Shop.find(keywords).sort('created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    Shop.find(keywords).sort('-created').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)

@@ -73,23 +73,14 @@ var ShopSchema = new Schema({
   },
   items: {
     type: [{
-      catename: {
-        type: String
+      cate: {
+        type: Schema.ObjectId,
+        ref: 'Categoryproduct'
       },
-      image: {
-        type: String
-      },
-      items: {
+      products: {
         type: [{
-          name: {
-            type: String
-          },
-          price: {
-            type: Number
-          },
-          image: {
-            type: [String]
-          }
+          type: Schema.ObjectId,
+          ref: 'Product'
         }]
       }
     }]
