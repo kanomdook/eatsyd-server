@@ -15,32 +15,33 @@ var path = require('path'),
 
 exports.mailer = function (req, res) {
   // console.log('mail' + req.shop);
-  var data = req.shop.user;
-  var smtpTransport = nodemailer.createTransport("SMTP", {
-    service: "Gmail",
-    auth: {
-      user: "mynameissarawut@gmail.com",
-      pass: "097154642"
-    }
-  });
+  // var data = req.shop.user;
+  // var smtpTransport = nodemailer.createTransport("SMTP", {
+  //   service: "Gmail",
+  //   auth: {
+  //     user: "mynameissarawut@gmail.com",
+  //     pass: "097154642"
+  //   }
+  // });
 
-  var mailOptions = {
-    from: "EatsyD ✔ <mynameissarawut@gmail.com>", // sender address✔
-    // to: data.email, // list of receivers
-    to: 'mynameissarawut@gmail.com',
-    subject: "Username & password for shop", // Subject line
-    html: "<p><b>" + "username" + " : " + data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
+  // var mailOptions = {
+  //   from: "EatsyD ✔ <mynameissarawut@gmail.com>", // sender address✔
+  //   // to: data.email, // list of receivers
+  //   to: 'mynameissarawut@gmail.com',
+  //   subject: "Username & password for shop", // Subject line
+  //   html: "<p><b>" + "username" + " : " + data.username + "</b></p>" + "   " + "<p><b>" + "password" + " : " + "user1234" + "</b></p>", // plaintext body
 
-  };
-  smtpTransport.sendMail(mailOptions, function (error, response) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Message sent: " + response.message);
-      res.jsonp(req.shop);
-    }
+  // };
+  // smtpTransport.sendMail(mailOptions, function (error, response) {
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     console.log("Message sent: " + response.message);
+  //     res.jsonp(req.shop);
+  //   }
 
-  });
+  // });
+  res.jsonp(req.shop);
 };
 /**
  * Create a Shop
