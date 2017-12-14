@@ -348,7 +348,12 @@ exports.cookingHomeShop = function (req, res, next) {
   // console.log(req.user._id);
   Shop.find({
     user: req.user._id
-  }).sort('-created').populate('categories').populate('items.cate').populate('items.products').exec(function (err, shops) {
+  }).sort('-created').populate('categories').populate({
+    path: 'items', populate: [
+      { path: 'cate', model: 'Categoryproduct' },
+      { path: 'products', model: 'Product' }
+    ]
+  }).exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -368,7 +373,7 @@ exports.resHomeShop = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
   shop.items.forEach(function (itm) {
     itm.products.forEach(function (i) {
-      i.image = i.image && i.image.length > 0 ? i.image[0] : 'noimage';
+      i.image = i.images && i.images.length > 0 ? i.images[0] : 'noimage';
     });
   });
   res.jsonp(shop);
@@ -559,23 +564,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-        'name': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'detail': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'tel': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
+      'name': {
+        '$regex': keyWord,
+        '$options': 'i'
       }
+    },
+    {
+      'detail': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    },
+    {
+      'tel': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    }
     ]
   };
   return keyword;
