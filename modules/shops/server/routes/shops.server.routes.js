@@ -32,6 +32,11 @@ module.exports = function (app) {
   app.route('/api/shopshome').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .get(shops.cookingHomeShop, shops.resHomeShop);
 
+  //get home customer
+  app.route('/api/shopscustomer')
+    .get(shops.ads, shops.hotprices, shops.categories, shops.listShop, shops.returnShop);
+
+  //get home admin
   app.route('/api/adminhome').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .get(shops.cookingAdminHome, shops.countPaging, shops.listHome);
 

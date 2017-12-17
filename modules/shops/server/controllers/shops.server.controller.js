@@ -800,6 +800,283 @@ exports.addProductToShop = function (req, res, next) {
   });
 };
 
+exports.ads = function (req, res, next) {
+  req.ads = {
+    "title": "Advertise",
+    "items": [{
+      "_id": "ads001",
+      "image": "./assets/imgs/ads/ads1.png",
+      "isvideo": true,
+      "videoid": "###"
+    },
+    {
+      "_id": "ads002",
+      "image": "./assets/imgs/ads/ads2.png",
+      "isvideo": false,
+      "videoid": ""
+    },
+    {
+      "_id": "ads003",
+      "image": "./assets/imgs/ads/ads3.png",
+      "isvideo": true,
+      "videoid": "###"
+    },
+    {
+      "_id": "ads004",
+      "image": "./assets/imgs/ads/ads4.png",
+      "isvideo": false,
+      "videoid": ""
+    },
+    {
+      "_id": "ads005",
+      "image": "./assets/imgs/ads/ads5.png",
+      "isvideo": false,
+      "videoid": ""
+    }
+    ]
+  };
+  next();
+};
+
+exports.hotprices = function (req, res, next) {
+  req.hotprices = {
+    "title": "Hot Price",
+    "items1": [{
+      "_id": "ht0001",
+      "image": "./assets/imgs/hot_price/hotprice1.png"
+    }, {
+      "_id": "ht0002",
+      "image": "./assets/imgs/hot_price/hotprice2.png"
+    }, {
+      "_id": "ht0003",
+      "image": "./assets/imgs/hot_price/hotprice3.png"
+    }, {
+      "_id": "ht0004",
+      "image": "./assets/imgs/hot_price/hotprice4.png"
+    }, {
+      "_id": "ht0005",
+      "image": "./assets/imgs/hot_price/hotprice5.png"
+    }, {
+      "_id": "ht0006",
+      "image": "./assets/imgs/hot_price/hotprice6.png"
+    }],
+    "items2": [{
+      "_id": "ht0007",
+      "image": "./assets/imgs/hot_price/hotprice7.png"
+    }, {
+      "_id": "ht0008",
+      "image": "./assets/imgs/hot_price/hotprice8.png"
+    }, {
+      "_id": "ht0009",
+      "image": "./assets/imgs/hot_price/hotprice9.png"
+    }, {
+      "_id": "ht0010",
+      "image": "./assets/imgs/hot_price/hotprice10.png"
+    }, {
+      "_id": "ht0011",
+      "image": "./assets/imgs/hot_price/hotprice11.png"
+    }, {
+      "_id": "ht0012",
+      "image": "./assets/imgs/hot_price/hotprice12.png"
+    }]
+  };
+  next();
+};
+
+exports.categories = function (req, res, next) {
+  req.categories = {
+    "title": "Category",
+    "items": [{
+      "_id": "cat0000",
+      "image": "./assets/imgs/Catagory/cat0.png"
+    },
+    {
+      "_id": "cat0001",
+      "image": "./assets/imgs/Catagory/cat1.png"
+    },
+    {
+      "_id": "cat0002",
+      "image": "./assets/imgs/Catagory/cat2.png"
+    },
+    {
+      "_id": "cat0003",
+      "image": "./assets/imgs/Catagory/cat3.png"
+    },
+    {
+      "_id": "cat0004",
+      "image": "./assets/imgs/Catagory/cat4.png"
+    },
+    {
+      "_id": "cat0005",
+      "image": "./assets/imgs/Catagory/cat5.png"
+    },
+    {
+      "_id": "cat0006",
+      "image": "./assets/imgs/Catagory/cat6.png"
+    },
+    {
+      "_id": "cat0007",
+      "image": "./assets/imgs/Catagory/cat7.png"
+    },
+    {
+      "_id": "cat0008",
+      "image": "./assets/imgs/Catagory/cat8.png"
+    },
+    {
+      "_id": "cat0009",
+      "image": "./assets/imgs/Catagory/cat9.png"
+    },
+    {
+      "_id": "cat00010",
+      "image": "./assets/imgs/Catagory/cat10.png"
+    }
+    ]
+  };
+  next();
+};
+
+exports.listShop = function (req, res, next) {
+  req.listShop = [{
+    "title": "Promotion",
+    "items": [{
+      "_id": "pro0001",
+      "name": "ข้าวหมูแดงอาก๋ง",
+      "rating": 5,
+      "distance": 5.2,
+      "image": "./assets/imgs/shop/shop1.png"
+    },
+    {
+      "_id": "pro0002",
+      "name": "Bottle Kitchen",
+      "rating": 4,
+      "distance": 10.5,
+      "image": "./assets/imgs/shop/shop2.png"
+    },
+    {
+      "_id": "pro0003",
+      "name": "Steak House",
+      "rating": 3,
+      "distance": 2.4,
+      "image": "./assets/imgs/shop/shop3.png"
+    },
+    {
+      "_id": "pro0004",
+      "name": "ครัวคุณโก๋",
+      "rating": 5,
+      "distance": 15.3,
+      "image": "./assets/imgs/shop/shop4.png"
+    },
+    {
+      "_id": "pro0005",
+      "name": "Poppen",
+      "rating": 4,
+      "distance": 4.2,
+      "image": "./assets/imgs/shop/shop5.png"
+    }
+    ]
+  },
+  {
+    "title": "Near by",
+    "items": [{
+      "_id": "nb0001",
+      "name": "Poppen",
+      "rating": 4,
+      "distance": 0.2,
+      "image": "./assets/imgs/shop/shop5.png"
+    },
+    {
+      "_id": "nb0002",
+      "name": "ข้าวหมูแดงอาก๋ง",
+      "rating": 5,
+      "distance": 0.9,
+      "image": "./assets/imgs/shop/shop1.png"
+    },
+    {
+      "_id": "nb0003",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 2.1,
+      "image": "./assets/imgs/shop/shop6.png"
+    },
+    {
+      "_id": "nb0004",
+      "name": "Sushi World",
+      "rating": 4,
+      "distance": 3.9,
+      "image": "./assets/imgs/shop/shop7.png"
+    }
+    ]
+  },
+  {
+    "title": "Popular",
+    "items": [{
+      "_id": "pop0001",
+      "name": "ภัตตาคารหลวง",
+      "rating": 5,
+      "distance": 5.2,
+      "image": "./assets/imgs/shop/shop8.png"
+    },
+    {
+      "_id": "pop0002",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 11.4,
+      "image": "./assets/imgs/shop/shop6.png"
+    },
+    {
+      "_id": "pop0003",
+      "name": "ร้านบ้านสวน",
+      "rating": 4,
+      "distance": 8.2,
+      "image": "./assets/imgs/shop/shop9.png"
+    }
+    ]
+  },
+  {
+    "title": "Favorite",
+    "items": [{
+      "_id": "fav0001",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 11.4,
+      "image": "./assets/imgs/shop/shop6.png"
+    },
+    {
+      "_id": "fav0002",
+      "name": "ภัตตาคารหลวง",
+      "rating": 5,
+      "distance": 5.2,
+      "image": "./assets/imgs/shop/shop8.png"
+    },
+    {
+      "_id": "fav0003",
+      "name": "Poppen",
+      "rating": 4,
+      "distance": 15.7,
+      "image": "./assets/imgs/shop/shop5.png"
+    },
+    {
+      "_id": "fav0004",
+      "name": "บ้านขนม",
+      "rating": 3,
+      "distance": 4.1,
+      "image": "./assets/imgs/shop/shop10.png"
+    }
+    ]
+  }
+  ];
+  next();
+};
+
+exports.returnShop = function (req, res) {
+  res.jsonp({
+    ads: req.ads,
+    hotprices: req.hotprices,
+    categories: req.categories,
+    shops: req.listShop
+  });
+};
+
 //count page
 function countPage(shops) {
   var numpage = [];
