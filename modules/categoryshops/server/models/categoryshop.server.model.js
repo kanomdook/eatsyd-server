@@ -16,6 +16,10 @@ var CategoryshopSchema = new Schema({
     required: 'Please fill Categoryshop name',
     trim: true
   },
+  image: {
+    type: String,
+    default: ''
+  },
   created: {
     type: Date,
     default: Date.now
