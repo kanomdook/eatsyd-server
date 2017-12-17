@@ -393,7 +393,7 @@ exports.resHomeShop = function (req, res) {
       cookingItem.products.push({
         _id: i.name === 'default' ? null : i._id,
         name: i.name === 'default' ? '' : i.name,
-        image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
+        image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
         price: i.name === 'default' ? null : i.price
       });
     });
@@ -414,7 +414,8 @@ exports.resHomeShop = function (req, res) {
     isactiveshop: shop.isactiveshop,
     issendmail: shop.issendmail,
     importform: shop.importform,
-    times: shop.times
+    times: shop.times,
+    isopen: true
   };
   res.jsonp(resShop);
 };
@@ -620,7 +621,7 @@ exports.resShopData = function (req, res) {
       cookingItem.products.push({
         _id: i.name === 'default' ? null : i._id,
         name: i.name === 'default' ? '' : i.name,
-        image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
+        image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
         price: i.name === 'default' ? null : i.price
       });
     });
@@ -641,7 +642,8 @@ exports.resShopData = function (req, res) {
     isactiveshop: shop.isactiveshop,
     issendmail: shop.issendmail,
     importform: shop.importform,
-    times: shop.times
+    times: shop.times,
+    isopen: true
   };
   res.jsonp(resShop);
 };
