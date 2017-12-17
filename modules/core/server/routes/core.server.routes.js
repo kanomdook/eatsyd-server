@@ -8,6 +8,8 @@ module.exports = function (app) {
 
   // We are going to protect /api routes with JWT
   app.use('/api', core.requiresLoginToken);
+  app.route('/api/token/:token').get(core.checkToken);
+
   // Define error pages
   app.route('/server-error').get(core.renderServerError);
 

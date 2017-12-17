@@ -78,7 +78,33 @@ exports.requiresLoginToken = function (req, res, next) {
       next();
     });
   }
+};
 
+exports.checkToken = function (req, res, next) {
+  if (!req.params || !req.params.token) {
+    req.isAuthorization = false;
+  } else {
+    var loginToken = req.params.token.replace('Bearer ', '');
 
-
+    User.findOne({
+      loginToken: loginToken,
+      loginExpires: {
+        $gt: Date.now()
+      }
+    }, function (err, user) {
+      if (!user) {
+        req.isAuthorization = false;
+      }
+      if (err) {
+        req.isAuthorization = false;
+      }
+      if (user) {
+        req.isAuthorization = true;
+      }
+      res.json({
+        status: req.isAuthorization,
+        message: (req.isAuthorization) ? 'SUCCESS' : 'Token is incorrect or has expired. Please login again'
+      });
+    });
+  }
 };

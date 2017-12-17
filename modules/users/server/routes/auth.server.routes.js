@@ -3,7 +3,9 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport');
+var passport = require('passport'),
+  core = require('../../../core/server/controllers/core.server.controller')
+;
 
 module.exports = function (app) {
   // User Routes
@@ -18,7 +20,6 @@ module.exports = function (app) {
   app.route('/api/auth/signup').post(users.signup);
   app.route('/api/auth/signin').post(users.signin);
   app.route('/api/auth/signout').get(users.signout);
-
   // Setting the facebook oauth routes
   app.route('/api/auth/facebook').get(users.oauthCall('facebook', {
     scope: ['email']
