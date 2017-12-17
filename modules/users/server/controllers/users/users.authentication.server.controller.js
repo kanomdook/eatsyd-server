@@ -60,7 +60,9 @@ exports.signup = function (req, res) {
  */
 exports.signin = function (req, res, next) {
   if (req.body.facebookLogin ? req.body.facebookLogin : false) {
-    User.findOne({ 'email': req.body.facebookData.email }).exec(function (err, user) { //facebook login process
+    User.findOne({
+      'email': req.body.facebookData.email
+    }).exec(function (err, user) { //facebook login process
       if (err) {
         res.status(400).send(err);
       } else {
@@ -70,7 +72,10 @@ exports.signin = function (req, res, next) {
             loginExpires: user.loginExpires
           };
 
-          User.findByIdAndUpdate(user._id, { 'loginToken': jwt.sign(tokenPayload, secret), 'loginExpires': Date.now() + (2 * 60 * 60 * 1000) }).exec(function (err, user) {
+          User.findByIdAndUpdate(user._id, {
+            'loginToken': jwt.sign(tokenPayload, secret),
+            'loginExpires': Date.now() + (2 * 60 * 60 * 1000)
+          }).exec(function (err, user) {
             if (err) {
               res.status(400).send(err);
             } else {
