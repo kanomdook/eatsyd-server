@@ -391,10 +391,10 @@ exports.resHomeShop = function (req, res) {
     };
     itm.products.forEach(function (i) {
       cookingItem.products.push({
-        _id: i._id,
-        name: i.name,
+        _id: i.name === 'default' ? null : i._id,
+        name: i.name === 'default' ? '' : i.name,
         image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
-        price: i.price
+        price: i.name === 'default' ? null : i.price
       });
     });
     items.push(cookingItem);
@@ -603,6 +603,9 @@ exports.changeCover = function (req, res, next) {
 
 exports.resShopData = function (req, res) {
   var shop = req.shop ? req.shop.toJSON() : {};
+  // console.log('ddddddddd' +shop.items);
+  // console.log(shop.items);
+
   var items = [];
   shop.items.forEach(function (itm) {
     var cookingItem = {
@@ -615,10 +618,10 @@ exports.resShopData = function (req, res) {
     };
     itm.products.forEach(function (i) {
       cookingItem.products.push({
-        _id: i._id,
-        name: i.name,
+        _id: i.name === 'default' ? null : i._id,
+        name: i.name === 'default' ? '' : i.name,
         image: i.images && i.images.length > 0 ? i.images[0] : 'noimage',
-        price: i.price
+        price: i.name === 'default' ? null : i.price
       });
     });
     items.push(cookingItem);
@@ -685,14 +688,25 @@ exports.addCateToShop = function (req, res, next) {
     cate: req.cate,
     products: []
   });
+  var index = 0;
+  if (shop.items && shop.items.length > 0) {
+    shop.items.forEach(function (itm, i) {
+      if (itm.cate === req.cate._id) {
+        index = i;
+      }
+    });
+    for (let i = 0; i < 30; i++) {
+      shop.items[index].products.push(req.defaultProd);
+    }
+  }
+
+
   shop.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-
-
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items', populate: [
           { path: 'cate', model: 'Categoryproduct' },
@@ -723,43 +737,63 @@ exports.createProduct = function (req, res, next) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      req.product = product;
+      req.product = product.toJSON();
       next();
+    }
+  });
+};
+
+exports.defaultProduct = function (req, res, next) {
+  Product.find({ name: 'default' }).exec(function (err, defaultProd) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (defaultProd && defaultProd.length > 0) {
+        req.defaultProd = defaultProd[0];
+        next();
+      } else {
+        var product = new Product({
+          name: 'default'
+        });
+        product.save(function (err) {
+          if (err) {
+            console.log(err);
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            // console.log(product);
+            req.defaultProd = product.toJSON();
+            next();
+          }
+        });
+      }
     }
   });
 };
 
 exports.addProductToShop = function (req, res, next) {
   var shop = req.shop;
-  shop.items.forEach(function (itm) {
-    if (req.product.categories.toString() === itm.cate._id.toString()) {
-      itm.products.push(req.product);
+  var index = parseInt(req.body.index);
+  var cateindex = parseInt(req.body.cateindex);
+  var items = shop.items[cateindex].products ? shop.items[cateindex].products : [];
+  for (let i = 0; i < 30; i++) {
+    if (i === index) {
+      items[i] = req.product;
     }
-  });
+  }
+  shop.items[cateindex].products = items;
   shop.save(function (err) {
     if (err) {
+      console.log(err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-
-
-      Shop.findById(shop._id).populate('user').populate('categories').populate({
-        path: 'items', populate: [
-          { path: 'cate', model: 'Categoryproduct' },
-          { path: 'products', model: 'Product' }
-        ]
-      }).exec(function (err, shop) {
-        if (err) {
-          return next(err);
-        } else if (!shop) {
-          return res.status(404).send({
-            message: 'No Shop with that identifier has been found'
-          });
-        }
-        req.shop = shop;
-        next();
-      });
+      req.shop = shop;
+      next();
     }
   });
 };

@@ -47,7 +47,7 @@ module.exports = function (app) {
     .put(shops.addPromote, shops.resShopData);
 
   app.route('/api/createcate/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .put(shops.createCate, shops.addCateToShop, shops.resShopData);
+    .put(shops.createCate, shops.defaultProduct, shops.addCateToShop, shops.resShopData);
 
   app.route('/api/createproduct/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.createProduct, shops.addProductToShop, shops.resShopData);
