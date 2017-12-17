@@ -40,8 +40,8 @@ describe('Shop CRUD token tests', function () {
   beforeEach(function (done) {
     // Create user credentials
     credentials = {
-      username: 'username',
-      password: 'M3@n.jsI$Aw3$0m3'
+      username: 'admin',
+      password: 'P@ssw0rd1234'
     };
 
     categoryproduct = new Categoryproduct({
@@ -84,32 +84,37 @@ describe('Shop CRUD token tests', function () {
           products.save(function () {
 
             shop = {
-              name: 'Shop name',
+              name: 'ครัวคุณโก๋',
               name_eng: 'Shop name english',
-              detail: 'Shop Detail',
+              detail: 'Coffice Idea Space',
               tel: '0894447208',
               email: 'test@gmail.com',
               facebook: 'facebook.com',
               line: '@lineid',
               address: {
-                address: '77/7',
-                addressdetail: 'in font of 7-eleven',
-                subdistinct: 'Lumlukka',
-                distinct: 'Lumlukka',
-                province: 'BKK',
+                address: '88/8',
+                addressdetail: 'ตรงข้าม big c',
+                subdistinct: 'ลำลูกกา',
+                distinct: 'ลำลูกกา',
+                province: 'ปทุมธานี',
                 postcode: '12150',
                 lat: '13.9338949',
                 lng: '100.6827773'
               },
               items: [],
               times: [{
-                description: 'all days',
-                timestart: '08.00',
+                description: 'ทุกวัน',
+                timestart: '07.00',
                 timeend: '20.00',
-                days: ['mon', 'thu', 'sun']
+                days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
               }],
-              coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
-              promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
+              coverimage: 'http://www.hardrock.com/cafes/amsterdam/files/2308/LegendsRoom.jpg',
+              promoteimage: ["http://soimilk.com/sites/default/files/u143056/13528419_497821473741911_1179151975926373336_o.jpg",
+                "http://soimilk.com/sites/default/files/u143056/841128_788347794565227_8687025660509098200_o.jpg",
+                "http://soimilk.com/sites/default/files/u143056/11402392_840851149314891_2781537114366370680_o.jpg",
+                "http://soimilk.com/sites/default/files/u143056/unnamed.jpg",
+                "http://soimilk.com/sites/default/files/u143056/2458.jpg"
+              ],
               isactiveshop: false,
               issendmail: false,
               importform: 'manual',
@@ -370,7 +375,7 @@ describe('Shop CRUD token tests', function () {
                 // Set assertions
                 (shops.length).should.match(1);
                 (shops[0].issendmail).should.match(true);
-                (shops[0].user.firstName).should.match('Shop name');
+                (shops[0].user.firstName).should.match(shop.name);
 
                 // Call the assertion callback
                 done();
@@ -742,7 +747,6 @@ describe('Shop CRUD token tests', function () {
 
   it('get shop home with token', function (done) {
     // Save a new Shop
-    shop.promoteimage = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     agent.post('/api/shops')
       .set('authorization', 'Bearer ' + token)
       .send(shop)
@@ -1028,7 +1032,7 @@ describe('Shop CRUD token tests', function () {
                         }
                         var shopchange = changecoverRes.body;
                         (shopchange.coverimage).should.match(shop.coverimage);
-                        (shopchange.promoteimage.length).should.match(2);
+                        (shopchange.promoteimage.length).should.match(6);
                         (shopchange.items.length).should.match(0);
                         done();
                       });
@@ -1172,8 +1176,8 @@ describe('Shop CRUD token tests', function () {
             (shops.pagings[0]).should.match(1);
             (shops.pagings[1]).should.match(2);
             (shops.items.length).should.match(10);
-            (shops.items[0].name).should.match('Shop name');
-            (shops.items[9].name).should.match('shop09');
+            (shops.items[0].name).should.match('shop01');
+            (shops.items[9].name).should.match('shop10');
 
             done();
           });
@@ -1869,6 +1873,581 @@ describe('Shop CRUD token tests', function () {
         (shops.pagings.length).should.match(1);
 
         done();
+      });
+  });
+
+  it('add data real', function (done) {
+    // Save a new Shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+          .expect(200)
+          .end(function (createusershopErr, createusershopRes) {
+            // Handle signin error
+            if (createusershopErr) {
+              return done(createusershopErr);
+            }
+            var newcredentials = {
+              username: shop.email,
+              password: 'user1234'
+            };
+            agent.post('/api/auth/signin')
+              .send(newcredentials)
+              .expect(200)
+              .end(function (signinErr, signinRes) {
+                // Handle signin error
+                if (signinErr) {
+                  return done(signinErr);
+                }
+                agent.get('/api/shopshome')
+                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                  .expect(200)
+                  .end(function (shopGetErr, shopsGetRes) {
+                    if (shopGetErr) {
+                      return done(shopGetErr);
+                    }
+                    var shops = shopsGetRes.body;
+                    (shops.coverimage).should.match(shop.coverimage);
+                    (shops.promoteimage).should.match(shop.promoteimage);
+                    (shops.items.length).should.match(0);
+                    var cate = {
+                      name: 'ของทานเล่น',
+                      image: 'https://i.pinimg.com/736x/a1/b6/2e/a1b62e13c959f4ede0f450605c67ed33--thai-dessert-thaifood.jpg',
+                    };
+                    agent.put('/api/createcate/' + shops._id)
+                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                      .send(cate)
+                      .expect(200)
+                      .end(function (changecoverErr, changecoverRes) {
+                        // Handle signin error
+                        if (changecoverErr) {
+                          return done(changecoverErr);
+                        }
+                        var shopchange = changecoverRes.body;
+                        // (shopchange.message).should.match('Promote images is limited.');
+                        (shopchange.coverimage).should.match(shop.coverimage);
+                        (shopchange.promoteimage).should.match(shop.promoteimage);
+                        (shopchange.items.length).should.match(1);
+                        (shopchange.items[0].cate.name).should.match(cate.name);
+                        (shopchange.items[0].products.length).should.match(30);
+
+                        var productCreate1 = {
+                          name: 'ขนมปังชีสโรล',
+                          images: ['https://img.kapook.com/u/2016/surauch/cook1/appetizer4.jpg'],
+                          price: 200,
+                          categories: shopchange.items[0].cate,
+                          index: 0,
+                          cateindex: 0
+                        };
+                        agent.put('/api/createproduct/' + shops._id)
+                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                          .send(productCreate1)
+                          .expect(200)
+                          .end(function (createproductErr, createproductRes) {
+                            // Handle signin error
+                            if (createproductErr) {
+                              return done(createproductErr);
+                            }
+                            var shopProduct = createproductRes.body;
+                            (shopProduct.coverimage).should.match(shop.coverimage);
+                            (shopProduct.promoteimage).should.match(shop.promoteimage);
+                            (shopProduct.items.length).should.match(1);
+                            (shopProduct.items[0].cate.name).should.match(cate.name);
+                            (shopProduct.items[0].products.length).should.match(30);
+                            var productCreate2 = {
+                              name: 'ขนมปังอบชีส',
+                              images: ['https://img.kapook.com/u/2016/surauch/cook1/appetizer10.jpg'],
+                              price: 200,
+                              categories: shopchange.items[0].cate,
+                              index: 1,
+                              cateindex: 0
+                            };
+                            agent.put('/api/createproduct/' + shops._id)
+                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                              .send(productCreate2)
+                              .expect(200)
+                              .end(function (create2productErr, create2productRes) {
+                                // Handle signin error
+                                if (create2productErr) {
+                                  return done(create2productErr);
+                                }
+                                var shopProduct2 = create2productRes.body;
+                                (shopProduct2.coverimage).should.match(shop.coverimage);
+                                (shopProduct2.promoteimage).should.match(shop.promoteimage);
+                                (shopProduct2.items.length).should.match(1);
+                                (shopProduct2.items[0].cate.name).should.match(cate.name);
+                                (shopProduct2.items[0].products.length).should.match(30);
+
+                                var cate2 = {
+                                  name: 'ของหวาน',
+                                  image: 'http://ed.files-media.com/ud/book/content/1/147/439909/IMG_5070_Cover-620x392-850x567.jpg',
+                                };
+                                agent.put('/api/createcate/' + shops._id)
+                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                  .send(cate2)
+                                  .expect(200)
+                                  .end(function (changecover2Err, changecover2Res) {
+                                    // Handle signin error
+                                    if (changecover2Err) {
+                                      return done(changecover2Err);
+                                    }
+                                    var shop2change = changecover2Res.body;
+                                    // (shopchange.message).should.match('Promote images is limited.');
+                                    (shop2change.coverimage).should.match(shop.coverimage);
+                                    (shop2change.promoteimage).should.match(shop.promoteimage);
+                                    (shop2change.items.length).should.match(2);
+
+
+
+                                    var productCreate3 = {
+                                      name: 'ฮันนี่โทสต์มะม่วง',
+                                      images: ['https://img.kapook.com/u/2016/surauch/cook1/b1_3.jpg'],
+                                      price: 200,
+                                      categories: shop2change.items[1].cate,
+                                      index: 0,
+                                      cateindex: 1
+                                    };
+                                    agent.put('/api/createproduct/' + shops._id)
+                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                      .send(productCreate3)
+                                      .expect(200)
+                                      .end(function (create3productErr, create3productRes) {
+                                        // Handle signin error
+                                        if (create3productErr) {
+                                          return done(create3productErr);
+                                        }
+                                        var shopProduct3 = create3productRes.body;
+                                        (shopProduct3.coverimage).should.match(shop.coverimage);
+                                        (shopProduct3.promoteimage).should.match(shop.promoteimage);
+                                        (shopProduct3.items.length).should.match(2);
+                                        (shopProduct3.items[1].cate.name).should.match(cate2.name);
+                                        (shopProduct3.items[1].products.length).should.match(30);
+
+                                        var productCreate4 = {
+                                          name: 'ช็อกโกแลตลาวา',
+                                          images: ['https://img.kapook.com/u/2016/surauch/cook1/b7_1.jpg'],
+                                          price: 200,
+                                          categories: shop2change.items[1].cate,
+                                          index: 1,
+                                          cateindex: 1
+                                        };
+                                        agent.put('/api/createproduct/' + shops._id)
+                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                          .send(productCreate4)
+                                          .expect(200)
+                                          .end(function (create4productErr, create4productRes) {
+                                            // Handle signin error
+                                            if (create4productErr) {
+                                              return done(create4productErr);
+                                            }
+
+                                            var productCreate5 = {
+                                              name: 'ชีสพายชาเขียว',
+                                              images: ['https://img.kapook.com/u/2016/surauch/cook1/b13_1.jpg'],
+                                              price: 200,
+                                              categories: shop2change.items[1].cate,
+                                              index: 2,
+                                              cateindex: 1
+                                            };
+                                            agent.put('/api/createproduct/' + shops._id)
+                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                              .send(productCreate5)
+                                              .expect(200)
+                                              .end(function (create5productErr, create5productRes) {
+                                                // Handle signin error
+                                                if (create5productErr) {
+                                                  return done(create5productErr);
+                                                }
+
+                                                var productCreate6 = {
+                                                  name: 'เครปช็อกโกแลต',
+                                                  images: ['https://img.kapook.com/u/2016/surauch/cook1/b17_1.jpg'],
+                                                  price: 200,
+                                                  categories: shop2change.items[1].cate,
+                                                  index: 3,
+                                                  cateindex: 1
+                                                };
+                                                agent.put('/api/createproduct/' + shops._id)
+                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                  .send(productCreate6)
+                                                  .expect(200)
+                                                  .end(function (create6productErr, create6productRes) {
+                                                    // Handle signin error
+                                                    if (create6productErr) {
+                                                      return done(create6productErr);
+                                                    }
+
+
+                                                    var productCreate7 = {
+                                                      name: 'เครปข้าวเหนียวมะม่วง',
+                                                      images: ['https://img.kapook.com/u/2016/surauch/cook1/b19_1.jpg'],
+                                                      price: 200,
+                                                      categories: shop2change.items[1].cate,
+                                                      index: 4,
+                                                      cateindex: 1
+                                                    };
+                                                    agent.put('/api/createproduct/' + shops._id)
+                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                      .send(productCreate7)
+                                                      .expect(200)
+                                                      .end(function (create7productErr, create7productRes) {
+                                                        // Handle signin error
+                                                        if (create7productErr) {
+                                                          return done(create7productErr);
+                                                        }
+
+
+                                                        var cate3 = {
+                                                          name: 'เมนูทะเล',
+                                                          image: 'http://www.chillpainai.com/src/wewakeup/scoop/img_scoop/scoop/kang/travel/5cfooddelivery/sfff.jpg',
+                                                        };
+                                                        agent.put('/api/createcate/' + shops._id)
+                                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                          .send(cate3)
+                                                          .expect(200)
+                                                          .end(function (cate3Err, cate3Res) {
+                                                            // Handle signin error
+                                                            if (cate3Err) {
+                                                              return done(cate3Err);
+                                                            }
+
+                                                            var cate3res = cate3Res.body;
+
+                                                            var productCreate8 = {
+                                                              name: 'กุ้งมะนาว',
+                                                              images: ['https://img.kapook.com/u/2016/surauch/cook1/c3_2.jpg'],
+                                                              price: 200,
+                                                              categories: cate3res.items[2].cate,
+                                                              index: 0,
+                                                              cateindex: 2
+                                                            };
+                                                            agent.put('/api/createproduct/' + shops._id)
+                                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                              .send(productCreate8)
+                                                              .expect(200)
+                                                              .end(function (productCreate8Err, productCreate8Res) {
+                                                                // Handle signin error
+                                                                if (productCreate8Err) {
+                                                                  return done(productCreate8Err);
+                                                                }
+
+                                                                var productCreate9 = {
+                                                                  name: 'ปลาหมึกผัดฉ่า',
+                                                                  images: ['https://img.kapook.com/u/2016/surauch/cook1/c12_2.jpg'],
+                                                                  price: 200,
+                                                                  categories: cate3res.items[2].cate,
+                                                                  index: 1,
+                                                                  cateindex: 2
+                                                                };
+                                                                agent.put('/api/createproduct/' + shops._id)
+                                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                  .send(productCreate9)
+                                                                  .expect(200)
+                                                                  .end(function (productCreate9Err, productCreate9Res) {
+                                                                    // Handle signin error
+                                                                    if (productCreate9Err) {
+                                                                      return done(productCreate9Err);
+                                                                    }
+
+                                                                    var productCreate10 = {
+                                                                      name: 'ปลาหมึกนึ่งมะนาว',
+                                                                      images: ['https://img.kapook.com/u/2016/surauch/cook1/c13_1.jpg'],
+                                                                      price: 200,
+                                                                      categories: cate3res.items[2].cate,
+                                                                      index: 2,
+                                                                      cateindex: 2
+                                                                    };
+                                                                    agent.put('/api/createproduct/' + shops._id)
+                                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                      .send(productCreate10)
+                                                                      .expect(200)
+                                                                      .end(function (productCreate10Err, productCreate10Res) {
+                                                                        // Handle signin error
+                                                                        if (productCreate10Err) {
+                                                                          return done(productCreate10Err);
+                                                                        }
+
+                                                                        var productCreate11 = {
+                                                                          name: 'ปลาเก๋านึ่งมะนาว',
+                                                                          images: ['https://img.kapook.com/u/2016/surauch/cook1/c15_1.jpg'],
+                                                                          price: 200,
+                                                                          categories: cate3res.items[2].cate,
+                                                                          index: 3,
+                                                                          cateindex: 2
+                                                                        };
+                                                                        agent.put('/api/createproduct/' + shops._id)
+                                                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                          .send(productCreate11)
+                                                                          .expect(200)
+                                                                          .end(function (productCreate11Err, productCreate11Res) {
+                                                                            // Handle signin error
+                                                                            if (productCreate11Err) {
+                                                                              return done(productCreate11Err);
+                                                                            }
+
+                                                                            var productCreate12 = {
+                                                                              name: 'ปลากะพงทอดน้ำปลา',
+                                                                              images: ['https://img.kapook.com/u/2016/surauch/cook1/c16_2.jpg'],
+                                                                              price: 200,
+                                                                              categories: cate3res.items[2].cate,
+                                                                              index: 4,
+                                                                              cateindex: 2
+                                                                            };
+                                                                            agent.put('/api/createproduct/' + shops._id)
+                                                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                              .send(productCreate12)
+                                                                              .expect(200)
+                                                                              .end(function (productCreate12Err, productCreate12Res) {
+                                                                                // Handle signin error
+                                                                                if (productCreate12Err) {
+                                                                                  return done(productCreate12Err);
+                                                                                }
+
+                                                                                var cate4 = {
+                                                                                  name: 'เมนูเส้น',
+                                                                                  image: 'https://daily.rabbitstatic.com/wp-content/uploads/2017/09/5-6.jpg',
+                                                                                };
+                                                                                agent.put('/api/createcate/' + shops._id)
+                                                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                  .send(cate4)
+                                                                                  .expect(200)
+                                                                                  .end(function (cate4Err, cate4Res) {
+                                                                                    // Handle signin error
+                                                                                    if (cate4Err) {
+                                                                                      return done(cate4Err);
+                                                                                    }
+                                                                                    // 3
+                                                                                    var cate4res = cate4Res.body;
+
+                                                                                    var productCreate13 = {
+                                                                                      name: 'เส้นหมี่กะทิสีชมพู',
+                                                                                      images: ['https://img.kapook.com/u/2016/surauch/Mix/b3_3.jpg'],
+                                                                                      price: 200,
+                                                                                      categories: cate4res.items[3].cate,
+                                                                                      index: 0,
+                                                                                      cateindex: 3
+                                                                                    };
+                                                                                    agent.put('/api/createproduct/' + shops._id)
+                                                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                      .send(productCreate13)
+                                                                                      .expect(200)
+                                                                                      .end(function (productCreate13Err, productCreate13Res) {
+                                                                                        // Handle signin error
+                                                                                        if (productCreate13Err) {
+                                                                                          return done(productCreate13Err);
+                                                                                        }
+
+                                                                                        var productCreate14 = {
+                                                                                          name: 'บะหมี่กึ่งสำเร็จรูปผัดขี้เมา',
+                                                                                          images: ['https://img.kapook.com/u/2016/surauch/Mix/b6_4.jpg'],
+                                                                                          price: 200,
+                                                                                          categories: cate4res.items[3].cate,
+                                                                                          index: 1,
+                                                                                          cateindex: 3
+                                                                                        };
+                                                                                        agent.put('/api/createproduct/' + shops._id)
+                                                                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                          .send(productCreate14)
+                                                                                          .expect(200)
+                                                                                          .end(function (productCreate14Err, productCreate14Res) {
+                                                                                            // Handle signin error
+                                                                                            if (productCreate14Err) {
+                                                                                              return done(productCreate14Err);
+                                                                                            }
+
+
+                                                                                            var productCreate15 = {
+                                                                                              name: 'ผัดซีอิ๊วเส้นใหญ่กุ้งใส่ไก่',
+                                                                                              images: ['https://img.kapook.com/u/2016/surauch/cook1/b8_1.jpg'],
+                                                                                              price: 200,
+                                                                                              categories: cate4res.items[3].cate,
+                                                                                              index: 2,
+                                                                                              cateindex: 3
+                                                                                            };
+                                                                                            agent.put('/api/createproduct/' + shops._id)
+                                                                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                              .send(productCreate15)
+                                                                                              .expect(200)
+                                                                                              .end(function (productCreate15Err, productCreate15Res) {
+                                                                                                // Handle signin error
+                                                                                                if (productCreate15Err) {
+                                                                                                  return done(productCreate15Err);
+                                                                                                }
+
+                                                                                                var productCreate16 = {
+                                                                                                  name: 'วุ้นเส้นผัดไทย',
+                                                                                                  images: ['https://img.kapook.com/u/2016/surauch/cook1/b15.jpg'],
+                                                                                                  price: 200,
+                                                                                                  categories: cate4res.items[3].cate,
+                                                                                                  index: 3,
+                                                                                                  cateindex: 3
+                                                                                                };
+                                                                                                agent.put('/api/createproduct/' + shops._id)
+                                                                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                  .send(productCreate16)
+                                                                                                  .expect(200)
+                                                                                                  .end(function (productCreate16Err, productCreate16Res) {
+                                                                                                    // Handle signin error
+                                                                                                    if (productCreate16Err) {
+                                                                                                      return done(productCreate16Err);
+                                                                                                    }
+
+                                                                                                    var cate5 = {
+                                                                                                      name: 'เมนูร้อน',
+                                                                                                      image: 'https://daily.rabbitstatic.com/wp-content/uploads/2017/05/%E0%B8%95%E0%B9%89%E0%B8%A1%E0%B8%88%E0%B8%B7%E0%B8%94-7.jpg',
+                                                                                                    };
+                                                                                                    agent.put('/api/createcate/' + shops._id)
+                                                                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                      .send(cate5)
+                                                                                                      .expect(200)
+                                                                                                      .end(function (cate5Err, cate5Res) {
+                                                                                                        // Handle signin error
+                                                                                                        if (cate5Err) {
+                                                                                                          return done(cate5Err);
+                                                                                                        }
+                                                                                                        // 4
+                                                                                                        var cate5res = cate5Res.body;
+
+                                                                                                        var productCreate17 = {
+                                                                                                          name: 'ต้มยำปลาทู',
+                                                                                                          images: ['http://cookingdiary.fanthai.com/files/2013/11/mackerel-soup.jpg'],
+                                                                                                          price: 200,
+                                                                                                          categories: cate5res.items[4].cate,
+                                                                                                          index: 0,
+                                                                                                          cateindex: 4
+                                                                                                        };
+                                                                                                        agent.put('/api/createproduct/' + shops._id)
+                                                                                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                          .send(productCreate17)
+                                                                                                          .expect(200)
+                                                                                                          .end(function (productCreate17Err, productCreate17Res) {
+                                                                                                            // Handle signin error
+                                                                                                            if (productCreate17Err) {
+                                                                                                              return done(productCreate17Err);
+                                                                                                            }
+
+                                                                                                            var productCreate18 = {
+                                                                                                              name: 'ต้มยำกุ้ง',
+                                                                                                              images: ['https://img.kapook.com/u/2016/surauch/cook1/c2_5.jpg'],
+                                                                                                              price: 200,
+                                                                                                              categories: cate5res.items[4].cate,
+                                                                                                              index: 1,
+                                                                                                              cateindex: 4
+                                                                                                            };
+                                                                                                            agent.put('/api/createproduct/' + shops._id)
+                                                                                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                              .send(productCreate18)
+                                                                                                              .expect(200)
+                                                                                                              .end(function (productCreate18Err, productCreate18Res) {
+                                                                                                                // Handle signin error
+                                                                                                                if (productCreate18Err) {
+                                                                                                                  return done(productCreate18Err);
+                                                                                                                }
+
+                                                                                                                var productCreate19 = {
+                                                                                                                  name: 'ขาไก่ต้มพะโล้',
+                                                                                                                  images: ['https://img.kapook.com/u/2016/surauch/cook1/r10.jpg'],
+                                                                                                                  price: 200,
+                                                                                                                  categories: cate5res.items[4].cate,
+                                                                                                                  index: 2,
+                                                                                                                  cateindex: 4
+                                                                                                                };
+                                                                                                                agent.put('/api/createproduct/' + shops._id)
+                                                                                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                                  .send(productCreate19)
+                                                                                                                  .expect(200)
+                                                                                                                  .end(function (productCreate19Err, productCreate19Res) {
+                                                                                                                    // Handle signin error
+                                                                                                                    if (productCreate19Err) {
+                                                                                                                      return done(productCreate19Err);
+                                                                                                                    }
+
+                                                                                                                    var productCreate20 = {
+                                                                                                                      name: 'ต้มแซ่บไก่',
+                                                                                                                      images: ['https://img.kapook.com/u/2017/surauch/cooking/w6_6.jpg'],
+                                                                                                                      price: 200,
+                                                                                                                      categories: cate5res.items[4].cate,
+                                                                                                                      index: 3,
+                                                                                                                      cateindex: 4
+                                                                                                                    };
+                                                                                                                    agent.put('/api/createproduct/' + shops._id)
+                                                                                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                                      .send(productCreate20)
+                                                                                                                      .expect(200)
+                                                                                                                      .end(function (productCreate20Err, productCreate20Res) {
+                                                                                                                        // Handle signin error
+                                                                                                                        if (productCreate20Err) {
+                                                                                                                          return done(productCreate20Err);
+                                                                                                                        }
+
+
+                                                                                                                        agent.get('/api/shopshome')
+                                                                                                                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                                                                                          .expect(200)
+                                                                                                                          .end(function (shopresGetErr, shopsresGetRes) {
+                                                                                                                            // Handle shop save error
+                                                                                                                            if (shopresGetErr) {
+                                                                                                                              return done(shopresGetErr);
+                                                                                                                            }
+                                                                                                                            // Get shop list
+                                                                                                                            var shopsres = shopsresGetRes.body;
+                                                                                                                            (shopsres.coverimage).should.match(shop.coverimage);
+                                                                                                                            (shopsres.promoteimage).should.match(shop.promoteimage);
+                                                                                                                            (shopsres.isopen).should.match(true);
+                                                                                                                            (shopsres.items.length).should.match(5);
+                                                                                                                            (shopsres.items[0].products.length).should.match(30);
+                                                                                                                            (shopsres.items[0].products[0].name).should.match(productCreate1.name);
+                                                                                                                            (shopsres.items[0].products[1].name).should.match(productCreate2.name);
+                                                                                                                            (shopsres.items[0].products[2].name).should.match('');
+                                                                                                                            (shopsres.items[1].products.length).should.match(30);
+                                                                                                                            (shopsres.items[1].products[4].name).should.match(productCreate7.name);
+                                                                                                                            (shopsres.items[2].products.length).should.match(30);
+                                                                                                                            (shopsres.items[2].products[4].name).should.match(productCreate12.name);
+                                                                                                                            (shopsres.items[3].products.length).should.match(30);
+                                                                                                                            (shopsres.items[3].products[3].name).should.match(productCreate16.name);
+                                                                                                                            (shopsres.items[4].products.length).should.match(30);
+                                                                                                                            (shopsres.items[4].products[3].name).should.match(productCreate20.name);
+
+
+
+                                                                                                                            done();
+                                                                                                                          });
+                                                                                                                      });
+                                                                                                                  });
+                                                                                                              });
+                                                                                                          });
+                                                                                                      });
+                                                                                                  });
+                                                                                              });
+                                                                                          });
+                                                                                      });
+                                                                                  });
+                                                                              });
+                                                                          });
+                                                                      });
+                                                                  });
+                                                              });
+                                                          });
+                                                      });
+                                                  });
+                                              });
+                                          });
+                                      });
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+
       });
   });
 
