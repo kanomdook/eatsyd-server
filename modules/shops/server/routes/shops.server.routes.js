@@ -33,7 +33,7 @@ module.exports = function (app) {
     .get(shops.cookingHomeShop, shops.resHomeShop);
 
   //get home customer
-  app.route('/api/shopscustomer')
+  app.route('/api/customerhome')
     .get(shops.ads, shops.hotprices, shops.categories, shops.listShop, shops.returnShop);
 
   //get home admin
