@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Categoryshops
  */
 exports.list = function(req, res) {
-  Categoryshop.find().sort('-created').populate('user', 'displayName').exec(function(err, categoryshops) {
+  Categoryshop.find().sort('created').populate('user', 'displayName').exec(function(err, categoryshops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
