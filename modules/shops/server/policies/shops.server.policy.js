@@ -38,6 +38,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/changecover/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/addpromote/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/manageshop/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -67,6 +73,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/createproduct/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/manageshop/:shopId',
       permissions: '*'
     }]
   }, {

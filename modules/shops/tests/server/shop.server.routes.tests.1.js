@@ -2451,6 +2451,185 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
+  it('shop edit own shop', function (done) {
+    // Save a new Shop
+    shop.promoteimage = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+          .expect(200)
+          .end(function (createusershopErr, createusershopRes) {
+            // Handle signin error
+            if (createusershopErr) {
+              return done(createusershopErr);
+            }
+            var newcredentials = {
+              username: shop.email,
+              password: 'user1234'
+            };
+            agent.post('/api/auth/signin')
+              .send(newcredentials)
+              .expect(200)
+              .end(function (signinErr, signinRes) {
+                // Handle signin error
+                if (signinErr) {
+                  return done(signinErr);
+                }
+                agent.get('/api/shopshome')
+                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                  .expect(200)
+                  .end(function (shopGetErr, shopsGetRes) {
+                    if (shopGetErr) {
+                      return done(shopGetErr);
+                    }
+                    var shops = shopsGetRes.body;
+                    (shops.coverimage).should.match(shop.coverimage);
+                    (shops.name).should.match(shop.name);
+                    (shops.promoteimage).should.match(shop.promoteimage);
+                    (shops.items.length).should.match(0);
+                    var cate = {
+                      name: 'catename',
+                      image: 'url_image',
+                    };
+                    agent.put('/api/createcate/' + shops._id)
+                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                      .send(cate)
+                      .expect(200)
+                      .end(function (changecoverErr, changecoverRes) {
+                        // Handle signin error
+                        if (changecoverErr) {
+                          return done(changecoverErr);
+                        }
+                        var shopchange = changecoverRes.body;
+                        // (shopchange.message).should.match('Promote images is limited.');
+                        (shopchange.coverimage).should.match(shop.coverimage);
+                        (shopchange.promoteimage).should.match(shop.promoteimage);
+                        (shopchange.items.length).should.match(1);
+                        (shopchange.items[0].cate.name).should.match(cate.name);
+                        (shopchange.items[0].products.length).should.match(30);
+                        (shopchange.items[0].products[0].name).should.match('');
+                        agent.get('/api/shops/' + shops._id)
+                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                          .expect(200)
+                          .end(function (shopsByIdErr, shopsByIdRes) {
+                            // Handle signin error
+                            if (shopsByIdErr) {
+                              return done(shopsByIdErr);
+                            }
+                            var shopsById = shopsByIdRes.body;
+                            // categories
+                            // categoryshop = new Categoryshop({
+                            //   name: 'อาหารและเคื่องดื่ม'
+                            // });
+                            (shopsById.categories.name).should.match(categoryshop.name);
+                            (shopsById.coverimage).should.match(shop.coverimage);
+                            (shopsById.name).should.match(shop.name);
+                            (shopsById.name_eng).should.match(shop.name_eng);
+                            (shopsById.detail).should.match(shop.detail);
+                            (shopsById.email).should.match(shop.email);
+                            (shopsById.tel).should.match(shop.tel);
+                            (shopsById.othercontact).should.match('');
+                            (shopsById.times).should.match(shop.times);
+                            (shopsById.address.address).should.match(shop.address.address);
+                            (shopsById.address.addressdetail).should.match(shop.address.addressdetail);
+                            (shopsById.address.subdistinct).should.match(shop.address.subdistinct);
+                            (shopsById.address.distinct).should.match(shop.address.distinct);
+                            (shopsById.address.province).should.match(shop.address.province);
+                            (shopsById.address.postcode).should.match(shop.address.postcode);
+                            (shopsById.address.lat).should.match(shop.address.lat);
+                            (shopsById.address.lng).should.match(shop.address.lng);
+                            (shopsById.items.length).should.match(1);
+                            (shopsById.items[0].cate.name).should.match(cate.name);
+                            (shopsById.items[0].products.length).should.match(30);
+                            (shopsById.items[0].products[0].name).should.match('default');
+                            var categoryshop2 = new Categoryshop({
+                              name: 'ssss'
+                            });
+                            categoryshop2.save();
+                            var editdatashop = {
+                              categories: categoryshop2,
+                              name: 'ครัวคุณโก๋2',
+                              name_eng: 'Shop name english2',
+                              detail: 'Coffice Idea Space2',
+                              tel: '08944472082',
+                              email: 'test2@gmail.com',
+                              facebook: 'facebook.com',
+                              line: '@lineid',
+                              othercontact: 'dsfasfd',
+                              address: {
+                                address: '88/82',
+                                addressdetail: 'ตรงข้าม big c2',
+                                subdistinct: 'ลำลูกกา2',
+                                distinct: 'ลำลูกกา2',
+                                province: 'ปทุมธานี2',
+                                postcode: '121502',
+                                lat: '13.93389491',
+                                lng: '100.68277732'
+                              },
+                              items: [],
+                              times: [{
+                                description: 'ทุกวัน',
+                                timestart: '07.00',
+                                timeend: '20.00',
+                                days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+                              }, {
+                                description: 'ทุกวัน',
+                                timestart: '07.00',
+                                timeend: '20.00',
+                                days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+                              }],
+                              coverimage: 'http://www.hardrock.com/cafes/amsterdam/files/2308/LegendsRo22om.jpg',
+                            };
+                            agent.put('/api/manageshop/' + shops._id)
+                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                              .send(editdatashop)
+                              .expect(200)
+                              .end(function (manageshopErr, manageshopRes) {
+                                // Handle signin error
+                                if (manageshopErr) {
+                                  return done(manageshopErr);
+                                }
+                                var manageshopres = manageshopRes.body;
+
+                                (manageshopres.categories.name).should.match(categoryshop2.name);
+                                (manageshopres.coverimage).should.match(editdatashop.coverimage);
+                                (manageshopres.name).should.match(editdatashop.name);
+                                (manageshopres.name_eng).should.match(editdatashop.name_eng);
+                                (manageshopres.detail).should.match(editdatashop.detail);
+                                (manageshopres.email).should.match(editdatashop.email);
+                                (manageshopres.tel).should.match(editdatashop.tel);
+                                (manageshopres.othercontact).should.match(editdatashop.othercontact);
+                                (manageshopres.times).should.match(editdatashop.times);
+                                (manageshopres.address.address).should.match(editdatashop.address.address);
+                                (manageshopres.address.addressdetail).should.match(editdatashop.address.addressdetail);
+                                (manageshopres.address.subdistinct).should.match(editdatashop.address.subdistinct);
+                                (manageshopres.address.distinct).should.match(editdatashop.address.distinct);
+                                (manageshopres.address.province).should.match(editdatashop.address.province);
+                                (manageshopres.address.postcode).should.match(editdatashop.address.postcode);
+                                (manageshopres.address.lat).should.match(editdatashop.address.lat);
+                                (manageshopres.address.lng).should.match(editdatashop.address.lng);
+                                (manageshopres.items.length).should.match(1);
+                                (manageshopres.items[0].cate.name).should.match(cate.name);
+                                (manageshopres.items[0].products.length).should.match(30);
+                                (manageshopres.items[0].products[0].name).should.match('default');
+                                done();
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+
+      });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Categoryshop.remove().exec(function () {

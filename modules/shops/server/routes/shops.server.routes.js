@@ -57,6 +57,8 @@ module.exports = function (app) {
   app.route('/api/createproduct/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.createProduct, shops.addProductToShop, shops.resShopData);
 
+  app.route('/api/manageshop/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
+    .put(shops.editShop);
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

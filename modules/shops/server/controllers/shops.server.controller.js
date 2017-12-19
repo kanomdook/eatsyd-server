@@ -800,6 +800,32 @@ exports.addProductToShop = function (req, res, next) {
   });
 };
 
+exports.editShop = function (req, res) {
+  var shop = req.shop;
+  var _shop = req.body;
+  shop.categories = _shop.categories;
+  shop.name = _shop.name;
+  shop.name_eng = _shop.name_eng;
+  shop.detail = _shop.detail;
+  shop.tel = _shop.tel;
+  shop.email = _shop.email;
+  shop.address = _shop.address;
+  shop.times = _shop.times;
+  shop.coverimage = _shop.coverimage;
+  shop.othercontact = _shop.othercontact;
+  console.log(shop);
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(shop);
+    }
+  });
+};
+
 exports.ads = function (req, res, next) {
   req.ads = {
     "title": "Advertise",

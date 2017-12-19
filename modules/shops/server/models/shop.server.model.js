@@ -51,6 +51,10 @@ var ShopSchema = new Schema({
     type: String,
     default: ''
   },
+  othercontact: {
+    type: String,
+    default: ''
+  },
   promoteimage: {
     type: [String],
     default: []
