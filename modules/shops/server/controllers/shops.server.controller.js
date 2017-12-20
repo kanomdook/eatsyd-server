@@ -813,7 +813,6 @@ exports.editShop = function (req, res) {
   shop.times = _shop.times;
   shop.coverimage = _shop.coverimage;
   shop.othercontact = _shop.othercontact;
-  console.log(shop);
   shop.save(function (err) {
     if (err) {
       console.log(err);
