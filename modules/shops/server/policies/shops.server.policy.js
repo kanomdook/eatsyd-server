@@ -44,6 +44,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/manageshop/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/createcate/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/createproduct/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
