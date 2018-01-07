@@ -55,29 +55,41 @@ describe('User Token tests', function () {
 
     it('should be able to login successfully and have token', function (done) {
 
-        // agent.post('/api/auth/signin')
-        //     .send(credentials)
+        agent.post('/api/auth/signin')
+            .send(credentials)
+            .expect(200)
+            .end(function (signinErr, signinRes) {
+                // Handle signin error
+                if (signinErr) {
+                    return done(signinErr);
+                }
+                signinRes.body.loginToken.should.not.be.empty();
+                //done();
+                agent.get('/api/protected')
+                    .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                    .expect(200)
+                    .end(function (signinErr, signinResToken) {
+                        // Handle signin error
+                        if (signinErr) {
+                            return done(signinErr);
+                        }
+                        signinResToken.body.firstName.should.equal(_user.firstName);
+                        done();
+                    });
+            });
+
+        // var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YTUxZGY5N2JkMTIyYmM3MjhjMjQxOWYiLCJzYWx0IjoieC8za3BYN2hsTDEyYnJHbEd1UHpzQT09IiwiZGlzcGxheU5hbWUiOiJGdWxsIE5hbWUiLCJ1c2VybmFtZSI6InVzZXJuYW1lIiwicHJvdmlkZXIiOiJsb2NhbCIsIl9fdiI6MCwiY3JlYXRlZCI6IjIwMTgtMDEtMDdUMDg6NTE6MzUuMTYxWiIsInJvbGVzIjpbInVzZXIiXSwicHJvZmlsZUltYWdlVVJMIjoibW9kdWxlcy91c2Vycy9jbGllbnQvaW1nL3Byb2ZpbGUvZGVmYXVsdC5wbmciLCJwYXNzd29yZCI6IlVVcHVPb1plWExuL0pOVDdKQUU5b0VFSVdtMVJraytLdzMyZWU3SXBJMERMVjlrYStuRlBsd0xLKzhNNFc3NmoxaWlUSGdnckMxU1MzOGhkK3pqdk1RPT0iLCJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJsYXN0TmFtZSI6Ik5hbWUiLCJmaXJzdE5hbWUiOiJGdWxsIn0.VO9O4XxXgxKN9wqGN7yB2r-V03eKJOlz7c7K6rFvmYk';
+        // agent.get('/api/protected')
+        //     .set('authorization', 'Bearer ' + token)
         //     .expect(200)
-        //     .end(function (signinErr, signinRes) {
+        //     .end(function (signinErr, signinResToken) {
         //         // Handle signin error
         //         if (signinErr) {
         //             return done(signinErr);
         //         }
-        //         signinRes.body.loginToken.should.not.be.empty();
-        //         agent.post('/api')
-        //             .set('authorization', 'Bearer ' + signinRes.body.loginToken)
-        //             .expect(200)
-        //             .end(function (signinErr, signinResToken) {
-        //                 // Handle signin error
-        //                 if (signinErr) {
-        //                     return done(signinErr);
-        //                 }
-        //                 signinResToken.body.loginToken.should.equal(signinRes.body.loginToken);
-        //                 done();
-        //             });
+        //         signinResToken.body.firstName.should.equal(_user.firstName);
+        //         done();
         //     });
-
-        done();
 
     });
 

@@ -45,66 +45,9 @@ exports.renderNotFound = function (req, res) {
 };
 
 /**
- * Require login token routing middleware
+ * Test jwt Decoder
+ * Expect req.user
  */
-exports.requiresLoginToken = function (req, res, next) {
-  //check for login token here
-  if (!req.headers.authorization) {
-    next();
-  } else {
-    var loginToken = req.headers.authorization.replace('Bearer ', '');
-
-    // query DB for the user corresponding to the token and act accordingly
-    User.findOne({
-      loginToken: loginToken,
-      loginExpires: {
-        $gt: Date.now()
-      }
-    }, function (err, user) {
-      if (!user) {
-        return res.status(401).send({
-          message: 'Token is incorrect or has expired. Please login again'
-        });
-      }
-      if (err) {
-        return res.status(500).send({
-          message: 'There was an internal server error processing your login token'
-        });
-      }
-
-      // bind user object to request and continue
-      req.user = user;
-      //res.json(user);
-      next();
-    });
-  }
-};
-
-exports.checkToken = function (req, res, next) {
-  if (!req.params || !req.params.token) {
-    req.isAuthorization = false;
-  } else {
-    var loginToken = req.params.token.replace('Bearer ', '');
-
-    User.findOne({
-      loginToken: loginToken,
-      loginExpires: {
-        $gt: Date.now()
-      }
-    }, function (err, user) {
-      if (!user) {
-        req.isAuthorization = false;
-      }
-      if (err) {
-        req.isAuthorization = false;
-      }
-      if (user) {
-        req.isAuthorization = true;
-      }
-      res.json({
-        status: req.isAuthorization,
-        message: (req.isAuthorization) ? 'SUCCESS' : 'Token is incorrect or has expired. Please login again'
-      });
-    });
-  }
+exports.protected = function(req, res){
+  res.json(req.user);
 };

@@ -4,7 +4,6 @@
  * Module dependencies
  */
 var productsPolicy = require('../policies/products.server.policy'),
-  core = require('../../../core/server/controllers/core.server.controller'),
   products = require('../controllers/products.server.controller');
 
 module.exports = function (app) {
@@ -12,17 +11,17 @@ module.exports = function (app) {
   app.route('/api/products') //.all(productsPolicy.isAllowed)
     .get(products.list);
 
-  app.route('/api/products').all(core.requiresLoginToken, productsPolicy.isAllowed)
+  app.route('/api/products').all(productsPolicy.isAllowed)
     .post(products.create);
 
   app.route('/api/products/:productId') //.all(productsPolicy.isAllowed)
     .get(products.read);
 
-  app.route('/api/products/:productId').all(core.requiresLoginToken, productsPolicy.isAllowed)
+  app.route('/api/products/:productId').all(productsPolicy.isAllowed)
     .put(products.update)
     .delete(products.delete);
 
-  app.route('/api/productsbyshop/:productbyshopId').all(core.requiresLoginToken, productsPolicy.isAllowed)
+  app.route('/api/productsbyshop/:productbyshopId').all(productsPolicy.isAllowed)
     .get(products.cookingProductList, products.productByShop);
 
   app.route('/api/products_picture').post(products.changeProductPicture);

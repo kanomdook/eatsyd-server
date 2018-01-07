@@ -6,16 +6,50 @@
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     User = require('mongoose').model('User'),
+    _ = require('lodash'),
     jwt = require('jsonwebtoken');
 
-var secret = 'keepitquiet';
+var config = {
+    secret: 'ngEurope rocks!',
+    audience: 'nodejs-jwt-auth',
+    issuer: 'https://gonto.com'
+};
 
 module.exports = function () {
+
+    function createIdToken(user) {
+        return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 2 * 60 * 60 * 1000 });
+    }
+
+    function createAccessToken() {
+        return jwt.sign({
+            iss: config.issuer,
+            aud: config.audience,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60),
+            scope: 'full_access',
+            sub: "lalaland|gonto",
+            jti: genJti(), // unique identifier for the token
+            alg: 'HS256'
+        }, config.secret);
+    }
+
+    // Generate Unique Identifier for the access token
+    function genJti() {
+        let jti = '';
+        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 16; i++) {
+            jti += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return jti;
+    }
+
+
     // Use local strategy
     passport.use('local', new LocalStrategy({
-            usernameField: 'username',
-            passwordField: 'password'
-        },
+        usernameField: 'username',
+        passwordField: 'password'
+    },
         function (username, password, done) {
             User.findOne({
                 $or: [{
@@ -38,15 +72,9 @@ module.exports = function () {
                     });
                 }
 
-                var tokenPayload = {
-                    username: user.username,
-                    loginExpires: user.loginExpires
-                };
-
                 // add token and exp date to user object
-                user.loginToken = jwt.sign(tokenPayload, secret);
+                user.loginToken = createIdToken(user);
                 user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
-
                 // save user object to update database
                 user.save(function (err) {
                     if (err) {
