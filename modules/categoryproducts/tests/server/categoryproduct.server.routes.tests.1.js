@@ -86,7 +86,8 @@ describe('Categoryproduct CRUD tests with token', function () {
       email: 'test@test.com',
       username: credentials.username,
       password: credentials.password,
-      provider: 'local'
+      provider: 'local',
+      roles : ['admin']
     });
 
     // Save a user to the test db and create new Categoryproduct

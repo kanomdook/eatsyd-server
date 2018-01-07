@@ -697,7 +697,7 @@ exports.addCateToShop = function (req, res, next) {
         index = i;
       }
     });
-    for (let i = 0; i < 30; i++) {
+    for (var i = 0; i < 30; i++) {
       shop.items[index].products.push(req.defaultProd);
     }
   }
@@ -781,7 +781,7 @@ exports.addProductToShop = function (req, res, next) {
   var index = parseInt(req.body.index);
   var cateindex = parseInt(req.body.cateindex);
   var items = shop.items[cateindex].products ? shop.items[cateindex].products : [];
-  for (let i = 0; i < 30; i++) {
+  for (var i = 0; i < 30; i++) {
     if (i === index) {
       items[i] = req.product;
     }

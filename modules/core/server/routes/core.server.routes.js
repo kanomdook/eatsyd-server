@@ -1,23 +1,14 @@
 'use strict';
-var expressJwt = require('express-jwt');
-var jwt = require('express-jwt');
 
 module.exports = function (app) {
   // Root routing
   var core = require('../controllers/core.server.controller');
 
-  // Validate access_token
-  var jwtCheck = jwt({
-    secret: 'ngEurope rocks!'
-  });
-
   // We are going to protect /api routes with JWT
   // API Token Authen
-  app.route('/api/*').all(jwtCheck);
-  app.route('/api/protected').get(core.protected);
-  //app.use('/api', core.requiresLoginToken);
-  //app.route('/api/token/:token').get(core.checkToken);
-
+  app.route('/api/protected').all(core.jwtCheck)
+  .get(core.protected);
+  
 
   // Define error pages
   app.route('/server-error').get(core.renderServerError);

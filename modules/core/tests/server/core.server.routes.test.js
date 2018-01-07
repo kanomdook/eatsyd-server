@@ -10,12 +10,12 @@ var should = require('should'),
 /**
  * Globals
  */
-var app, agent, credentials, user, _user, admin;
+var app, agent, credentials, user, _user, admin, token;
 
 /**
  * User routes tests
  */
-describe('User Token tests', function () {
+describe('Authen Token tests', function () {
 
     before(function (done) {
         // Get application
@@ -53,7 +53,7 @@ describe('User Token tests', function () {
     });
 
 
-    it('should be able to login successfully and have token', function (done) {
+    it('should be able to login successfully and have token for get protected', function (done) {
 
         agent.post('/api/auth/signin')
             .send(credentials)
@@ -64,9 +64,9 @@ describe('User Token tests', function () {
                     return done(signinErr);
                 }
                 signinRes.body.loginToken.should.not.be.empty();
-                //done();
+                token = signinRes.body.loginToken;
                 agent.get('/api/protected')
-                    .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                    .set('authorization', 'Bearer ' + token)
                     .expect(200)
                     .end(function (signinErr, signinResToken) {
                         // Handle signin error
@@ -78,20 +78,43 @@ describe('User Token tests', function () {
                     });
             });
 
-        // var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YTUxZGY5N2JkMTIyYmM3MjhjMjQxOWYiLCJzYWx0IjoieC8za3BYN2hsTDEyYnJHbEd1UHpzQT09IiwiZGlzcGxheU5hbWUiOiJGdWxsIE5hbWUiLCJ1c2VybmFtZSI6InVzZXJuYW1lIiwicHJvdmlkZXIiOiJsb2NhbCIsIl9fdiI6MCwiY3JlYXRlZCI6IjIwMTgtMDEtMDdUMDg6NTE6MzUuMTYxWiIsInJvbGVzIjpbInVzZXIiXSwicHJvZmlsZUltYWdlVVJMIjoibW9kdWxlcy91c2Vycy9jbGllbnQvaW1nL3Byb2ZpbGUvZGVmYXVsdC5wbmciLCJwYXNzd29yZCI6IlVVcHVPb1plWExuL0pOVDdKQUU5b0VFSVdtMVJraytLdzMyZWU3SXBJMERMVjlrYStuRlBsd0xLKzhNNFc3NmoxaWlUSGdnckMxU1MzOGhkK3pqdk1RPT0iLCJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJsYXN0TmFtZSI6Ik5hbWUiLCJmaXJzdE5hbWUiOiJGdWxsIn0.VO9O4XxXgxKN9wqGN7yB2r-V03eKJOlz7c7K6rFvmYk';
-        // agent.get('/api/protected')
-        //     .set('authorization', 'Bearer ' + token)
-        //     .expect(200)
-        //     .end(function (signinErr, signinResToken) {
-        //         // Handle signin error
-        //         if (signinErr) {
-        //             return done(signinErr);
-        //         }
-        //         signinResToken.body.firstName.should.equal(_user.firstName);
-        //         done();
-        //     });
+    });
+
+    it('should be able to login successfully and have token for post categoryshops', function (done) {
+        var categoryshop = {
+            name: 'Categoryshop name'
+        };
+        agent.post('/api/categoryshops')
+            .set('authorization', 'Bearer ' + token)
+            .send(categoryshop)
+            .expect(200)
+            .end(function (categoryshopSaveErr, categoryshopSaveRes) {
+                // Handle Categoryshop save error
+                if (categoryshopSaveErr) {
+                    return done(categoryshopSaveErr);
+                }
+
+                // Get a list of Categoryshops
+                agent.get('/api/categoryshops')
+                    .end(function (categoryshopsGetErr, categoryshopsGetRes) {
+                        // Handle Categoryshops save error
+                        if (categoryshopsGetErr) {
+                            return done(categoryshopsGetErr);
+                        }
+
+                        // Get Categoryshops list
+                        var categoryshops = categoryshopsGetRes.body;
+
+                        // Set assertions
+                        (categoryshops[0].name).should.match('Categoryshop name');
+
+                        // Call the assertion callback
+                        done();
+                    });
+            });
 
     });
+
 
     afterEach(function (done) {
         User.remove().exec(done);

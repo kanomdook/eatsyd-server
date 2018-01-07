@@ -53,7 +53,8 @@ describe('Product CRUD tests with token', function () {
       email: 'test@test.com',
       username: credentials.username,
       password: credentials.password,
-      provider: 'local'
+      provider: 'local',
+      roles : ['admin']
     });
 
     categoryshop = new Categoryshop({

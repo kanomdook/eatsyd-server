@@ -1,5 +1,5 @@
 'use strict';
-
+var jwt = require('express-jwt');
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 
@@ -43,6 +43,11 @@ exports.renderNotFound = function (req, res) {
     }
   });
 };
+
+exports.jwtCheck = jwt({
+  secret: 'ngEurope rocks!',
+  credentialsRequired: false
+});
 
 /**
  * Test jwt Decoder
