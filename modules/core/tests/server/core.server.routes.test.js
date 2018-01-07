@@ -40,7 +40,8 @@ describe('Authen Token tests', function () {
             email: 'test@test.com',
             username: credentials.username,
             password: credentials.password,
-            provider: 'local'
+            provider: 'local',
+            roles: ['admin']
         };
 
         user = new User(_user);

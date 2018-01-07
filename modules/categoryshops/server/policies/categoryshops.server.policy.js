@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/categoryshops',
-      permissions: ['get', 'post']
+      permissions: ['get']
     }, {
       resources: '/api/categoryshops/:categoryshopId',
       permissions: ['get']
