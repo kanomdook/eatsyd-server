@@ -149,6 +149,86 @@ exports.managelist = function (req, res) {
   });
 };
 
+exports.setinitpage = function(req, res, next){
+  req.items = [];
+  req.pagings = [1];
+  next();
+};
+exports.tabcustomer = function(req, res, next){
+  if(req.body.role !== 'user'){
+    next();
+  } 
+  User.find({roles: 'user'},'-salt -password -loginToken -loginExpires').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.items.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.tabshopowner = function(req, res, next){
+  if(req.body.role !== 'shop') next();
+
+  User.find({roles: 'shop'}, '-salt -password -loginToken -loginExpires').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.items.push(user);
+    });
+    next();
+  });
+  
+};
+exports.tabadmins = function(req, res, next){
+  if(req.body.role !== 'admin') next();
+
+  User.find({roles: 'admin'}, '-salt -password -loginToken -loginExpires').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.items.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.tabbiker = function(req, res, next){
+  if(req.role !== 'biker') next();
+
+  User.find({roles: 'biker'}, '-salt -password -loginToken -loginExpires').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.items.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.managelistpage = function (req, res) {
+  res.jsonp({
+    items: req.items,
+    pagings: req.pagings
+  });
+};
+
 /**
  * User middleware
  */

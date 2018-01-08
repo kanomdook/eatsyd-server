@@ -10,7 +10,7 @@ var should = require('should'),
 /**
  * Globals
  */
-var app, agent, credentials, user, _user,_cust,_shop,_biker, admin;
+var app, agent, credentials, user, _user, _cust, _shop, _biker, admin;
 
 /**
  * User routes tests
@@ -53,7 +53,7 @@ describe('User Mng tests', function () {
       provider: 'local'
     };
 
-   
+
 
     _shop = {
       firstName: 'Shop',
@@ -63,7 +63,7 @@ describe('User Mng tests', function () {
       username: 'shop',
       password: 'pass22wrwrwr##',
       provider: 'local',
-      roles: ['shop']
+      //roles: ['shop']
     };
 
     _biker = {
@@ -74,7 +74,7 @@ describe('User Mng tests', function () {
       username: 'biker',
       password: 'pass22wrwrwr##',
       provider: 'local',
-      roles: ['biker']
+      //roles: ['biker']
     };
 
     var cust = new User(_cust);
@@ -93,7 +93,9 @@ describe('User Mng tests', function () {
     });
   });
 
-  it('should not be able to retrieve a list of users if not admin', function (done) {
+
+
+  it('should not be able to retrieve a list of users(paging server) if not admin', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -104,7 +106,12 @@ describe('User Mng tests', function () {
         }
 
         // Request list of users
-        agent.get('/api/management/users')
+        agent.post('/api/management/paging/users')
+          .send({
+            currentpage: 1,
+            role: 'user',
+            keyword: ''
+          })
           .expect(403)
           .end(function (usersGetErr, usersGetRes) {
             if (usersGetErr) {
@@ -116,7 +123,7 @@ describe('User Mng tests', function () {
       });
   });
 
-  it('should be able to retrieve a list of users if admin', function (done) {
+  it('should be able to retrieve a list of users(paging server) if admin', function (done) {
     user.roles = ['user', 'admin'];
 
     user.save(function (err) {
@@ -131,18 +138,24 @@ describe('User Mng tests', function () {
           }
 
           // Request list of users
-          agent.get('/api/management/users')
+          agent.post('/api/management/paging/users')
+            .send({
+              currentpage: 1,
+              role: 'user',
+              keyword: ''
+            })
             .expect(200)
             .end(function (usersGetErr, usersGetRes) {
               if (usersGetErr) {
                 return done(usersGetErr);
               }
 
-              usersGetRes.body.filterrole.should.be.instanceof(Array).and.have.lengthOf(4);
-              usersGetRes.body.filterrole[0].users.should.be.instanceof(Array).and.have.lengthOf(2);
-              usersGetRes.body.filterrole[1].users.should.be.instanceof(Array).and.have.lengthOf(1);
-              usersGetRes.body.filterrole[2].users.should.be.instanceof(Array).and.have.lengthOf(1);
-              usersGetRes.body.filterrole[3].users.should.be.instanceof(Array).and.have.lengthOf(1);
+              usersGetRes.body.items.should.be.instanceof(Array).and.have.lengthOf(4);
+              usersGetRes.body.pagings.should.be.instanceof(Array).and.have.lengthOf(1);
+              // usersGetRes.body.filterrole[0].users.should.be.instanceof(Array).and.have.lengthOf(2);
+              // usersGetRes.body.filterrole[1].users.should.be.instanceof(Array).and.have.lengthOf(1);
+              // usersGetRes.body.filterrole[2].users.should.be.instanceof(Array).and.have.lengthOf(1);
+              // usersGetRes.body.filterrole[3].users.should.be.instanceof(Array).and.have.lengthOf(1);
 
               // Call the assertion callback
               return done();
@@ -151,7 +164,7 @@ describe('User Mng tests', function () {
     });
   });
 
-  
+
 
   afterEach(function (done) {
     User.remove().exec(done);

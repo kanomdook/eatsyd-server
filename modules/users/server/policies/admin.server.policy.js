@@ -24,6 +24,10 @@ exports.invokeRolesPolicies = function () {
     {
       resources: '/api/management/users',
       permissions: '*'
+    },
+    {
+      resources: '/api/management/paging/users',
+      permissions: '*'
     }]
   }]);
 };
