@@ -85,7 +85,7 @@ exports.initlist = function (req, res, next) {
 };
 
 exports.customer = function(req, res, next){
-  User.find({roles: 'user'}).exec(function (err, users) {
+  User.find({roles: 'user'},'_id displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -100,7 +100,7 @@ exports.customer = function(req, res, next){
 };
 
 exports.shopowner = function(req, res, next){
-  User.find({roles: 'shop'}).exec(function (err, users) {
+  User.find({roles: 'shop'}, '_id displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -114,7 +114,7 @@ exports.shopowner = function(req, res, next){
   
 };
 exports.admins = function(req, res, next){
-  User.find({roles: 'admin'}).exec(function (err, users) {
+  User.find({roles: 'admin'}, '_id displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -129,7 +129,7 @@ exports.admins = function(req, res, next){
 };
 
 exports.biker = function(req, res, next){
-  User.find({roles: 'shop'}).exec(function (err, users) {
+  User.find({roles: 'shop'}, '_id displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
