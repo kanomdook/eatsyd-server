@@ -129,7 +129,7 @@ exports.admins = function(req, res, next){
 };
 
 exports.biker = function(req, res, next){
-  User.find({roles: 'shop'}, '_id displayName roles').exec(function (err, users) {
+  User.find({roles: 'biker'}, '_id displayName roles').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
