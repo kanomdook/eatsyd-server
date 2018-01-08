@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var adminPolicy = require('../policies/admin.server.policy'),
+  core = require('../../../core/server/controllers/core.server.controller'),
   admin = require('../controllers/admin.server.controller');
 
 module.exports = function (app) {
@@ -12,13 +13,13 @@ module.exports = function (app) {
 
   // Users collection routes
   app.route('/api/users')
-    .get(adminPolicy.isAllowed, admin.list);
+    .get(core.jwtCheck, adminPolicy.isAllowed, admin.list);
 
   // Single user routes
   app.route('/api/users/:userId')
-    .get(adminPolicy.isAllowed, admin.read)
-    .put(adminPolicy.isAllowed, admin.update)
-    .delete(adminPolicy.isAllowed, admin.delete);
+    .get(core.jwtCheck, adminPolicy.isAllowed, admin.read)
+    .put(core.jwtCheck, adminPolicy.isAllowed, admin.update)
+    .delete(core.jwtCheck, adminPolicy.isAllowed, admin.delete);
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);
