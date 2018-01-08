@@ -50,6 +50,7 @@ module.exports = function () {
                 }
 
                 // add token and exp date to user object
+                user.loginToken = "";
                 user.loginToken = createIdToken(user);
                 user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
                 // save user object to update database
