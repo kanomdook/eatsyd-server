@@ -71,6 +71,85 @@ exports.list = function (req, res) {
 };
 
 /**
+ * User(s) Management
+ */
+exports.initlist = function (req, res, next) {
+  req.usersofrole = [
+    { name: "customer", users: [] },
+    { name: "shopowner", users: [] },
+    { name: "admin", users: [] },
+    { name: "biker", users: [] }
+  ];
+
+  next();
+};
+
+exports.customer = function(req, res, next){
+  User.find({roles: 'user'}).exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.usersofrole[0].users.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.shopowner = function(req, res, next){
+  User.find({roles: 'shop'}).exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.usersofrole[1].users.push(user);
+    });
+    next();
+  });
+  
+};
+exports.admins = function(req, res, next){
+  User.find({roles: 'admin'}).exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.usersofrole[2].users.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.biker = function(req, res, next){
+  User.find({roles: 'shop'}).exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    users.forEach(function (user) {
+      req.usersofrole[3].users.push(user);
+    });
+    next();
+  });
+  
+};
+
+exports.managelist = function (req, res) {
+  res.json({
+    filterrole: req.usersofrole
+  });
+};
+
+/**
  * User middleware
  */
 exports.userByID = function (req, res, next, id) {

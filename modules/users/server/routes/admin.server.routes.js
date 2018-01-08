@@ -15,6 +15,10 @@ module.exports = function (app) {
   app.route('/api/users')
     .get(core.jwtCheck, adminPolicy.isAllowed, admin.list);
 
+  //User Management
+  app.route('/api/management/users')
+  .get(core.jwtCheck, adminPolicy.isAllowed, admin.initlist, admin.customer, admin.shopowner, admin.admins, admin.biker, admin.managelist);
+
   // Single user routes
   app.route('/api/users/:userId')
     .get(core.jwtCheck, adminPolicy.isAllowed, admin.read)
