@@ -107,6 +107,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/shops/categories',
       permissions: ['get']
+    }, {
+      resources: '/api/customerhome',
+      permissions: ['get']
     }]
   }]);
 };
