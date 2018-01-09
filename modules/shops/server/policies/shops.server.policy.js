@@ -95,6 +95,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/shops/categories',
       permissions: ['get', 'post']
+    }, {
+      resources: '/api/customerhome',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
