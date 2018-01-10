@@ -961,135 +961,103 @@ exports.categories = function (req, res, next) {
 };
 
 exports.listShop = function (req, res, next) {
-  req.listShop = [{
-    "title": "Promotion",
-    "items": [{
-      "_id": "pro0001",
-      "name": "ข้าวหมูแดงอาก๋ง",
-      "rating": 5,
-      "distance": 5.2,
-      "image": "./assets/imgs/shop/shop1.png"
+  req.listShop = [
+    {
+      "title": "NEAR_BY",
+      "items": [{
+        "_id": "nb0001",
+        "name": "Poppen",
+        "rating": 4,
+        "distance": 0.2,
+        "image": "./assets/imgs/shop/shop5.png",
+        "isAds": true
+      },
+      {
+        "_id": "nb0002",
+        "name": "ข้าวหมูแดงอาก๋ง",
+        "rating": 5,
+        "distance": 0.9,
+        "image": "./assets/imgs/shop/shop1.png",
+        "isAds": true
+      },
+      {
+        "_id": "nb0003",
+        "name": "แซ่บแน่",
+        "rating": 4,
+        "distance": 2.1,
+        "image": "./assets/imgs/shop/shop6.png",
+        "isAds": false
+      },
+      {
+        "_id": "nb0004",
+        "name": "Sushi World",
+        "rating": 4,
+        "distance": 3.9,
+        "image": "./assets/imgs/shop/shop7.png",
+        "isAds": false
+      }
+      ]
     },
     {
-      "_id": "pro0002",
-      "name": "Bottle Kitchen",
-      "rating": 4,
-      "distance": 10.5,
-      "image": "./assets/imgs/shop/shop2.png"
+      "title": "POPULAR",
+      "items": [{
+        "_id": "pop0001",
+        "name": "ภัตตาคารหลวง",
+        "rating": 5,
+        "distance": 5.2,
+        "image": "./assets/imgs/shop/shop8.png",
+        "isAds": true
+      },
+      {
+        "_id": "pop0002",
+        "name": "แซ่บแน่",
+        "rating": 4,
+        "distance": 11.4,
+        "image": "./assets/imgs/shop/shop6.png",
+        "isAds": true
+      },
+      {
+        "_id": "pop0003",
+        "name": "ร้านบ้านสวน",
+        "rating": 4,
+        "distance": 8.2,
+        "image": "./assets/imgs/shop/shop9.png",
+        "isAds": false
+      }
+      ]
     },
     {
-      "_id": "pro0003",
-      "name": "Steak House",
-      "rating": 3,
-      "distance": 2.4,
-      "image": "./assets/imgs/shop/shop3.png"
-    },
-    {
-      "_id": "pro0004",
-      "name": "ครัวคุณโก๋",
-      "rating": 5,
-      "distance": 15.3,
-      "image": "./assets/imgs/shop/shop4.png"
-    },
-    {
-      "_id": "pro0005",
-      "name": "Poppen",
-      "rating": 4,
-      "distance": 4.2,
-      "image": "./assets/imgs/shop/shop5.png"
-    }
-    ]
-  },
-  {
-    "title": "Near by",
-    "items": [{
-      "_id": "nb0001",
-      "name": "Poppen",
-      "rating": 4,
-      "distance": 0.2,
-      "image": "./assets/imgs/shop/shop5.png"
-    },
-    {
-      "_id": "nb0002",
-      "name": "ข้าวหมูแดงอาก๋ง",
-      "rating": 5,
-      "distance": 0.9,
-      "image": "./assets/imgs/shop/shop1.png"
-    },
-    {
-      "_id": "nb0003",
-      "name": "แซ่บแน่",
-      "rating": 4,
-      "distance": 2.1,
-      "image": "./assets/imgs/shop/shop6.png"
-    },
-    {
-      "_id": "nb0004",
-      "name": "Sushi World",
-      "rating": 4,
-      "distance": 3.9,
-      "image": "./assets/imgs/shop/shop7.png"
-    }
-    ]
-  },
-  {
-    "title": "Popular",
-    "items": [{
-      "_id": "pop0001",
-      "name": "ภัตตาคารหลวง",
-      "rating": 5,
-      "distance": 5.2,
-      "image": "./assets/imgs/shop/shop8.png"
-    },
-    {
-      "_id": "pop0002",
-      "name": "แซ่บแน่",
-      "rating": 4,
-      "distance": 11.4,
-      "image": "./assets/imgs/shop/shop6.png"
-    },
-    {
-      "_id": "pop0003",
-      "name": "ร้านบ้านสวน",
-      "rating": 4,
-      "distance": 8.2,
-      "image": "./assets/imgs/shop/shop9.png"
-    }
-    ]
-  },
-  {
-    "title": "Favorite",
-    "items": [{
-      "_id": "fav0001",
-      "name": "แซ่บแน่",
-      "rating": 4,
-      "distance": 11.4,
-      "image": "./assets/imgs/shop/shop6.png"
-    },
-    {
-      "_id": "fav0002",
-      "name": "ภัตตาคารหลวง",
-      "rating": 5,
-      "distance": 5.2,
-      "image": "./assets/imgs/shop/shop8.png"
-    },
-    {
-      "_id": "fav0003",
-      "name": "Poppen",
-      "rating": 4,
-      "distance": 15.7,
-      "image": "./assets/imgs/shop/shop5.png"
-    },
-    {
-      "_id": "fav0004",
-      "name": "บ้านขนม",
-      "rating": 3,
-      "distance": 4.1,
-      "image": "./assets/imgs/shop/shop10.png"
-    }
-    ]
-  }
-  ];
+      "title": "FAVORITE",
+      "items": [{
+        "_id": "fav0001",
+        "name": "แซ่บแน่",
+        "rating": 4,
+        "distance": 11.4,
+        "image": "./assets/imgs/shop/shop6.png"
+      },
+      {
+        "_id": "fav0002",
+        "name": "ภัตตาคารหลวง",
+        "rating": 5,
+        "distance": 5.2,
+        "image": "./assets/imgs/shop/shop8.png"
+      },
+      {
+        "_id": "fav0003",
+        "name": "Poppen",
+        "rating": 4,
+        "distance": 15.7,
+        "image": "./assets/imgs/shop/shop5.png"
+      },
+      {
+        "_id": "fav0004",
+        "name": "บ้านขนม",
+        "rating": 3,
+        "distance": 4.1,
+        "image": "./assets/imgs/shop/shop10.png"
+      }
+      ]
+    }];
   next();
 };
 
