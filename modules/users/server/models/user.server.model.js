@@ -113,6 +113,12 @@ var UserSchema = new Schema({
   },
   loginExpires: {
     type: Date
+  },
+  citizenid: {
+    type: String
+  },
+  notificationids: {
+    type: [String]
   }
 });
 

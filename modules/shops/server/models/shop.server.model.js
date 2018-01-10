@@ -99,8 +99,10 @@ var ShopSchema = new Schema({
     }]
   },
   categories: {
-    type: Schema.ObjectId,
-    ref: 'Categoryshop'
+    type: [{
+      type: Schema.ObjectId,
+      ref: 'Categoryshop'
+    }]
   },
   created: {
     type: Date,

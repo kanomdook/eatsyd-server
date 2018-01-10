@@ -118,7 +118,7 @@ describe('Shop CRUD token tests', function () {
               isactiveshop: false,
               issendmail: false,
               importform: 'manual',
-              categories: categoryshop,
+              categories: [categoryshop],
               user: user
             };
           });
@@ -2528,7 +2528,7 @@ describe('Shop CRUD token tests', function () {
                             // categoryshop = new Categoryshop({
                             //   name: 'อาหารและเคื่องดื่ม'
                             // });
-                            (shopsById.categories.name).should.match(categoryshop.name);
+                            (shopsById.categories[0].name).should.match(categoryshop.name);
                             (shopsById.coverimage).should.match(shop.coverimage);
                             (shopsById.name).should.match(shop.name);
                             (shopsById.name_eng).should.match(shop.name_eng);
@@ -2554,7 +2554,7 @@ describe('Shop CRUD token tests', function () {
                             });
                             categoryshop2.save();
                             var editdatashop = {
-                              categories: categoryshop2,
+                              categories: [categoryshop2],
                               name: 'ครัวคุณโก๋2',
                               name_eng: 'Shop name english2',
                               detail: 'Coffice Idea Space2',
@@ -2598,7 +2598,7 @@ describe('Shop CRUD token tests', function () {
                                 }
                                 var manageshopres = manageshopRes.body;
 
-                                (manageshopres.categories.name).should.match(categoryshop2.name);
+                                (manageshopres.categories[0].name).should.match(categoryshop2.name);
                                 (manageshopres.coverimage).should.match(editdatashop.coverimage);
                                 (manageshopres.name).should.match(editdatashop.name);
                                 (manageshopres.name_eng).should.match(editdatashop.name_eng);
