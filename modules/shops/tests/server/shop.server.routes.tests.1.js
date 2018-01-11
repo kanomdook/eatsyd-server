@@ -1212,7 +1212,7 @@ describe('Shop CRUD token tests', function () {
                         (shopchange.shop.address.province).should.match(firstlogin.address.province);
                         (shopchange.shop.address.postcode).should.match(firstlogin.address.postcode);
                         (shopchange.shop.address.lat).should.match(firstlogin.address.lat);
-                        (shopchange.shop.address.lng).should.match(firstlogin.address.lng);                   
+                        (shopchange.shop.address.lng).should.match(firstlogin.address.lng);
                         (shopchange.user.profileImageURL).should.match(firstlogin.profileImageURL);
                         (shopchange.user.firstName).should.match(firstlogin.firstName);
                         (shopchange.user.lastName).should.match(firstlogin.lastName);
@@ -2749,6 +2749,36 @@ describe('Shop CRUD token tests', function () {
               });
           });
 
+      });
+  });
+
+  it('get shops name', function (done) {
+    // Save a new Shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.get('/api/getshopsname')
+          .set('authorization', 'Bearer ' + token)
+          .expect(200)
+          .end(function (shopGetErr, shopsGetRes) {
+            // Handle shop save error
+            if (shopGetErr) {
+              return done(shopGetErr);
+            }
+            // Get shop list
+            var shops = shopsGetRes.body;
+
+            (shops.length).should.match(1);
+            (shops[0].name).should.match(shop.name);
+
+            done();
+          });
       });
   });
 
