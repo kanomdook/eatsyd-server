@@ -315,11 +315,6 @@ describe('Review CRUD tests token', function () {
             if (reviewSaveErr) {
               return done(reviewSaveErr);
             }
-
-            // Update Review title
-            // review.likes = {
-            //   likes: user
-            // };
             // Update an existing Review
             agent.put('/api/islike/' + reviewSaveRes.body._id)
               // .send(review)
@@ -329,6 +324,14 @@ describe('Review CRUD tests token', function () {
                 if (reviewUpdateErr) {
                   return done(reviewUpdateErr);
                 }
+                var islike = reviewUpdateRes.body;
+                (islike.title).should.match(review.title);
+                (islike.description).should.match(review.description);
+                (islike.image).should.match(review.image);
+                (islike.islike).should.match(true);
+                (islike.countlike).should.match(1);
+                (islike.user.displayName).should.match(user.firstName + ' ' + user.lastName);
+                (islike.user.profileImageURL).should.match('http://res.cloudinary.com/hflvlav04/image/upload/v1487834187/g3hwyieb7dl7ugdgj3tb.png');
 
                 agent.get('/api/reviews/' + reviewSaveRes.body._id)
                   .end(function (reviewsGetErr, reviewsGetRes) {
@@ -387,6 +390,14 @@ describe('Review CRUD tests token', function () {
                 if (reviewUpdateErr) {
                   return done(reviewUpdateErr);
                 }
+                var islike = reviewUpdateRes.body;
+                (islike.title).should.match(review.title);
+                (islike.description).should.match(review.description);
+                (islike.image).should.match(review.image);
+                (islike.islike).should.match(false);
+                (islike.countlike).should.match(0);
+                (islike.user.displayName).should.match(user.firstName + ' ' + user.lastName);
+                (islike.user.profileImageURL).should.match('http://res.cloudinary.com/hflvlav04/image/upload/v1487834187/g3hwyieb7dl7ugdgj3tb.png');
 
                 agent.get('/api/reviews/' + reviewSaveRes.body._id)
                   .end(function (reviewsGetErr, reviewsGetRes) {
@@ -409,7 +420,7 @@ describe('Review CRUD tests token', function () {
       });
   });
 
-  it('getlistreview', function (done) {
+  it('getlistreview have me', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -454,6 +465,62 @@ describe('Review CRUD tests token', function () {
                 (reviews[0].image).should.match(review.image);
                 (reviews[0].islike).should.match(true);
                 (reviews[0].countlike).should.match(1);
+                (reviews[0].user.displayName).should.match(user.firstName + ' ' + user.lastName);
+                (reviews[0].user.profileImageURL).should.match('http://res.cloudinary.com/hflvlav04/image/upload/v1487834187/g3hwyieb7dl7ugdgj3tb.png');
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('getlistreview not have me', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+        // Save a new Review
+        review.likes = [];
+        agent.post('/api/reviews')
+          .send(review)
+          .expect(200)
+          .end(function (reviewSaveErr, reviewSaveRes) {
+            // Handle Review save error
+            if (reviewSaveErr) {
+              return done(reviewSaveErr);
+            }
+
+            agent.get('/api/getlistreview')
+              .end(function (reviewsGetErr, reviewsGetRes) {
+                // Handle Reviews save error
+                if (reviewsGetErr) {
+                  return done(reviewsGetErr);
+                }
+
+                // Get Reviews list
+                var reviews = reviewsGetRes.body;
+
+                // Set assertions
+                // description: 'Review description',
+                // image: 'Review image',
+                // likes: [user],
+                // active: true,
+                // iscoin: false,
+                // user: user
+                (reviews.length).should.match(1);
+                (reviews[0].title).should.match(review.title);
+                (reviews[0].description).should.match(review.description);
+                (reviews[0].image).should.match(review.image);
+                (reviews[0].islike).should.match(false);
+                (reviews[0].countlike).should.match(0);
                 (reviews[0].user.displayName).should.match(user.firstName + ' ' + user.lastName);
                 (reviews[0].user.profileImageURL).should.match('http://res.cloudinary.com/hflvlav04/image/upload/v1487834187/g3hwyieb7dl7ugdgj3tb.png');
 

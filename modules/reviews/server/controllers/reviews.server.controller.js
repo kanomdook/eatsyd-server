@@ -103,7 +103,7 @@ exports.reviewByID = function (req, res, next, id) {
     });
   }
 
-  Review.findById(id).populate('user', 'displayName').exec(function (err, review) {
+  Review.findById(id).populate('user', 'displayName profileImageURL').exec(function (err, review) {
     if (err) {
       return next(err);
     } else if (!review) {
@@ -117,10 +117,12 @@ exports.reviewByID = function (req, res, next, id) {
 };
 
 exports.updateIslikes = function (req, res) {
+  var islike = false;
   if (req.review.likes.indexOf(req.user._id) > -1) {
     req.review.likes.splice(req.review.likes.indexOf(req.user._id), 1);
   } else {
     req.review.likes.push(req.user);
+    islike = true;
   }
   req.review.save(function (err) {
     if (err) {
@@ -128,7 +130,16 @@ exports.updateIslikes = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(req.review);
+      var data = {
+        _id: req.review._id,
+        title: req.review.title,
+        description: req.review.description,
+        image: req.review.image,
+        countlike: req.review.likes.length,
+        islike: islike,
+        user: req.review.user
+      };
+      res.jsonp(data);
     }
   });
 };
