@@ -100,6 +100,11 @@ module.exports = {
       }
     }
   },
+  jwt:{
+    secret: 'ngEurope rocks!',
+    audience: 'nodejs-jwt-auth',
+    issuer: 'https://gonto.com'
+  },
   // This config is set to true during grunt coverage
   coverage: process.env.COVERAGE || false
 };

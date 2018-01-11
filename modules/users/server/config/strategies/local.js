@@ -5,23 +5,11 @@
  */
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    User = require('mongoose').model('User'),
-    _ = require('lodash'),
-    jwt = require('jsonwebtoken');
-
-var config = {
-    secret: 'ngEurope rocks!',
-    audience: 'nodejs-jwt-auth',
-    issuer: 'https://gonto.com'
-};
-
-module.exports = function () {
-
-    function createIdToken(user) {
-        return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 2 * 60 * 60 * 1000 });
-    }
+    User = require('mongoose').model('User');
+    
 
 
+module.exports = function (config) {
     // Use local strategy
     passport.use('local', new LocalStrategy({
         usernameField: 'username',
@@ -50,9 +38,9 @@ module.exports = function () {
                 }
 
                 // add token and exp date to user object
-                user.loginToken = "";
-                user.loginToken = createIdToken(user);
-                user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
+                // user.loginToken = "";
+                // user.loginToken = createIdToken(user);
+                // user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
                 // save user object to update database
                 user.save(function (err) {
                     if (err) {

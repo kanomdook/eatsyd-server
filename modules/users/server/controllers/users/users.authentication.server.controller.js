@@ -7,7 +7,8 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  ///custom///////////////////
+  config = require(path.resolve('./config/config')),
+  _ = require('lodash'),
   jwt = require('jsonwebtoken'),
   User = mongoose.model('User');
 
@@ -17,6 +18,7 @@ var noReturnUrls = [
   '/authentication/signin',
   '/authentication/signup'
 ];
+
 
 /**
  * Signup
@@ -59,6 +61,7 @@ exports.signup = function (req, res) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
+
   if (req.body.facebookLogin ? req.body.facebookLogin : false) {
     User.findOne({
       'email': req.body.facebookData.email
@@ -67,15 +70,35 @@ exports.signin = function (req, res, next) {
         res.status(400).send(err);
       } else {
         if (user) {
-          var tokenPayload = {
-            username: user.username,
-            loginExpires: user.loginExpires
-          };
+          user.password = undefined;
+          user.salt = undefined;
+          user.loginToken = "";
+          user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
+          user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
+          // var tokenPayload = {
+          //   username: user.username,
+          //   loginExpires: user.loginExpires
+          // };
 
-          User.findByIdAndUpdate(user._id, {
-            'loginToken': jwt.sign(tokenPayload, secret),
-            'loginExpires': Date.now() + (2 * 60 * 60 * 1000)
-          }).exec(function (err, user) {
+          // User.findByIdAndUpdate(user._id, {
+          //   'loginToken': jwt.sign(tokenPayload, secret),
+          //   'loginExpires': Date.now() + (2 * 60 * 60 * 1000)
+          // }).exec(function (err, user) {
+          //   if (err) {
+          //     res.status(400).send(err);
+          //   } else {
+          //     res.json(user);
+          //   }
+          // });
+          // user.save(function (err, user) {
+          //   if (err) {
+          //     res.status(400).send(err);
+          //   } else {
+          //     res.json(user);
+          //   }
+          // });
+
+          req.login(user, function (err) {
             if (err) {
               res.status(400).send(err);
             } else {
@@ -83,24 +106,27 @@ exports.signin = function (req, res, next) {
             }
           });
         } else { //register
-          var tokenPayload2 = {
-            username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
-            loginExpires: Date.now()
-          };
+          // var tokenPayload2 = {
+          //   username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
+          //   loginExpires: Date.now()
+          // };
 
-          var user2 = new User({
+          user = new User({
             displayName: req.body.facebookData.name,
             email: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id + '@gmail.com',
             username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
-            provider: 'facebook',
-            loginToken: jwt.sign(tokenPayload2, secret),
-            loginExpires: Date.now() + (2 * 60 * 60 * 1000)
+            provider: 'facebook'
           });
 
           user.save(function (err, user) {
             if (err) {
               res.status(400).send(err);
             } else {
+              user.password = undefined;
+              user.salt = undefined;
+              user.loginToken = "";
+              user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
+              user.loginExpires = Date.now() + (2 * 60 * 60 * 1000);
               res.json(user);
             }
           });
@@ -115,6 +141,18 @@ exports.signin = function (req, res, next) {
         // Remove sensitive data before login
         user.password = undefined;
         user.salt = undefined;
+        // add token and exp date to user object
+        user.loginToken = "";
+        user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
+        user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
+        // save user object to update database
+        // user.save(function (err) {
+        //   if (err) {
+        //     done(err);
+        //   } else {
+        //     done(null, user);
+        //   }
+        // });
 
         req.login(user, function (err) {
           if (err) {

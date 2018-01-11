@@ -99,5 +99,10 @@ module.exports = {
         roles: ['user', 'admin']
       }
     }
+  },
+  jwt:{
+    secret: 'ngEurope rocks!',
+    audience: 'nodejs-jwt-auth',
+    issuer: 'https://gonto.com'
   }
 };
