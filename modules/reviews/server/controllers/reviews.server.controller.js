@@ -117,7 +117,18 @@ exports.reviewByID = function (req, res, next, id) {
 };
 
 exports.updateIslikes = function (req, res) {
-
-  console.log(req.review.likes);
-  res.jsonp(req.review);
+  if (req.review.likes.indexOf(req.user._id) > -1) {
+    req.review.likes.splice(req.review.likes.indexOf(req.user._id), 1);
+  } else {
+    req.review.likes.push(req.user);
+  }
+  req.review.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(req.review);
+    }
+  });
 };

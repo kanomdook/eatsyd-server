@@ -341,6 +341,64 @@ describe('Review CRUD tests token', function () {
                     var reviews = reviewsGetRes.body;
 
                     // Set assertions
+                    (reviews.likes.length).should.match(1);
+
+                    // Call the assertion callback
+                    done();
+                  });
+              });
+          });
+      });
+  });
+
+  it('update un likes', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+        // review.likes = [];
+        // Save a new Review
+        agent.post('/api/reviews')
+          .send(review)
+          .expect(200)
+          .end(function (reviewSaveErr, reviewSaveRes) {
+            // Handle Review save error
+            if (reviewSaveErr) {
+              return done(reviewSaveErr);
+            }
+
+            // Update Review title
+            // review.likes = {
+            //   likes: user
+            // };
+            // Update an existing Review
+            agent.put('/api/islike/' + reviewSaveRes.body._id)
+              // .send(review)
+              .expect(200)
+              .end(function (reviewUpdateErr, reviewUpdateRes) {
+                // Handle Review update error
+                if (reviewUpdateErr) {
+                  return done(reviewUpdateErr);
+                }
+
+                agent.get('/api/reviews/' + reviewSaveRes.body._id)
+                  .end(function (reviewsGetErr, reviewsGetRes) {
+                    // Handle Reviews save error
+                    if (reviewsGetErr) {
+                      return done(reviewsGetErr);
+                    }
+
+                    // Get Reviews list
+                    var reviews = reviewsGetRes.body;
+
+                    // Set assertions
                     (reviews.likes.length).should.match(0);
 
                     // Call the assertion callback
