@@ -165,13 +165,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -365,13 +365,13 @@ exports.cookingHomeShop = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -413,7 +413,9 @@ exports.resHomeShop = function (req, res) {
   });
   var resShop = {
     _id: shop._id,
+    categories: shop.categories,
     name: shop.name,
+    name_eng: shop.name_eng,
     detail: shop.detail,
     address: shop.address,
     tel: shop.tel,
@@ -724,13 +726,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-            path: 'cate',
-            model: 'Categoryproduct'
-          },
-          {
-            path: 'products',
-            model: 'Product'
-          }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -849,35 +851,35 @@ exports.ads = function (req, res, next) {
   req.ads = {
     "title": "Advertise",
     "items": [{
-        "_id": "ads001",
-        "image": "./assets/imgs/ads/ads1.png",
-        "isvideo": true,
-        "videoid": "###"
-      },
-      {
-        "_id": "ads002",
-        "image": "./assets/imgs/ads/ads2.png",
-        "isvideo": false,
-        "videoid": ""
-      },
-      {
-        "_id": "ads003",
-        "image": "./assets/imgs/ads/ads3.png",
-        "isvideo": true,
-        "videoid": "###"
-      },
-      {
-        "_id": "ads004",
-        "image": "./assets/imgs/ads/ads4.png",
-        "isvideo": false,
-        "videoid": ""
-      },
-      {
-        "_id": "ads005",
-        "image": "./assets/imgs/ads/ads5.png",
-        "isvideo": false,
-        "videoid": ""
-      }
+      "_id": "ads001",
+      "image": "./assets/imgs/ads/ads1.png",
+      "isvideo": true,
+      "videoid": "###"
+    },
+    {
+      "_id": "ads002",
+      "image": "./assets/imgs/ads/ads2.png",
+      "isvideo": false,
+      "videoid": ""
+    },
+    {
+      "_id": "ads003",
+      "image": "./assets/imgs/ads/ads3.png",
+      "isvideo": true,
+      "videoid": "###"
+    },
+    {
+      "_id": "ads004",
+      "image": "./assets/imgs/ads/ads4.png",
+      "isvideo": false,
+      "videoid": ""
+    },
+    {
+      "_id": "ads005",
+      "image": "./assets/imgs/ads/ads5.png",
+      "isvideo": false,
+      "videoid": ""
+    }
     ]
   };
   next();
@@ -932,49 +934,49 @@ exports.categories = function (req, res, next) {
   req.categories = {
     "title": "Category",
     "items": [{
-        "_id": "cat0000",
-        "image": "./assets/imgs/Catagory/cat0.png"
-      },
-      {
-        "_id": "cat0001",
-        "image": "./assets/imgs/Catagory/cat1.png"
-      },
-      {
-        "_id": "cat0002",
-        "image": "./assets/imgs/Catagory/cat2.png"
-      },
-      {
-        "_id": "cat0003",
-        "image": "./assets/imgs/Catagory/cat3.png"
-      },
-      {
-        "_id": "cat0004",
-        "image": "./assets/imgs/Catagory/cat4.png"
-      },
-      {
-        "_id": "cat0005",
-        "image": "./assets/imgs/Catagory/cat5.png"
-      },
-      {
-        "_id": "cat0006",
-        "image": "./assets/imgs/Catagory/cat6.png"
-      },
-      {
-        "_id": "cat0007",
-        "image": "./assets/imgs/Catagory/cat7.png"
-      },
-      {
-        "_id": "cat0008",
-        "image": "./assets/imgs/Catagory/cat8.png"
-      },
-      {
-        "_id": "cat0009",
-        "image": "./assets/imgs/Catagory/cat9.png"
-      },
-      {
-        "_id": "cat00010",
-        "image": "./assets/imgs/Catagory/cat10.png"
-      }
+      "_id": "cat0000",
+      "image": "./assets/imgs/Catagory/cat0.png"
+    },
+    {
+      "_id": "cat0001",
+      "image": "./assets/imgs/Catagory/cat1.png"
+    },
+    {
+      "_id": "cat0002",
+      "image": "./assets/imgs/Catagory/cat2.png"
+    },
+    {
+      "_id": "cat0003",
+      "image": "./assets/imgs/Catagory/cat3.png"
+    },
+    {
+      "_id": "cat0004",
+      "image": "./assets/imgs/Catagory/cat4.png"
+    },
+    {
+      "_id": "cat0005",
+      "image": "./assets/imgs/Catagory/cat5.png"
+    },
+    {
+      "_id": "cat0006",
+      "image": "./assets/imgs/Catagory/cat6.png"
+    },
+    {
+      "_id": "cat0007",
+      "image": "./assets/imgs/Catagory/cat7.png"
+    },
+    {
+      "_id": "cat0008",
+      "image": "./assets/imgs/Catagory/cat8.png"
+    },
+    {
+      "_id": "cat0009",
+      "image": "./assets/imgs/Catagory/cat9.png"
+    },
+    {
+      "_id": "cat00010",
+      "image": "./assets/imgs/Catagory/cat10.png"
+    }
     ]
   };
   next();
@@ -982,101 +984,101 @@ exports.categories = function (req, res, next) {
 
 exports.listShop = function (req, res, next) {
   req.listShop = [{
-      "title": "NEAR_BY",
-      "items": [{
-          "_id": "nb0001",
-          "name": "Poppen",
-          "rating": 4,
-          "distance": 0.2,
-          "image": "./assets/imgs/shop/shop5.png",
-          "isAds": true
-        },
-        {
-          "_id": "nb0002",
-          "name": "ข้าวหมูแดงอาก๋ง",
-          "rating": 5,
-          "distance": 0.9,
-          "image": "./assets/imgs/shop/shop1.png",
-          "isAds": true
-        },
-        {
-          "_id": "nb0003",
-          "name": "แซ่บแน่",
-          "rating": 4,
-          "distance": 2.1,
-          "image": "./assets/imgs/shop/shop6.png",
-          "isAds": false
-        },
-        {
-          "_id": "nb0004",
-          "name": "Sushi World",
-          "rating": 4,
-          "distance": 3.9,
-          "image": "./assets/imgs/shop/shop7.png",
-          "isAds": false
-        }
-      ]
+    "title": "NEAR_BY",
+    "items": [{
+      "_id": "nb0001",
+      "name": "Poppen",
+      "rating": 4,
+      "distance": 0.2,
+      "image": "./assets/imgs/shop/shop5.png",
+      "isAds": true
     },
     {
-      "title": "POPULAR",
-      "items": [{
-          "_id": "pop0001",
-          "name": "ภัตตาคารหลวง",
-          "rating": 5,
-          "distance": 5.2,
-          "image": "./assets/imgs/shop/shop8.png",
-          "isAds": true
-        },
-        {
-          "_id": "pop0002",
-          "name": "แซ่บแน่",
-          "rating": 4,
-          "distance": 11.4,
-          "image": "./assets/imgs/shop/shop6.png",
-          "isAds": true
-        },
-        {
-          "_id": "pop0003",
-          "name": "ร้านบ้านสวน",
-          "rating": 4,
-          "distance": 8.2,
-          "image": "./assets/imgs/shop/shop9.png",
-          "isAds": false
-        }
-      ]
+      "_id": "nb0002",
+      "name": "ข้าวหมูแดงอาก๋ง",
+      "rating": 5,
+      "distance": 0.9,
+      "image": "./assets/imgs/shop/shop1.png",
+      "isAds": true
     },
     {
-      "title": "FAVORITE",
-      "items": [{
-          "_id": "fav0001",
-          "name": "แซ่บแน่",
-          "rating": 4,
-          "distance": 11.4,
-          "image": "./assets/imgs/shop/shop6.png"
-        },
-        {
-          "_id": "fav0002",
-          "name": "ภัตตาคารหลวง",
-          "rating": 5,
-          "distance": 5.2,
-          "image": "./assets/imgs/shop/shop8.png"
-        },
-        {
-          "_id": "fav0003",
-          "name": "Poppen",
-          "rating": 4,
-          "distance": 15.7,
-          "image": "./assets/imgs/shop/shop5.png"
-        },
-        {
-          "_id": "fav0004",
-          "name": "บ้านขนม",
-          "rating": 3,
-          "distance": 4.1,
-          "image": "./assets/imgs/shop/shop10.png"
-        }
-      ]
+      "_id": "nb0003",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 2.1,
+      "image": "./assets/imgs/shop/shop6.png",
+      "isAds": false
+    },
+    {
+      "_id": "nb0004",
+      "name": "Sushi World",
+      "rating": 4,
+      "distance": 3.9,
+      "image": "./assets/imgs/shop/shop7.png",
+      "isAds": false
     }
+    ]
+  },
+  {
+    "title": "POPULAR",
+    "items": [{
+      "_id": "pop0001",
+      "name": "ภัตตาคารหลวง",
+      "rating": 5,
+      "distance": 5.2,
+      "image": "./assets/imgs/shop/shop8.png",
+      "isAds": true
+    },
+    {
+      "_id": "pop0002",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 11.4,
+      "image": "./assets/imgs/shop/shop6.png",
+      "isAds": true
+    },
+    {
+      "_id": "pop0003",
+      "name": "ร้านบ้านสวน",
+      "rating": 4,
+      "distance": 8.2,
+      "image": "./assets/imgs/shop/shop9.png",
+      "isAds": false
+    }
+    ]
+  },
+  {
+    "title": "FAVORITE",
+    "items": [{
+      "_id": "fav0001",
+      "name": "แซ่บแน่",
+      "rating": 4,
+      "distance": 11.4,
+      "image": "./assets/imgs/shop/shop6.png"
+    },
+    {
+      "_id": "fav0002",
+      "name": "ภัตตาคารหลวง",
+      "rating": 5,
+      "distance": 5.2,
+      "image": "./assets/imgs/shop/shop8.png"
+    },
+    {
+      "_id": "fav0003",
+      "name": "Poppen",
+      "rating": 4,
+      "distance": 15.7,
+      "image": "./assets/imgs/shop/shop5.png"
+    },
+    {
+      "_id": "fav0004",
+      "name": "บ้านขนม",
+      "rating": 3,
+      "distance": 4.1,
+      "image": "./assets/imgs/shop/shop10.png"
+    }
+    ]
+  }
   ];
   next();
 };
@@ -1128,13 +1130,13 @@ exports.findShopUser = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -1161,13 +1163,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -1236,23 +1238,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-        'name': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'detail': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'tel': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
+      'name': {
+        '$regex': keyWord,
+        '$options': 'i'
       }
+    },
+    {
+      'detail': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    },
+    {
+      'tel': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    }
     ]
   };
   return keyword;

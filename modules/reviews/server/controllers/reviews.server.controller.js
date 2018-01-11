@@ -164,22 +164,26 @@ exports.cookingListReview = function (req, res, next) {
     if (review.likes.indexOf(req.user._id) > -1) {
       // have
       cookingreviews.push({
+        _id: review._id,
         title: review.title,
         description: review.description,
         image: review.image,
         countlike: review.likes.length,
         islike: true,
-        user: review.user
+        user: review.user,
+        created: review.created
       });
     } else {
       // not have
       cookingreviews.push({
+        _id: review._id,
         title: review.title,
         description: review.description,
         image: review.image,
         countlike: review.likes.length,
         islike: false,
-        user: review.user
+        user: review.user,
+        created: review.created
       });
     }
   });
