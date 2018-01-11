@@ -409,6 +409,61 @@ describe('Review CRUD tests token', function () {
       });
   });
 
+  it('getlistreview', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+        // Save a new Review
+        agent.post('/api/reviews')
+          .send(review)
+          .expect(200)
+          .end(function (reviewSaveErr, reviewSaveRes) {
+            // Handle Review save error
+            if (reviewSaveErr) {
+              return done(reviewSaveErr);
+            }
+
+            agent.get('/api/getlistreview')
+              .end(function (reviewsGetErr, reviewsGetRes) {
+                // Handle Reviews save error
+                if (reviewsGetErr) {
+                  return done(reviewsGetErr);
+                }
+
+                // Get Reviews list
+                var reviews = reviewsGetRes.body;
+
+                // Set assertions
+                // description: 'Review description',
+                // image: 'Review image',
+                // likes: [user],
+                // active: true,
+                // iscoin: false,
+                // user: user
+                (reviews.length).should.match(1);
+                (reviews[0].title).should.match(review.title);
+                (reviews[0].description).should.match(review.description);
+                (reviews[0].image).should.match(review.image);
+                (reviews[0].islike).should.match(true);
+                (reviews[0].countlike).should.match(1);
+                (reviews[0].user.displayName).should.match(user.firstName + ' ' + user.lastName);
+                (reviews[0].user.profileImageURL).should.match('http://res.cloudinary.com/hflvlav04/image/upload/v1487834187/g3hwyieb7dl7ugdgj3tb.png');
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Review.remove().exec(done);

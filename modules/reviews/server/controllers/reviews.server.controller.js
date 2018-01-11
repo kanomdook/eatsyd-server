@@ -132,3 +132,52 @@ exports.updateIslikes = function (req, res) {
     }
   });
 };
+
+exports.getListReview = function (req, res, next) {
+  Review.find({ active: true }).sort('-created').populate('user', 'displayName profileImageURL').exec(function (err, reviews) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.reviews = reviews;
+      next();
+    }
+  });
+};
+
+exports.cookingListReview = function (req, res, next) {
+  var cookingreviews = [];
+  var reviews = req.reviews;
+  reviews.forEach(review => {
+    if (review.likes.indexOf(req.user._id) > -1) {
+      // have
+      cookingreviews.push({
+        title: review.title,
+        description: review.description,
+        image: review.image,
+        countlike: review.likes.length,
+        islike: true,
+        user: review.user
+      });
+    } else {
+      // not have
+      cookingreviews.push({
+        title: review.title,
+        description: review.description,
+        image: review.image,
+        countlike: review.likes.length,
+        islike: false,
+        user: review.user
+      });
+    }
+  });
+
+  req.cookingreviews = cookingreviews;
+  next();
+
+};
+
+exports.listReview = function (req, res) {
+  res.jsonp(req.cookingreviews);
+};

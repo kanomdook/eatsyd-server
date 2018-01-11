@@ -21,6 +21,9 @@ module.exports = function (app) {
   app.route('/api/islike/:reviewId').all(core.jwtCheck, reviewsPolicy.isAllowed)
     .put(reviews.updateIslikes);
 
+  app.route('/api/getlistreview').all(core.jwtCheck, reviewsPolicy.isAllowed)
+    .get(reviews.getListReview, reviews.cookingListReview, reviews.listReview);
+
 
   // Finish by binding the Review middleware
   app.param('reviewId', reviews.reviewByID);

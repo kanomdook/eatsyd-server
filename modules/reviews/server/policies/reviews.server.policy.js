@@ -23,6 +23,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/islike/:reviewId',
       permissions: '*'
+    }, {
+      resources: '/api/getlistreview',
+      permissions: ['get']
     }]
   }, {
     roles: ['user'],
@@ -35,6 +38,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/islike/:reviewId',
       permissions: '*'
+    }, {
+      resources: '/api/getlistreview',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
