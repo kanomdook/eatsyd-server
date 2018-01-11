@@ -1186,6 +1186,7 @@ exports.updateShop = function (req, res, next) {
       shop.email = _shop.email;
       shop.facebook = _shop.facebook;
       shop.line = _shop.line;
+      shop.tel = _shop.tel;
       shop.times = _shop.times;
       shop.address = _shop.address;
       shop.save(function (err) {
