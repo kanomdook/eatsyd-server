@@ -117,6 +117,9 @@ var UserSchema = new Schema({
   citizenid: {
     type: String
   },
+  bankaccount: {
+    type: String
+  },
   notificationids: {
     type: [String]
   }

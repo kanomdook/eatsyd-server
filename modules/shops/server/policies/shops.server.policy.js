@@ -83,6 +83,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/manageshop/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/manageshopinfo',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
