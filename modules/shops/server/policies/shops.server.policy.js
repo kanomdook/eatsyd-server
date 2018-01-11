@@ -50,6 +50,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/createproduct/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/getshopsname',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -100,6 +103,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/customerhome',
+      permissions: ['get']
+    }, {
+      resources: '/api/getshopsname',
       permissions: ['get']
     }]
   }, {
