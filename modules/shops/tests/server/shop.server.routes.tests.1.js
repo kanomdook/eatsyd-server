@@ -1108,6 +1108,128 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
+  it('manage shop info', function (done) {
+    // Save a new Shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+          .expect(200)
+          .end(function (createusershopErr, createusershopRes) {
+            // Handle signin error
+            if (createusershopErr) {
+              return done(createusershopErr);
+            }
+            var newcredentials = {
+              username: shop.email,
+              password: 'user1234'
+            };
+            agent.post('/api/auth/signin')
+              .send(newcredentials)
+              .expect(200)
+              .end(function (signinErr, signinRes) {
+                // Handle signin error
+                if (signinErr) {
+                  return done(signinErr);
+                }
+                agent.get('/api/shopshome')
+                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                  .expect(200)
+                  .end(function (shopGetErr, shopsGetRes) {
+                    if (shopGetErr) {
+                      return done(shopGetErr);
+                    }
+                    var shops = shopsGetRes.body;
+                    (shops.coverimage).should.match(shop.coverimage);
+                    (shops.promoteimage).should.match(shop.promoteimage);
+                    (shops.items.length).should.match(0);
+                    var firstlogin = {
+                      profileImageURL: 'mypic.jpg',
+                      firstName: 'my name is',
+                      lastName: 'my lastname is',
+                      dateOfBirth: new Date(),
+                      citizenid: '12150',
+                      bankaccount: '1122233',
+                      coverimage: 'http://www.hardrock.com/cafes/amsterdam/files/2308/LegendsRoom.jpg',
+                      name: 'ครัวคุณโก๋2',
+                      name_eng: 'Shop name english2',
+                      detail: 'Coffice Idea Space2',
+                      email: 'test2@gmail.com',
+                      facebook: 'facebook2.com',
+                      line: '@lineid2',
+                      times: [{
+                        description: 'ทุกวัน2',
+                        timestart: '07.02',
+                        timeend: '20.02',
+                        days: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+                      }],
+                      address: {
+                        address: '88/82',
+                        addressdetail: 'ตรงข้าม big c2',
+                        subdistinct: 'ลำลูกกา2',
+                        distinct: 'ลำลูกกา2',
+                        province: 'ปทุมธานี2',
+                        postcode: '121502',
+                        lat: '13.93389492',
+                        lng: '100.68277732'
+                      }
+
+                    };
+                    agent.put('/api/manageshopinfo/')
+                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                      .send(firstlogin)
+                      .expect(200)
+                      .end(function (changecoverErr, changecoverRes) {
+                        // Handle signin error
+                        if (changecoverErr) {
+                          return done(changecoverErr);
+                        }
+                        var shopchange = changecoverRes.body;
+                        (shopchange.shop.coverimage).should.match(firstlogin.coverimage);
+                        (shopchange.shop.name).should.match(firstlogin.name);
+                        (shopchange.shop.name_eng).should.match(firstlogin.name_eng);
+                        (shopchange.shop.detail).should.match(firstlogin.detail);
+                        (shopchange.shop.email).should.match(firstlogin.email);
+                        (shopchange.shop.facebook).should.match(firstlogin.facebook);
+                        (shopchange.shop.line).should.match(firstlogin.line);
+                        (shopchange.shop.times.length).should.match(1);
+                        (shopchange.shop.times[0].description).should.match(firstlogin.times[0].description);
+                        (shopchange.shop.times[0].timestart).should.match(firstlogin.times[0].timestart);
+                        (shopchange.shop.times[0].timeend).should.match(firstlogin.times[0].timeend);
+                        (shopchange.shop.times[0].days.length).should.match(7);
+                        (shopchange.shop.times[0].days[0]).should.match(firstlogin.times[0].days[0]);
+                        (shopchange.shop.times[0].days[6]).should.match(firstlogin.times[0].days[6]);
+                        (shopchange.shop.address.address).should.match(firstlogin.address.address);
+                        (shopchange.shop.address.addressdetail).should.match(firstlogin.address.addressdetail);
+                        (shopchange.shop.address.subdistinct).should.match(firstlogin.address.subdistinct);
+                        (shopchange.shop.address.distinct).should.match(firstlogin.address.distinct);
+                        (shopchange.shop.address.province).should.match(firstlogin.address.province);
+                        (shopchange.shop.address.postcode).should.match(firstlogin.address.postcode);
+                        (shopchange.shop.address.lat).should.match(firstlogin.address.lat);
+                        (shopchange.shop.address.lng).should.match(firstlogin.address.lng);                   
+                        (shopchange.user.profileImageURL).should.match(firstlogin.profileImageURL);
+                        (shopchange.user.firstName).should.match(firstlogin.firstName);
+                        (shopchange.user.lastName).should.match(firstlogin.lastName);
+                        (shopchange.user.dateOfBirth).should.match(firstlogin.dateOfBirth);
+                        (shopchange.user.citizenid).should.match(firstlogin.citizenid);
+                        (shopchange.user.bankaccount).should.match(firstlogin.bankaccount);
+                        (shopchange.shop.promoteimage.length).should.match(5);
+                        (shopchange.shop.items.length).should.match(0);
+                        done();
+                      });
+                  });
+              });
+          });
+
+      });
+  });
+
   it('get home admin', function (done) {
     var shop1 = new Shop(shop);
     var shop2 = new Shop(shop);

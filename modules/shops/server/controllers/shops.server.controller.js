@@ -1070,6 +1070,110 @@ exports.returnShop = function (req, res) {
   });
 };
 
+exports.updateUser = function (req, res, next) {
+  var _user = req.body;
+  User.findById(req.user._id).exec(function (err, user) {
+    if (err) {
+      return next(err);
+    } else if (!user) {
+      return res.status(404).send({
+        message: 'User not found'
+      });
+    }
+    user.firstName = _user.firstName;
+    user.lastName = _user.lastName;
+    user.displayName = _user.firstName + ' ' + _user.lastName;
+    user.profileImageURL = _user.profileImageURL;
+    user.dateOfBirth = _user.dateOfBirth;
+    user.citizenid = _user.citizenid;
+    user.bankaccount = _user.bankaccount;
+
+    user.save(function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.updateuser = user;
+        next();
+      }
+    });
+  });
+};
+
+exports.findShopUser = function (req, res, next) {
+  Shop.find({
+    user: req.user._id
+  }).sort('-created').populate('categories').populate({
+    path: 'items', populate: [
+      { path: 'cate', model: 'Categoryproduct' },
+      { path: 'products', model: 'Product' }
+    ]
+  }).exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (shops && shops.length > 0) {
+        req.shop = shops[0];
+        next();
+      } else {
+        return res.status(400).send({
+          message: 'no shop'
+        });
+      }
+    }
+  });
+};
+
+exports.updateShop = function (req, res, next) {
+  var _shop = req.body;
+  Shop.findById(req.shop._id).sort('-created')
+    .populate('categories')
+    .populate({
+      path: 'items', populate: [
+        { path: 'cate', model: 'Categoryproduct' },
+        { path: 'products', model: 'Product' }
+      ]
+    }).exec(function (err, shop) {
+      if (err) {
+        return next(err);
+      } else if (!shop) {
+        return res.status(404).send({
+          message: 'shop not found'
+        });
+      }
+      shop.coverimage = _shop.coverimage;
+      shop.name = _shop.name;
+      shop.name_eng = _shop.name_eng;
+      shop.detail = _shop.detail;
+      shop.email = _shop.email;
+      shop.facebook = _shop.facebook;
+      shop.line = _shop.line;
+      shop.times = _shop.times;
+      shop.address = _shop.address;
+      shop.save(function (err) {
+        if (err) {
+          console.log(err);
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          req.updateshop = shop;
+          next();
+        }
+      });
+    });
+};
+
+exports.shopInfo = function (req, res) {
+  res.jsonp({
+    shop: req.updateshop,
+    user: req.updateuser
+  });
+};
 //count page
 function countPage(shops) {
   var numpage = [];
