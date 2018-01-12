@@ -401,6 +401,23 @@ describe('Customer Home Stories Test', function () {
     });
   });
 
+  it('should be get Shops by Condition', function(done){
+    agent.get('/api/customer/shops/' + 'NEAR_BY')
+    .end(function(shopByCondErr,shopByCondRes){
+      if (shopByCondErr) {
+        return done(shopByCondErr);
+      }
+
+      // Get Products list
+      var shopByCond = shopByCondRes.body;
+
+      // Set assertions
+      shopByCond.should.be.instanceof(Array).and.have.lengthOf(4);
+      done();
+      
+    });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Hotprice.remove().exec(function(){

@@ -122,6 +122,10 @@ var ShopSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  isAds : {
+    type: Boolean,
+    default: false
   }
 });
 

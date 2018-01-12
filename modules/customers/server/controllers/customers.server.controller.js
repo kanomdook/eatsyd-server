@@ -27,6 +27,12 @@ exports.getcateid = function (req, res, next, cateid) {
   next();
 };
 
+exports.getcondition = function(req, res, next, condition){
+  req.condition = condition;
+  next();
+};
+
+
 exports.getshopbycate = function (req, res) {
   Shop.find({categories: mongoose.Types.ObjectId(req.cateid)}).sort().exec(function (err, shops) {
     if (err) {
@@ -140,7 +146,12 @@ exports.listShop = function (req, res, next) {
 };
 
 exports.nearbyshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  var items = [];
+  var limit = { limit: 4 };
+  if(req.condition){
+    limit = { limit: 100 };
+  }
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -152,17 +163,29 @@ exports.nearbyshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: shop.coverimage
+          image: shop.coverimage,
+          isAds: shop.isAds
         };
-        req.listShop[0].items.push(resShop);
+        items.push(resShop);
       });
-      next();
+      if(req.condition && req.condition === 'NEAR_BY'){
+        res.json(items);
+      }else{
+        req.listShop[0].items = items;
+        next();
+      }
+     
     }
   });
 };
 
 exports.popshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  var items = [];
+  var limit = { limit: 4 };
+  if(req.condition){
+    limit = { limit: 100 };
+  }
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -174,17 +197,28 @@ exports.popshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: shop.coverimage
+          image: shop.coverimage,
+          isAds: shop.isAds
         };
-        req.listShop[1].items.push(resShop);
+        items.push(resShop);
       });
-      next();
+      if(req.condition && req.condition === 'POPULAR'){
+        res.json(items);
+      }else{
+        req.listShop[1].items = items;
+        next();
+      }
     }
   });
 };
 
 exports.favoriteshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  var items = [];
+  var limit = { limit: 4 };
+  if(req.condition){
+    limit = { limit: 100 };
+  }
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -196,11 +230,17 @@ exports.favoriteshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: shop.coverimage
+          image: shop.coverimage,
+          isAds: shop.isAds
         };
-        req.listShop[2].items.push(resShop);
+        items.push(resShop);
       });
-      next();
+      if(req.condition && req.condition === 'FAVORITE'){
+        res.json(items);
+      }else{
+        req.listShop[2].items = items;
+        next();
+      }
     }
   });
 };
