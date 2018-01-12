@@ -32,9 +32,6 @@ module.exports = function (app) {
   app.route('/api/shopshome').all(core.jwtCheck, shopsPolicy.isAllowed)
     .get(shops.cookingHomeShop, shops.resHomeShop);
 
-  //get home customer
-  app.route('/api/customerhome').all(core.jwtCheck, shopsPolicy.isAllowed)
-    .get(shops.ads, shops.hotprices, shops.categories, shops.listShop, shops.returnShop);
 
   //get home admin
   app.route('/api/adminhome').all(core.jwtCheck, shopsPolicy.isAllowed)

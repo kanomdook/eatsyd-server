@@ -5,6 +5,7 @@ var should = require('should'),
     path = require('path'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
+    Categoryshop = mongoose.model('Categoryshop'),
     express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -118,6 +119,8 @@ describe('Authen Token tests', function () {
 
 
     afterEach(function (done) {
-        User.remove().exec(done);
+        User.remove().exec(function () {
+            Categoryshop.remove().exec(done);
+        });
     });
 });
