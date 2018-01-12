@@ -11,6 +11,7 @@ var path = require('path'),
   _ = require('lodash'),
   jwt = require('jsonwebtoken'),
   Benefitsetting = mongoose.model('Benefitsetting'),
+  Coinbalance = mongoose.model('Coinbalance'),
   User = mongoose.model('User');
 
 var secret = 'keepitquiet';
@@ -79,28 +80,44 @@ exports.getnewregisterreward = function (req, res, next) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var resuser = {
-        _id: user._id,
-        created: user.created,
-        displayName: user.displayName,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        notificationids: user.notificationids,
-        profileImageURL: user.profileImageURL,
-        provider: user.provider,
-        roles: user.roles,
-        username: user.username,
-        loginToken: user.loginToken,
-        newregisterreward: {
-          items: [{
-            image: benefit.image,
-            description: benefit.description
-          }
-          ]
+      var coinbalance = new Coinbalance({
+        name: benefit.name,
+        balancetype: 'in',
+        volume: benefit.items[0].volume,
+        refbenefit: benefit,
+        user: user
+      });
+      coinbalance.save(function(errsave){
+        if(errsave){
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(errsave)
+          });
+        }else{
+          var resuser = {
+            _id: user._id,
+            created: user.created,
+            displayName: user.displayName,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            notificationids: user.notificationids,
+            profileImageURL: user.profileImageURL,
+            provider: user.provider,
+            roles: user.roles,
+            username: user.username,
+            loginToken: user.loginToken,
+            newregisterreward: {
+              items: [{
+                image: benefit.image,
+                description: benefit.description
+              }
+              ]
+            }
+          };
+          res.json(resuser);
         }
-      };
-      res.json(resuser);
+      });
+      
     }
   });
   

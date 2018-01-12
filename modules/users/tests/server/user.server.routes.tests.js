@@ -6,6 +6,7 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Benefitsetting = mongoose.model('Benefitsetting'),
+  Coinbalance = mongoose.model('Coinbalance'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -933,9 +934,12 @@ describe('User CRUD tests', function () {
   });
 
   afterEach(function (done) {
-    Benefitsetting.remove().exec(function(){
-      User.remove().exec(done);
+    Coinbalance.remove().exec(function(){
+      Benefitsetting.remove().exec(function(){
+        User.remove().exec(done);
+      });
     });
+    
     
   });
 });
