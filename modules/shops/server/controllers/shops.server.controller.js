@@ -138,7 +138,7 @@ exports.delete = function (req, res) {
 
 exports.list = function (req, res) {
 
-  Shop.find().sort('name').populate('user', 'firstName').exec(function (err, shop) {
+  Shop.find().sort('name').populate('user', 'firstName').populate('shopowner', 'firstName').exec(function (err, shop) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -165,13 +165,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -243,7 +243,7 @@ exports.updateUserShop = function (req, res, next) {
         message: 'Update Shop ' + errorHandler.getErrorMessage(err)
       });
     } else {
-      shops.user = req.usernew;
+      shops.shopowner = req.usernew;
       shops.issendmail = true;
 
       shops.save(function (err) {
@@ -253,7 +253,7 @@ exports.updateUserShop = function (req, res, next) {
           });
         } else {
           User.populate(shops, {
-            path: "user"
+            path: "shopowner"
           }, function (err, shopsRes) {
             req.shop = shopsRes;
             next();
@@ -361,17 +361,17 @@ exports.listFilter = function (req, res) {
 exports.cookingHomeShop = function (req, res, next) {
   // console.log(req.user._id);
   Shop.find({
-    user: req.user._id
+    shopowner: req.user._id
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -726,13 +726,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+            path: 'cate',
+            model: 'Categoryproduct'
+          },
+          {
+            path: 'products',
+            model: 'Product'
+          }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -883,17 +883,17 @@ exports.updateUser = function (req, res, next) {
 
 exports.findShopUser = function (req, res, next) {
   Shop.find({
-    user: req.user._id
+    shopowner: req.user._id
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -920,13 +920,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -996,23 +996,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-      'name': {
-        '$regex': keyWord,
-        '$options': 'i'
+        'name': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'detail': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'tel': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
       }
-    },
-    {
-      'detail': {
-        '$regex': keyWord,
-        '$options': 'i'
-      }
-    },
-    {
-      'tel': {
-        '$regex': keyWord,
-        '$options': 'i'
-      }
-    }
     ]
   };
   return keyword;

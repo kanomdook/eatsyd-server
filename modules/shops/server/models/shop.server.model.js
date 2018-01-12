@@ -108,6 +108,10 @@ var ShopSchema = new Schema({
       ref: 'Categoryshop'
     }]
   },
+  shopowner: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   created: {
     type: Date,
     default: Date.now
