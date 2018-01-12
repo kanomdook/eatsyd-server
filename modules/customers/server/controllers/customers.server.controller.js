@@ -253,3 +253,6 @@ exports.returnShop = function (req, res) {
     shops: req.listShop
   });
 };
+exports.returnShopByCate = function (req, res) {
+  res.jsonp(req.listShop);
+};

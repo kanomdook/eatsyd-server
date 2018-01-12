@@ -22,8 +22,12 @@ module.exports = function (app) {
       customers.favoriteshops, 
       customers.returnShop);
 
-  app.route('/api/customer/categoryshop/:cateid')
-  .get(customers.getshopbycate);
+  app.route('/api/customer/categoryshop/:cateid/:lat/:lng')
+  .get(customers.listShop,
+    customers.nearbyshops,
+    customers.popshops,
+    customers.favoriteshops, 
+    customers.returnShopByCate);
 
   app.route('/api/customer/shops/:condition')
   .get(customers.nearbyshops,
