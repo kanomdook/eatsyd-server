@@ -15,6 +15,9 @@ var BenefitsettingSchema = new Schema({
     enum: ['newreg', 'login', 'bill'],
     required: 'Please fill Benefitsetting name',
   },
+  title: String,
+  remark: String,
+  image: String,
   description:{
     type: String,
     default: ''

@@ -11,6 +11,7 @@ var should = require('should'),
   Hotprice = mongoose.model('Hotprice'),
   Categoryproduct = mongoose.model('Categoryproduct'),
   Product = mongoose.model('Product'),
+  Benefitsetting = mongoose.model('Benefitsetting'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -24,6 +25,7 @@ var app,
   categoryshop,
   shop1, shop2, shop3, shop4, shop5,
   hotprice1, hotprice2, hotprice3, hotprice4, hotprice5, hotprice6,
+  benefitsetting,
   token;
 
 /**
@@ -56,6 +58,19 @@ describe('Customer Home Stories Test', function () {
       password: credentials.password,
       provider: 'local',
       roles: ['admin']
+    });
+
+    benefitsetting = new Benefitsetting({
+      name: 'login',
+      title: 'ยินดีด้วย',
+      description: 'โปรโมชั่นประจำวัน คุณได้รับ 10 เหรียญ',
+      remark: 'หมายเหตุ: 1 วันต่อครั้งเท่านั้น',
+      image: './assets/imgs/Home-Collect.png',
+      items: [{
+        benefittype: 'coin',
+        volume: 10
+      }],
+      user: user
     });
 
     ads1 = new Ad({
@@ -325,6 +340,7 @@ describe('Customer Home Stories Test', function () {
     token = '';
     // Save a user to the test db and create new Shop
     user.save(function () {
+      benefitsetting.save();
       ads1.save();
       ads2.save();
       ads3.save();
@@ -425,7 +441,7 @@ describe('Customer Home Stories Test', function () {
       });
   });
 
-  it('should be get Today Welcome',function(done){
+  it('should be get Today Welcome', function (done) {
     agent.get('/api/customer/todaywelcome')
       .end(function (getErr, getRes) {
         if (getErr) {
@@ -443,14 +459,17 @@ describe('Customer Home Stories Test', function () {
   });
 
   afterEach(function (done) {
-    User.remove().exec(function () {
-      Hotprice.remove().exec(function () {
-        Shop.remove().exec(function () {
-          Categoryshop.remove().exec(function () {
-            Ad.remove().exec(done);
+    Benefitsetting.remove().exec(function () {
+      User.remove().exec(function () {
+        Hotprice.remove().exec(function () {
+          Shop.remove().exec(function () {
+            Categoryshop.remove().exec(function () {
+              Ad.remove().exec(done);
+            });
           });
         });
       });
     });
+
   });
 });

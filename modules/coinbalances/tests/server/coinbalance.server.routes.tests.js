@@ -51,7 +51,10 @@ describe('Coinbalance CRUD tests', function () {
     // Save a user to the test db and create new Coinbalance
     user.save(function () {
       coinbalance = {
-        name: 'Coinbalance name'
+        name: 'newreg',
+        balancetype: 'in',
+        volume: 5,
+        user: user
       };
 
       done();
@@ -94,7 +97,7 @@ describe('Coinbalance CRUD tests', function () {
 
                 // Set assertions
                 (coinbalances[0].user._id).should.equal(userId);
-                (coinbalances[0].name).should.match('Coinbalance name');
+                (coinbalances[0].name).should.match('newreg');
 
                 // Call the assertion callback
                 done();
@@ -167,7 +170,7 @@ describe('Coinbalance CRUD tests', function () {
             }
 
             // Update Coinbalance name
-            coinbalance.name = 'WHY YOU GOTTA BE SO MEAN?';
+            coinbalance.name = 'login';
 
             // Update an existing Coinbalance
             agent.put('/api/coinbalances/' + coinbalanceSaveRes.body._id)
@@ -181,7 +184,7 @@ describe('Coinbalance CRUD tests', function () {
 
                 // Set assertions
                 (coinbalanceUpdateRes.body._id).should.equal(coinbalanceSaveRes.body._id);
-                (coinbalanceUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (coinbalanceUpdateRes.body.name).should.match('login');
 
                 // Call the assertion callback
                 done();

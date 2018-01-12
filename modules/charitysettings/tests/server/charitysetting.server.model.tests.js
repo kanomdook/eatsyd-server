@@ -6,18 +6,18 @@
 var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
-  Coinbalance = mongoose.model('Coinbalance');
+  Charitysetting = mongoose.model('Charitysetting');
 
 /**
  * Globals
  */
 var user,
-  coinbalance;
+  charitysetting;
 
 /**
  * Unit tests
  */
-describe('Coinbalance Model Unit Tests:', function() {
+describe('Charitysetting Model Unit Tests:', function() {
   beforeEach(function(done) {
     user = new User({
       firstName: 'Full',
@@ -29,10 +29,8 @@ describe('Coinbalance Model Unit Tests:', function() {
     });
 
     user.save(function() {
-      coinbalance = new Coinbalance({
-        name: 'newreg',
-        balancetype: 'in',
-        volume: 5,
+      charitysetting = new Charitysetting({
+        name: 'Charitysetting Name',
         user: user
       });
 
@@ -43,16 +41,16 @@ describe('Coinbalance Model Unit Tests:', function() {
   describe('Method Save', function() {
     it('should be able to save without problems', function(done) {
       this.timeout(0);
-      return coinbalance.save(function(err) {
+      return charitysetting.save(function(err) {
         should.not.exist(err);
         done();
       });
     });
 
     it('should be able to show an error when try to save without name', function(done) {
-      coinbalance.name = '';
+      charitysetting.name = '';
 
-      return coinbalance.save(function(err) {
+      return charitysetting.save(function(err) {
         should.exist(err);
         done();
       });
@@ -60,7 +58,7 @@ describe('Coinbalance Model Unit Tests:', function() {
   });
 
   afterEach(function(done) {
-    Coinbalance.remove().exec(function() {
+    Charitysetting.remove().exec(function() {
       User.remove().exec(function() {
         done();
       });
