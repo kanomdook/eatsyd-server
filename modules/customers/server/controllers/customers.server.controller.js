@@ -91,6 +91,10 @@ exports.categories = function (req, res, next) {
       });
     } else {
       categories.forEach(function (category) {
+        var resCate = {
+          _id: category._id,
+          image: category.image || './assets/imgs/Catagory/cat20.png'
+        };
         req.categories.items.push(category);
       });
       next();
