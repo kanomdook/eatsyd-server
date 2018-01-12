@@ -402,12 +402,50 @@ exports.resHomeShop = function (req, res) {
       products: []
     };
     itm.products.forEach(function (i) {
-      cookingItem.products.push({
-        _id: i.name === 'default' ? null : i._id,
-        name: i.name === 'default' ? '' : i.name,
-        image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
-        price: i.name === 'default' ? null : i.price
-      });
+      if (i.promotionprice) {
+        var startdate = new Date(i.startdate);
+        startdate.setHours(0, 0, 0);
+        var expiredate = new Date(i.expiredate);
+        expiredate.setDate(expiredate.getDate() + 1);
+        expiredate.setHours(0, 0, 0);
+        var today = new Date();
+        if (today > startdate && today < expiredate) {
+          cookingItem.products.push({
+            _id: i.name === 'default' ? null : i._id,
+            name: i.name === 'default' ? '' : i.name,
+            image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
+            price: i.promotionprice ? i.promotionprice : i.price,
+            isrecomment: i.isrecomment,
+            ispromotionprice: true,
+            startdate: startdate,
+            expiredate: expiredate
+          });
+        } else {
+          cookingItem.products.push({
+            _id: i.name === 'default' ? null : i._id,
+            name: i.name === 'default' ? '' : i.name,
+            image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
+            price: i.name === 'default' ? null : i.price,
+            isrecomment: i.isrecomment,
+            ispromotionprice: false,
+            startdate: startdate,
+            expiredate: expiredate
+          });
+        }
+
+      } else {
+        cookingItem.products.push({
+          _id: i.name === 'default' ? null : i._id,
+          name: i.name === 'default' ? '' : i.name,
+          image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
+          price: i.name === 'default' ? null : i.price,
+          isrecomment: i.isrecomment,
+          ispromotionprice: false,
+          startdate: null,
+          expiredate: null
+        });
+      }
+
     });
     items.push(cookingItem);
   });
@@ -1153,7 +1191,7 @@ exports.shopUpdateItems = function (req, res) {
     };
     itm.products.forEach(function (itmp) {
       if (!itmp._id) {
-        data.products.push(req.defaultProd._id);        
+        data.products.push(req.defaultProd._id);
       } else {
         data.products.push(itmp._id);
       }
