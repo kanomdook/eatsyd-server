@@ -703,7 +703,7 @@ exports.resShopData = function (req, res) {
 
 exports.addPromote = function (req, res, next) {
   var shop = req.shop;
-  shop.promoteimage.push(req.body.data);
+  shop.promoteimage.unshift(req.body.data);
   if (shop.promoteimage.length > 10) {
     return res.status(400).send({
       message: 'Promote images is limited.'
