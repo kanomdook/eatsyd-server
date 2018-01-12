@@ -29,7 +29,7 @@ module.exports = function (app) {
     customers.favoriteshops, 
     customers.returnShopByCate);
 
-  app.route('/api/customer/shops/:condition')
+  app.route('/api/customer/shops/:condition/:lat/:lng')
   .get(customers.nearbyshops,
     customers.popshops,
     customers.favoriteshops);

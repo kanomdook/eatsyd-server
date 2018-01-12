@@ -409,7 +409,7 @@ describe('Customer Home Stories Test', function () {
   });
 
   it('should be get Shops by Condition', function (done) {
-    agent.get('/api/customer/shops/' + 'POPULAR')
+    agent.get('/api/customer/shops/' + 'POPULAR' + '/13.933522813836749/100.71915294868768')
       .end(function (shopByCondErr, shopByCondRes) {
         if (shopByCondErr) {
           return done(shopByCondErr);
