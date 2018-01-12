@@ -8,6 +8,7 @@ var should = require('should'),
   Ad = mongoose.model('Ad'),
   Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop'),
+  Hotprice = mongoose.model('Hotprice'),
   Categoryproduct = mongoose.model('Categoryproduct'),
   Product = mongoose.model('Product'),
   express = require(path.resolve('./config/lib/express'));
@@ -19,9 +20,10 @@ var app,
   agent,
   credentials,
   user,
-  ads1,ads2,ads3,
+  ads1, ads2, ads3,
   categoryshop,
-  shop1,shop2,shop3,shop4,shop5,
+  shop1, shop2, shop3, shop4, shop5,
+  hotprice1, hotprice2, hotprice3, hotprice4, hotprice5, hotprice6,
   token;
 
 /**
@@ -277,6 +279,49 @@ describe('Customer Home Stories Test', function () {
       user: user
     });
 
+    hotprice1 = new Hotprice({
+      name: 'Hotprice Name 1',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop1,
+      user: user
+    });
+
+    hotprice2 = new Hotprice({
+      name: 'Hotprice Name 2',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop2,
+      user: user
+    });
+
+    hotprice3 = new Hotprice({
+      name: 'Hotprice Name 3',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop3,
+      user: user
+    });
+
+    hotprice4 = new Hotprice({
+      name: 'Hotprice Name 4',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop4,
+      user: user
+    });
+
+    hotprice5 = new Hotprice({
+      name: 'Hotprice Name 5',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop5,
+      user: user
+    });
+
+    hotprice6 = new Hotprice({
+      name: 'Hotprice Name 6',
+      image: './assets/imgs/hot_price/hotprice1.png',
+      shop: shop2,
+      user: user
+    });
+
+
     token = '';
     // Save a user to the test db and create new Shop
     user.save(function () {
@@ -284,11 +329,22 @@ describe('Customer Home Stories Test', function () {
       ads2.save();
       ads3.save();
       categoryshop.save(function () {
-        shop1.save();
-        shop2.save();
-        shop3.save();
-        shop4.save();
-        shop5.save();
+        shop1.save(function(){
+          hotprice1.save();
+        });
+        shop2.save(function(){
+          hotprice2.save();
+          hotprice6.save();
+        });
+        shop3.save(function(){
+          hotprice3.save();
+        });
+        shop4.save(function(){
+          hotprice4.save();
+        });
+        shop5.save(function(){
+          hotprice5.save();
+        });
         done();
       });
 
@@ -311,6 +367,8 @@ describe('Customer Home Stories Test', function () {
         home.ads.should.not.be.empty();
         home.ads.items.should.be.instanceof(Array).and.have.lengthOf(3);
         home.hotprices.should.not.be.empty();
+        home.hotprices.items1.should.be.instanceof(Array).and.have.lengthOf(6);
+        home.hotprices.items2.should.be.instanceof(Array).and.have.lengthOf(0);
         home.categories.should.not.be.empty();
         home.categories.items.should.be.instanceof(Array).and.have.lengthOf(1);
         home.shops.should.not.be.empty();
@@ -328,9 +386,11 @@ describe('Customer Home Stories Test', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Categoryshop.remove().exec(function(){
-        Shop.remove().exec(function(){
-          Ad.remove().exec(done);
+      Hotprice.remove().exec(function(){
+        Shop.remove().exec(function () {
+          Categoryshop.remove().exec(function () {
+            Ad.remove().exec(done);
+          });
         });
       });
     });

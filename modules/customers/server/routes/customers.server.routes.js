@@ -13,6 +13,8 @@ module.exports = function (app) {
   app.route('/api/customer/home')
     .get(customers.ads, 
       customers.hotprices, 
+      customers.hotpricesItm1,
+      customers.hotpricesItm2,
       customers.categories, 
       customers.listShop,
       customers.nearbyshops,
