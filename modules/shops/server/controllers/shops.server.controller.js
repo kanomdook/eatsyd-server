@@ -245,6 +245,7 @@ exports.updateUserShop = function (req, res, next) {
     } else {
       shops.shopowner = req.usernew;
       shops.issendmail = true;
+      shops.isactiveshop = true;      
 
       shops.save(function (err) {
         if (err) {
