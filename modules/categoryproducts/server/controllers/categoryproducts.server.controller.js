@@ -47,8 +47,9 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var categoryproduct = req.categoryproduct;
 
-  categoryproduct = _.extend(categoryproduct, req.body);
-
+  // categoryproduct = _.extend(categoryproduct, req.body);
+  categoryproduct.name = req.body.name;
+  categoryproduct.image = req.body.image;
   categoryproduct.save(function (err) {
     if (err) {
       return res.status(400).send({
