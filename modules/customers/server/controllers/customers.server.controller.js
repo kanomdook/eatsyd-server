@@ -134,7 +134,7 @@ exports.nearbyshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: Shop.coverimage
+          image: shop.coverimage
         };
         req.listShop[0].items.push(resShop);
       });
