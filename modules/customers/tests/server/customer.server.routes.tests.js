@@ -454,7 +454,7 @@ describe('Customer Home Stories Test', function () {
 
         // Set assertions
         gettoday.title.should.be.equal('ยินดีด้วย');
-        
+
         agent.get('/api/customer/todaywelcome')
           .end(function (getErr2, getRes2) {
             if (getErr2) {
@@ -465,7 +465,7 @@ describe('Customer Home Stories Test', function () {
             var gettoday2 = getRes2.body;
 
             // Set assertions
-            gettoday2.should.be.equal('today welcome aleady');
+            gettoday2.should.be.equal('today welcome already!!!');
             done();
 
           });
