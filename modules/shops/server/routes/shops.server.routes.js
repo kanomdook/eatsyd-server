@@ -62,6 +62,9 @@ module.exports = function (app) {
 
   app.route('/api/getshopsname').all(core.jwtCheck, shopsPolicy.isAllowed)
     .get(shops.getShopsName);
+
+  app.route('/api/deleteproduct/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
+    .delete(shops.defaultProduct, shops.deleteProductUpdateShop, shops.deleteProduct, shops.resShopData);
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

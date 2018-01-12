@@ -53,6 +53,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/getshopsname',
       permissions: '*'
+    }, {
+      resources: '/api/deleteproduct/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -88,6 +91,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/manageshopinfo',
+      permissions: '*'
+    }, {
+      resources: '/api/deleteproduct/:shopId',
       permissions: '*'
     }]
   }, {
