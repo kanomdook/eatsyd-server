@@ -998,7 +998,31 @@ exports.deleteProductUpdateShop = function (req, res, next) {
     }
   });
 };
-
+exports.checkShopByName = function (req, res, next) {
+  var shopfind = [];
+  Shop.find({}, 'name').sort('-created').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.body.forEach(function (imp) {
+        var findshop = shops.filter(function (obj) {
+          return obj.name.toString() === imp.name.toString();
+        });
+        if (findshop.length > 0) {
+          imp.ishave = true;
+          shopfind.push(imp);
+        } else {
+          imp.ishave = false;
+          shopfind.push(imp);
+        }
+      });
+      req.shopfind = shopfind;
+      next();
+    }
+  });
+};
 exports.deleteProduct = function (req, res, next) {
   Product.findById(req.body._id).exec(function (err, product) {
     if (err) {
@@ -1017,6 +1041,12 @@ exports.deleteProduct = function (req, res, next) {
         next();
       }
     });
+  });
+};
+
+exports.listShopByName = function (req, res) {
+  res.jsonp({
+    shopfind: req.shopfind
   });
 };
 //count page

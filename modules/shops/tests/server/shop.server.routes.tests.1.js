@@ -2785,6 +2785,107 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
+  it('check shop by name false ', function (done) {
+    var shop1 = new Shop(shop);
+    var shop2 = new Shop(shop);
+    var shop3 = new Shop(shop);
+
+    shop1.name = 'shop01';
+    shop2.name = 'shop02';
+    shop3.name = 'shop03';
+
+    shop1.save();
+    shop2.save();
+    shop3.save();
+
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        var shopimport = [{
+          id: 'ssss',
+          name: 'test'
+        }];
+        agent.post('/api/checkshopbyname')
+          .set('authorization', 'Bearer ' + token)
+          .expect(200)
+          .send(shopimport)
+          .end(function (shopGetErr, shopsGetRes) {
+            // Handle shop save error
+            if (shopGetErr) {
+              return done(shopGetErr);
+            }
+            // Get shop list
+            var shops = shopsGetRes.body;
+
+            (shops.shopfind.length).should.match(1);
+            (shops.shopfind[0].name).should.match('test');
+            (shops.shopfind[0].ishave).should.match(false);
+
+            done();
+          });
+      });
+  });
+
+  it('check shop by name true ', function (done) {
+    var shop1 = new Shop(shop);
+    var shop2 = new Shop(shop);
+    var shop3 = new Shop(shop);
+
+    shop1.name = 'shop01';
+    shop2.name = 'shop02';
+    shop3.name = 'shop03';
+
+    shop1.save();
+    shop2.save();
+    shop3.save();
+
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        var shopimport = [{
+          id: 'ssss',
+          name: 'test'
+        },{
+          id: 'xxx',
+          name: 'shop01'
+        }];
+        agent.post('/api/checkshopbyname')
+          .set('authorization', 'Bearer ' + token)
+          .expect(200)
+          .send(shopimport)
+          .end(function (shopGetErr, shopsGetRes) {
+            // Handle shop save error
+            if (shopGetErr) {
+              return done(shopGetErr);
+            }
+            // Get shop list
+            var shops = shopsGetRes.body;
+
+            (shops.shopfind.length).should.match(2);
+            (shops.shopfind[0].name).should.match('test');
+            (shops.shopfind[1].name).should.match('shop01');
+            
+            (shops.shopfind[0].ishave).should.match(false);
+            (shops.shopfind[1].ishave).should.match(true);
+            
+
+            done();
+          });
+      });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Categoryshop.remove().exec(function () {
