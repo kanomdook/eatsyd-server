@@ -21,6 +21,12 @@ var HotpriceSchema = new Schema({
     default: './assets/imgs/hot_price/hotprice1.png',
     required: 'Please fill Hotprice image',
   },
+  effectivedatestart:{
+    type: Date
+  },
+  effectivedateend:{
+    type: Date
+  },
   shop: {
     type: Schema.ObjectId,
     ref: 'Shop',
