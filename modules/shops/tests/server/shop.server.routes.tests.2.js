@@ -581,6 +581,217 @@ describe('Shop CRUD edit and delete items token tests', function () {
       });
   });
 
+  it('update items shop', function (done) {
+    // Save a new Shop
+    agent.post('/api/shops')
+      .set('authorization', 'Bearer ' + token)
+      .send(shop)
+      .expect(200)
+      .end(function (shopSaveErr, shopSaveRes) {
+        // Handle shop save error
+        if (shopSaveErr) {
+          return done(shopSaveErr);
+        }
+        agent.put('/api/shops/createusershop/' + shopSaveRes.body._id)
+          .expect(200)
+          .end(function (createusershopErr, createusershopRes) {
+            // Handle signin error
+            if (createusershopErr) {
+              return done(createusershopErr);
+            }
+            var newcredentials = {
+              username: shop.email,
+              password: 'user1234'
+            };
+            agent.post('/api/auth/signin')
+              .send(newcredentials)
+              .expect(200)
+              .end(function (signinErr, signinRes) {
+                // Handle signin error
+                if (signinErr) {
+                  return done(signinErr);
+                }
+                agent.get('/api/shopshome')
+                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                  .expect(200)
+                  .end(function (shopGetErr, shopsGetRes) {
+                    if (shopGetErr) {
+                      return done(shopGetErr);
+                    }
+                    var shops = shopsGetRes.body;
+                    (shops.coverimage).should.match(shop.coverimage);
+                    (shops.promoteimage).should.match(shop.promoteimage);
+                    (shops.items.length).should.match(0);
+                    var cate = {
+                      name: 'catename',
+                      image: 'url_image',
+                    };
+                    agent.put('/api/createcate/' + shops._id)
+                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                      .send(cate)
+                      .expect(200)
+                      .end(function (changecoverErr, changecoverRes) {
+                        // Handle signin error
+                        if (changecoverErr) {
+                          return done(changecoverErr);
+                        }
+                        var shopchange = changecoverRes.body;
+                        // (shopchange.message).should.match('Promote images is limited.');
+                        (shopchange.coverimage).should.match(shop.coverimage);
+                        (shopchange.promoteimage).should.match(shop.promoteimage);
+                        (shopchange.items.length).should.match(1);
+                        (shopchange.items[0].cate.name).should.match(cate.name);
+                        (shopchange.items[0].products.length).should.match(30);
+
+                        agent.get('/api/shops/' + shops._id)
+                          .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                          .expect(200)
+                          .end(function (shopxGetErr, shopsxGetRes) {
+                            if (shopxGetErr) {
+                              return done(shopxGetErr);
+                            }
+                            var shopsssxxx = shopsxGetRes.body;
+                            (shopsssxxx.coverimage).should.match(shop.coverimage);
+                            (shopsssxxx.promoteimage).should.match(shop.promoteimage);
+                            (shopsssxxx.items.length).should.match(1);
+                            (shopsssxxx.items[0].products.length).should.match(30);
+                            // (shopsssxxx.items[0].products[0].name).should.match('sadf');
+                            var productCreate = {
+                              name: 'sadf',
+                              images: ['asdf', 'asdf'],
+                              price: 1234,
+                              categories: shopchange.items[0].cate,
+                              index: 0,
+                              cateindex: 0
+                            };
+                            agent.put('/api/createproduct/' + shops._id)
+                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                              .send(productCreate)
+                              .expect(200)
+                              .end(function (createproductErr, createproductRes) {
+                                // Handle signin error
+                                if (createproductErr) {
+                                  return done(createproductErr);
+                                }
+                                var shopProduct = createproductRes.body;
+                                (shopProduct.coverimage).should.match(shop.coverimage);
+                                (shopProduct.promoteimage).should.match(shop.promoteimage);
+                                (shopProduct.items.length).should.match(1);
+                                (shopProduct.items[0].cate.name).should.match(cate.name);
+                                (shopProduct.items[0].products.length).should.match(30);
+                                var productCreate2 = {
+                                  name: 'sadf2',
+                                  images: ['asdf2', 'asdf'],
+                                  price: 1234,
+                                  categories: shopchange.items[0].cate,
+                                  index: 1,
+                                  cateindex: 0
+                                };
+                                agent.put('/api/createproduct/' + shops._id)
+                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                  .send(productCreate2)
+                                  .expect(200)
+                                  .end(function (createproduct2Err, createproduct2Res) {
+                                    // Handle signin error
+                                    if (createproduct2Err) {
+                                      return done(createproduct2Err);
+                                    }
+                                    var shopProduct2 = createproduct2Res.body;
+                                    (shopProduct2.coverimage).should.match(shop.coverimage);
+                                    (shopProduct2.promoteimage).should.match(shop.promoteimage);
+                                    (shopProduct2.items.length).should.match(1);
+                                    (shopProduct2.items[0].products.length).should.match(30);
+                                    (shopProduct2.items[0].cate.name).should.match(cate.name);
+                                    agent.get('/api/shops/' + shops._id)
+                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                      .expect(200)
+                                      .end(function (shopxGetErr, shopsxGetRes) {
+                                        if (shopxGetErr) {
+                                          return done(shopxGetErr);
+                                        }
+                                        var shopsssx = shopsxGetRes.body;
+                                        (shopsssx.coverimage).should.match(shop.coverimage);
+                                        (shopsssx.promoteimage).should.match(shop.promoteimage);
+                                        (shopsssx.items.length).should.match(1);
+                                        (shopsssx.items[0].products.length).should.match(30);
+                                        (shopsssx.items[0].products[0].name).should.match('sadf');
+                                        (shopsssx.items[0].products[1].name).should.match('sadf2');
+                                        agent.get('/api/products')
+                                          .expect(200)
+                                          .end(function (productsGetErr, productsGetRes) {
+                                            if (productsGetErr) {
+                                              return done(productsGetErr);
+                                            }
+                                            var productsRes = productsGetRes.body;
+                                            (productsRes.length).should.match(4);
+
+                                            agent.get('/api/shopshome')
+                                              .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                              .expect(200)
+                                              .end(function (shopresGetErr, shopsresGetRes) {
+                                                // Handle shop save error
+                                                if (shopresGetErr) {
+                                                  return done(shopresGetErr);
+                                                }
+                                                // Get shop list
+                                                var shopsres = shopsresGetRes.body;
+                                                (shopsres.coverimage).should.match(shop.coverimage);
+                                                (shopsres.promoteimage).should.match(shop.promoteimage);
+                                                (shopsres.items.length).should.match(1);
+                                                (shopsres.items[0].products.length).should.match(30);
+                                                (shopsres.items[0].products[0].name).should.match('sadf');
+                                                (shopsres.items[0].products[1].name).should.match('sadf2');
+                                                (shopsres.items[0].products[2].name).should.match('');
+                                                var itemsupdate = shopsres.items;
+                                                itemsupdate[0].products[3] = shopsres.items[0].products[0];
+                                                var itemtoupdate = {
+                                                  items: itemsupdate
+                                                };
+                                                agent.put('/api/updateitems/' + shops._id)
+                                                  .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                  .send(itemtoupdate)
+                                                  .expect(200)
+                                                  .end(function (deleteproduct2Err, deleteproduct2Res) {
+                                                    // Handle signin error
+                                                    if (deleteproduct2Err) {
+                                                      return done(deleteproduct2Err);
+                                                    }
+
+                                                    agent.get('/api/shopshome')
+                                                      .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+                                                      .expect(200)
+                                                      .end(function (shopresGetErr2, shopsresGetRes2) {
+                                                        // Handle shop save error
+                                                        if (shopresGetErr2) {
+                                                          return done(shopresGetErr2);
+                                                        }
+                                                        // Get shop list
+                                                        var shopsres2 = shopsresGetRes2.body;
+                                                        (shopsres2.coverimage).should.match(shop.coverimage);
+                                                        (shopsres2.promoteimage).should.match(shop.promoteimage);
+                                                        (shopsres2.items.length).should.match(1);
+                                                        (shopsres2.items[0].products.length).should.match(30);
+                                                        (shopsres2.items[0].products[0].name).should.match('sadf');
+                                                        (shopsres2.items[0].products[1].name).should.match('sadf2');
+                                                        (shopsres2.items[0].products[2].name).should.match('');
+                                                        (shopsres2.items[0].products[3].name).should.match('sadf');
+                                                        done();
+                                                      });
+                                                  });
+                                              });
+                                          });
+                                      });
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+
+      });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Categoryshop.remove().exec(function () {

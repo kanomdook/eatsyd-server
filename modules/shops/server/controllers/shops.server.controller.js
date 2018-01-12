@@ -936,7 +936,7 @@ exports.updateShop = function (req, res, next) {
           message: 'shop not found'
         });
       }
-      shop.categories = _shop.categories;      
+      shop.categories = _shop.categories;
       shop.coverimage = _shop.coverimage;
       shop.name = _shop.name;
       shop.name_eng = _shop.name_eng;
@@ -1142,6 +1142,33 @@ exports.removePromote = function (req, res) {
     }
   });
 };
+
+exports.shopUpdateItems = function (req, res) {
+  var shop = req.shop;
+  var items = [];
+  req.body.items.forEach(function (itm) {
+    var data = {
+      cate: itm.cate._id,
+      products: []
+    };
+    itm.products.forEach(function (itmp) {
+      if (!itmp._id) {
+        data.products.push(req.defaultProd._id);        
+      } else {
+        data.products.push(itmp._id);
+      }
+    });
+    items.push(data);
+  });
+  shop.items = items;
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+    }
+    res.jsonp(shop);
+  });
+};
+
 
 //count page
 function countPage(shops) {
