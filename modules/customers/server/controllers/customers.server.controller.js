@@ -93,7 +93,7 @@ exports.categories = function (req, res, next) {
       categories.forEach(function (category) {
         var resCate = {
           _id: category._id,
-          image: category.image || './assets/imgs/Catagory/cat20.png'
+          image: category.image || category.image === '' ? './assets/imgs/Catagory/cat20.png' : category.image
         };
         req.categories.items.push(category);
       });
