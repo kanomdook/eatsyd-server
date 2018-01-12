@@ -119,7 +119,8 @@ describe('Shop CRUD token tests', function () {
               issendmail: false,
               importform: 'manual',
               categories: [categoryshop],
-              user: user
+              user: user,
+              shopowner: user
             };
           });
         });
@@ -375,7 +376,9 @@ describe('Shop CRUD token tests', function () {
                 // Set assertions
                 (shops.length).should.match(1);
                 (shops[0].issendmail).should.match(true);
-                (shops[0].user.firstName).should.match(shop.name);
+                // (shops[0].user.firstName).should.match(shop.name);
+                (shops[0].shopowner.firstName).should.match('ครัวคุณโก๋');
+
 
                 // Call the assertion callback
                 done();
