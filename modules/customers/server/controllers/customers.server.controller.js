@@ -9,6 +9,7 @@ var path = require('path'),
   Ad = mongoose.model('Ad'),
   Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop'),
+  Hotprice = mongoose.model('Hotprice'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -36,47 +37,41 @@ exports.ads = function (req, res, next) {
 
 exports.hotprices = function (req, res, next) {
   req.hotprices = {
-    "title": "Hot Price",
-    "items1": [{
-      "_id": "ht0001",
-      "image": "./assets/imgs/hot_price/hotprice1.png"
-    }, {
-      "_id": "ht0002",
-      "image": "./assets/imgs/hot_price/hotprice2.png"
-    }, {
-      "_id": "ht0003",
-      "image": "./assets/imgs/hot_price/hotprice3.png"
-    }, {
-      "_id": "ht0004",
-      "image": "./assets/imgs/hot_price/hotprice4.png"
-    }, {
-      "_id": "ht0005",
-      "image": "./assets/imgs/hot_price/hotprice5.png"
-    }, {
-      "_id": "ht0006",
-      "image": "./assets/imgs/hot_price/hotprice6.png"
-    }],
-    "items2": [{
-      "_id": "ht0007",
-      "image": "./assets/imgs/hot_price/hotprice7.png"
-    }, {
-      "_id": "ht0008",
-      "image": "./assets/imgs/hot_price/hotprice8.png"
-    }, {
-      "_id": "ht0009",
-      "image": "./assets/imgs/hot_price/hotprice9.png"
-    }, {
-      "_id": "ht0010",
-      "image": "./assets/imgs/hot_price/hotprice10.png"
-    }, {
-      "_id": "ht0011",
-      "image": "./assets/imgs/hot_price/hotprice11.png"
-    }, {
-      "_id": "ht0012",
-      "image": "./assets/imgs/hot_price/hotprice12.png"
-    }]
+    title: "Hot Price",
+    items1: [],
+    items2: []
   };
   next();
+};
+
+exports.hotpricesItm1 = function (req, res, next) {
+  Hotprice.find({},'_id image',{ skip: 0, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      hotprices.forEach(function(hotprice){
+        req.hotprices.items1.push(hotprice);
+      });
+      next();
+    }
+  });
+};
+
+exports.hotpricesItm2 = function (req, res, next) {
+  Hotprice.find({},'_id image', { skip: 6, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      hotprices.forEach(function(hotprice){
+        req.hotprices.items2.push(hotprice);
+      });
+      next();
+    }
+  });
 };
 
 exports.categories = function (req, res, next) {
@@ -93,7 +88,7 @@ exports.categories = function (req, res, next) {
       categories.forEach(function (category) {
         var resCate = {
           _id: category._id,
-          image: category.image 
+          image: category.image
         };
         req.categories.items.push(category);
       });
