@@ -23,17 +23,17 @@ var noReturnUrls = [
 /**
  * Signup
  */
-exports.signup = function (req, res) {
+exports.signup = function (req, res, next) {
   // For security measurement we remove the roles from the req.body object
-  delete req.body.roles;
+  // delete req.body.roles;
 
-  // Init Variables
+  // // Init Variables
   var user = new User(req.body);
   var message = null;
 
-  // Add missing user fields
+  // // Add missing user fields
   user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
+  user.displayName = user.firstName + ' barbar ' + user.lastName;
 
   // Then save the user
   user.save(function (err) {
@@ -45,16 +45,54 @@ exports.signup = function (req, res) {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
+      user.loginToken = "";
+      user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
+      user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
 
       req.login(user, function (err, resp) {
         if (err) {
           res.status(400).send(err);
         } else {
-          res.json(user);
+
+          if (user.roles.indexOf('user') !== -1) {
+            req.user = user;
+            next();
+          } else {
+            res.json(user);
+          }
+
         }
       });
     }
   });
+};
+
+/**
+ * Get New Register Reward
+ */
+exports.getnewregisterreward = function (req, res, next) {
+  var user = req.user;
+  var resuser = {
+    _id: user._id,
+    created: user.created,
+    displayName: user.displayName,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    notificationids: user.notificationids,
+    profileImageURL: user.profileImageURL,
+    provider: user.provider,
+    roles: user.roles,
+    username: user.username,
+    loginToken : user.loginToken,
+    newregisterreward: {
+      items: [{
+        image: '',
+        description: ''
+      }]
+    }
+  };
+  res.json(resuser);
 };
 
 /**
@@ -75,28 +113,6 @@ exports.signin = function (req, res, next) {
           user.loginToken = "";
           user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
           user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
-          // var tokenPayload = {
-          //   username: user.username,
-          //   loginExpires: user.loginExpires
-          // };
-
-          // User.findByIdAndUpdate(user._id, {
-          //   'loginToken': jwt.sign(tokenPayload, secret),
-          //   'loginExpires': Date.now() + (2 * 60 * 60 * 1000)
-          // }).exec(function (err, user) {
-          //   if (err) {
-          //     res.status(400).send(err);
-          //   } else {
-          //     res.json(user);
-          //   }
-          // });
-          // user.save(function (err, user) {
-          //   if (err) {
-          //     res.status(400).send(err);
-          //   } else {
-          //     res.json(user);
-          //   }
-          // });
 
           req.login(user, function (err) {
             if (err) {
@@ -106,10 +122,7 @@ exports.signin = function (req, res, next) {
             }
           });
         } else { //register
-          // var tokenPayload2 = {
-          //   username: req.body.facebookData.email ? req.body.facebookData.email : req.body.facebookData.id,
-          //   loginExpires: Date.now()
-          // };
+
 
           user = new User({
             displayName: req.body.facebookData.name,
@@ -145,14 +158,7 @@ exports.signin = function (req, res, next) {
         user.loginToken = "";
         user.loginToken = jwt.sign(_.omit(user, 'password'), config.jwt.secret, { expiresIn: 2 * 60 * 60 * 1000 });
         user.loginExpires = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
-        // save user object to update database
-        // user.save(function (err) {
-        //   if (err) {
-        //     done(err);
-        //   } else {
-        //     done(null, user);
-        //   }
-        // });
+
 
         req.login(user, function (err) {
           if (err) {
@@ -165,6 +171,8 @@ exports.signin = function (req, res, next) {
     })(req, res, next);
   }
 };
+
+
 
 /**
  * Signout

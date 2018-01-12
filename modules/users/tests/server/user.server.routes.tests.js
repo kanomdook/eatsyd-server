@@ -74,8 +74,11 @@ describe('User CRUD tests', function () {
         signupRes.body.roles.should.be.instanceof(Array).and.have.lengthOf(1);
         signupRes.body.roles.indexOf('user').should.equal(0);
 
+        // New Register Reward
+        signupRes.body.newregisterreward.should.not.be.empty();
+        signupRes.body.newregisterreward.items.should.be.instanceof(Array).and.have.lengthOf(1);
         
-          
+        signupRes.body.loginToken.should.not.be.empty();
 
         return done();
       });
