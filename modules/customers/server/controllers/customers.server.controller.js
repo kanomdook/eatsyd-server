@@ -10,6 +10,7 @@ var path = require('path'),
   Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop'),
   Hotprice = mongoose.model('Hotprice'),
+  Benefitsetting = mongoose.model('Benefitsetting'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -289,11 +290,19 @@ exports.returnShopByCate = function (req, res) {
   res.jsonp(req.listShop);
 };
 
-exports.todaywelcome = function (req, res) {
-  res.jsonp({
-    title: 'ยินดีด้วย',
-    description: 'โปรโมชั่นประจำวัน คุณได้รับ 1 เหรียญ',
-    remark: 'หมายเหตุ: 1 วันต่อครั้งเท่านั้น',
-    image: './assets/imgs/Home-Collect.png'
+exports.getbenefitlogin = function (req, res, next) {
+  Benefitsetting.findOne({name: 'login'}).sort('-created').exec(function (err, benefit) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.benefit = benefit;
+      next();
+    }
   });
+};
+
+exports.todaywelcome = function (req, res) {
+  res.jsonp(req.benefit);
 };
