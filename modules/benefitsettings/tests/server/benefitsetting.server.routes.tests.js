@@ -51,7 +51,13 @@ describe('Benefitsetting CRUD tests', function () {
     // Save a user to the test db and create new Benefitsetting
     user.save(function () {
       benefitsetting = {
-        name: 'Benefitsetting name'
+        name: 'newreg',
+        description: 'description of benefit',
+        items: [{
+          benefittype: 'coin',
+          volume: 10
+        }],
+        user: user
       };
 
       done();
@@ -94,7 +100,7 @@ describe('Benefitsetting CRUD tests', function () {
 
                 // Set assertions
                 (benefitsettings[0].user._id).should.equal(userId);
-                (benefitsettings[0].name).should.match('Benefitsetting name');
+                (benefitsettings[0].name).should.match('newreg');
 
                 // Call the assertion callback
                 done();
@@ -167,7 +173,7 @@ describe('Benefitsetting CRUD tests', function () {
             }
 
             // Update Benefitsetting name
-            benefitsetting.name = 'WHY YOU GOTTA BE SO MEAN?';
+            benefitsetting.name = 'login';
 
             // Update an existing Benefitsetting
             agent.put('/api/benefitsettings/' + benefitsettingSaveRes.body._id)
@@ -181,7 +187,7 @@ describe('Benefitsetting CRUD tests', function () {
 
                 // Set assertions
                 (benefitsettingUpdateRes.body._id).should.equal(benefitsettingSaveRes.body._id);
-                (benefitsettingUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (benefitsettingUpdateRes.body.name).should.match('login');
 
                 // Call the assertion callback
                 done();

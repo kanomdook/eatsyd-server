@@ -409,7 +409,7 @@ describe('Customer Home Stories Test', function () {
   });
 
   it('should be get Shops by Condition', function (done) {
-    agent.get('/api/customer/shops/' + 'POPULAR')
+    agent.get('/api/customer/shops/' + 'POPULAR' + '/13.933522813836749/100.71915294868768')
       .end(function (shopByCondErr, shopByCondRes) {
         if (shopByCondErr) {
           return done(shopByCondErr);
@@ -420,6 +420,23 @@ describe('Customer Home Stories Test', function () {
 
         // Set assertions
         shopByCond.should.be.instanceof(Array).and.have.lengthOf(4);
+        done();
+
+      });
+  });
+
+  it('should be get Today Welcome',function(done){
+    agent.get('/api/customer/todaywelcome')
+      .end(function (getErr, getRes) {
+        if (getErr) {
+          return done(getErr);
+        }
+
+        // Get Products list
+        var gettoday = getRes.body;
+
+        // Set assertions
+        gettoday.title.should.be.equal('ยินดีด้วย');
         done();
 
       });

@@ -110,7 +110,7 @@ exports.categories = function (req, res, next) {
     "title": "Category",
     "items": []
   };
-  Categoryshop.find({}, '_id image').sort('-created').exec(function (err, categories) {
+  Categoryshop.find({}, '_id image').sort('seq').exec(function (err, categories) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -284,6 +284,16 @@ exports.returnShop = function (req, res) {
     shops: req.listShop
   });
 };
+
 exports.returnShopByCate = function (req, res) {
   res.jsonp(req.listShop);
+};
+
+exports.todaywelcome = function (req, res) {
+  res.jsonp({
+    title: 'ยินดีด้วย',
+    description: 'โปรโมชั่นประจำวัน คุณได้รับ 1 เหรียญ',
+    remark: 'หมายเหตุ: 1 วันต่อครั้งเท่านั้น',
+    image: './assets/imgs/Home-Collect.png'
+  });
 };
