@@ -291,8 +291,26 @@ exports.returnShopByCate = function (req, res) {
   res.jsonp(req.listShop);
 };
 
+exports.gettodaybyuser = function (req, res, next) {
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  Coinbalance.find({ user: req.user, created : {$gte: startOfToday}}).exec(function (err, todays) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if(todays.length > 0){
+        res.json('today welcome aleady');
+      }else{
+        next();
+      }
+    }
+  });
+};
+
 exports.getbenefitlogin = function (req, res, next) {
-  Benefitsetting.findOne({name: 'login'}).sort('-created').exec(function (err, benefit) {
+  Benefitsetting.findOne({ name: 'login' }).sort('-created').exec(function (err, benefit) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -313,14 +331,14 @@ exports.todaywelcome = function (req, res) {
     refbenefit: benefit,
     user: req.user
   });
-  coinbalance.save(function(errsave){
-    if(errsave){
+  coinbalance.save(function (errsave) {
+    if (errsave) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(errsave)
       });
-    }else{
+    } else {
       res.jsonp(req.benefit);
     }
   });
-  
+
 };

@@ -35,7 +35,7 @@ module.exports = function (app) {
     customers.favoriteshops);
   
   app.route('/api/customer/todaywelcome')
-  .get(customers.getbenefitlogin,customers.todaywelcome);
+  .get(customers.gettodaybyuser,customers.getbenefitlogin,customers.todaywelcome);
 
       app.param('lat', customers.getlat);
       app.param('lng', customers.getlng);

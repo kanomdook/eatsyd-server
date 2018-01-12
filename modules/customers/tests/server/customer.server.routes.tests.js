@@ -454,13 +454,27 @@ describe('Customer Home Stories Test', function () {
 
         // Set assertions
         gettoday.title.should.be.equal('ยินดีด้วย');
-        done();
+        
+        agent.get('/api/customer/todaywelcome')
+          .end(function (getErr2, getRes2) {
+            if (getErr2) {
+              return done(getErr2);
+            }
+
+            // Get Products list
+            var gettoday2 = getRes2.body;
+
+            // Set assertions
+            gettoday2.should.be.equal('today welcome aleady');
+            done();
+
+          });
 
       });
   });
 
   afterEach(function (done) {
-    Coinbalance.remove().exec(function(){
+    Coinbalance.remove().exec(function () {
       Benefitsetting.remove().exec(function () {
         User.remove().exec(function () {
           Hotprice.remove().exec(function () {
@@ -473,7 +487,7 @@ describe('Customer Home Stories Test', function () {
         });
       });
     });
-    
+
 
   });
 });
