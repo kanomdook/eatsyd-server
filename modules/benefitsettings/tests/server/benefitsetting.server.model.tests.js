@@ -30,7 +30,12 @@ describe('Benefitsetting Model Unit Tests:', function() {
 
     user.save(function() {
       benefitsetting = new Benefitsetting({
-        name: 'Benefitsetting Name',
+        name: 'newreg',
+        description: 'description of benefit',
+        items: [{
+          benefittype: 'coin',
+          volume: 10
+        }],
         user: user
       });
 

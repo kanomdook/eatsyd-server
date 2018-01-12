@@ -12,9 +12,21 @@ var mongoose = require('mongoose'),
 var BenefitsettingSchema = new Schema({
   name: {
     type: String,
-    default: '',
+    enum: ['newreg', 'login', 'bill'],
     required: 'Please fill Benefitsetting name',
-    trim: true
+  },
+  description:{
+    type: String,
+    default: ''
+  },
+  items:{
+    type: [{
+      benefittype: {
+        type: String,
+        enum: ['coin']
+      },
+      volume: Number
+    }]
   },
   created: {
     type: Date,
