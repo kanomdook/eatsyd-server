@@ -187,7 +187,7 @@ describe('User Mng tests', function () {
             bankaccount: '1122233'
           };
           // Request list of users
-          agent.put('/api/usermanage')
+          agent.put('/api/usermanage/' + user.id)
             .send(editUser)
             .set('authorization', 'Bearer ' + signinRes.body.loginToken)
             .expect(200)
