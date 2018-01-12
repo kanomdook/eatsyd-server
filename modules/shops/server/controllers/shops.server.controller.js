@@ -1049,6 +1049,90 @@ exports.listShopByName = function (req, res) {
     shopfind: req.shopfind
   });
 };
+
+exports.cateProductByID = function (req, res, next) {
+  var cateId = req.body.cateId;
+  req.cateId = cateId;
+  Categoryproduct.findById(cateId).exec(function (err, category) {
+    if (err) {
+      return next(err);
+    } else if (!category) {
+      return res.status(404).send({
+        message: 'No category with that identifier has been found'
+      });
+    }
+    req.category = category;
+    next();
+  });
+};
+
+exports.findAllProduct = function (req, res, next) {
+  // categories
+  Product.find({ categories: req.cateId }, '_id').exec(function (err, products) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (products && products.length > 0) {
+        req.productIDs = products;
+        next();
+      } else {
+        next();
+      }
+    }
+  });
+};
+
+exports.deleteAllProduct = function (req, res, next) {
+  Product.remove({ user: req.user._id, _id: { $in: req.productIDs } }).exec(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      next();
+    }
+  });
+};
+exports.shopSliceItems = function (req, res, next) {
+  // console.log(req.shop.items);
+  var indexCate = 0;
+  var shop = req.shop;
+  shop.items.forEach(function (item, i) {
+    if (item.cate._id === req.cateId) {
+      indexCate = i;
+    }
+  });
+  shop.items.splice(indexCate, 1);
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shop = shop;
+      next();
+    }
+  });
+  // var cateIndex = req.shop.items.indexOf();
+  next();
+};
+
+exports.deleteCateProduct = function (req, res, next) {
+  req.category.remove(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      next();
+    }
+  });
+};
+
+
 //count page
 function countPage(shops) {
   var numpage = [];

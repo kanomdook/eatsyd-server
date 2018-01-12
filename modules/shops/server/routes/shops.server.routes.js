@@ -68,6 +68,9 @@ module.exports = function (app) {
 
   app.route('/api/checkshopbyname').all(core.jwtCheck, shopsPolicy.isAllowed)
     .post(shops.checkShopByName, shops.listShopByName);
+
+  app.route('/api/deletecateproduct/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
+    .delete(shops.cateProductByID, shops.findAllProduct, shops.deleteAllProduct, shops.shopSliceItems, shops.deleteCateProduct, shops.resShopData);
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };
