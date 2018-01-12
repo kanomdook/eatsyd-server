@@ -113,6 +113,8 @@ describe('Product CRUD tests with token', function () {
             categories: categoryproduct,
             shop: shop,
             promotionprice: 40,
+            isrecomment: false,
+            ispromotionprice: false,
             startdate: new Date(),
             enddate: new Date(),
           };
