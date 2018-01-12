@@ -47,7 +47,7 @@ var ProductSchema = new Schema({
   startdate: {
     type: Date
   },
-  enddate: {
+  expiredate: {
     type: Date
   },
   created: {
