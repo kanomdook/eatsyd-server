@@ -1095,6 +1095,7 @@ exports.deleteAllProduct = function (req, res, next) {
     }
   });
 };
+
 exports.shopSliceItems = function (req, res, next) {
   // console.log(req.shop.items);
   var indexCate = 0;
@@ -1108,16 +1109,10 @@ exports.shopSliceItems = function (req, res, next) {
   shop.save(function (err) {
     if (err) {
       console.log(err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      req.shop = shop;
-      next();
     }
+    req.shop = shop;
+    next();
   });
-  // var cateIndex = req.shop.items.indexOf();
-  next();
 };
 
 exports.deleteCateProduct = function (req, res, next) {
@@ -1132,6 +1127,20 @@ exports.deleteCateProduct = function (req, res, next) {
   });
 };
 
+exports.removePromote = function (req, res) {
+  var shop = req.shop;
+  shop.promoteimage.splice(req.body.index, 1);
+  shop.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      // req.shop = shop;
+      res.jsonp(shop);
+    }
+  });
+};
 
 //count page
 function countPage(shops) {

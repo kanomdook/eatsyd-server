@@ -353,7 +353,7 @@ describe('Customer Home Stories Test', function () {
 
 
   it('should be get Home data collection', function (done) {
-    agent.get('/api/customer/home')
+    agent.get('/api/customer/home/13.933522813836749/100.71915294868768')
       .end(function (homeGetErr, homeGetRes) {
         // Handle Products save error
         if (homeGetErr) {

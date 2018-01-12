@@ -10,7 +10,7 @@ var customersPolicy = require('../policies/customers.server.policy'),
 module.exports = function (app) {
   
   //get home customer
-  app.route('/api/customer/home')
+  app.route('/api/customer/home/:lat/:lng')
     .get(customers.ads, 
       customers.hotprices, 
       customers.hotpricesItm1,
@@ -22,5 +22,7 @@ module.exports = function (app) {
       customers.favoriteshops, 
       customers.returnShop);
 
+      app.param('lat', customers.getlat);
+      app.param('lng', customers.getlng);
   
 };
