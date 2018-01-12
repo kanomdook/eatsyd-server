@@ -27,14 +27,14 @@ exports.getcateid = function (req, res, next, cateid) {
   next();
 };
 
-exports.getcondition = function(req, res, next, condition){
+exports.getcondition = function (req, res, next, condition) {
   req.condition = condition;
   next();
 };
 
 
 exports.getshopbycate = function (req, res) {
-  Shop.find({categories: mongoose.Types.ObjectId(req.cateid)}).sort().exec(function (err, shops) {
+  Shop.find({ categories: mongoose.Types.ObjectId(req.cateid) }).sort().exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -43,7 +43,7 @@ exports.getshopbycate = function (req, res) {
       res.json(shops);
     }
   });
-  
+
 };
 
 exports.ads = function (req, res, next) {
@@ -148,10 +148,14 @@ exports.listShop = function (req, res, next) {
 exports.nearbyshops = function (req, res, next) {
   var items = [];
   var limit = { limit: 4 };
-  if(req.condition){
+  if (req.condition || req.cateid) {
     limit = { limit: 100 };
   }
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
+  var filter = { isactiveshop: true };
+  if (req.cateid) {
+    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+  }
+  Shop.find(filter, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -168,13 +172,13 @@ exports.nearbyshops = function (req, res, next) {
         };
         items.push(resShop);
       });
-      if(req.condition && req.condition === 'NEAR_BY'){
+      if (req.condition && req.condition === 'NEAR_BY') {
         res.json(items);
-      }else{
+      } else {
         req.listShop[0].items = items;
         next();
       }
-     
+
     }
   });
 };
@@ -182,10 +186,14 @@ exports.nearbyshops = function (req, res, next) {
 exports.popshops = function (req, res, next) {
   var items = [];
   var limit = { limit: 4 };
-  if(req.condition){
+  if (req.condition) {
     limit = { limit: 100 };
   }
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
+  var filter = { isactiveshop: true };
+  if (req.cateid) {
+    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+  }
+  Shop.find(filter, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -202,9 +210,9 @@ exports.popshops = function (req, res, next) {
         };
         items.push(resShop);
       });
-      if(req.condition && req.condition === 'POPULAR'){
+      if (req.condition && req.condition === 'POPULAR') {
         res.json(items);
-      }else{
+      } else {
         req.listShop[1].items = items;
         next();
       }
@@ -215,10 +223,14 @@ exports.popshops = function (req, res, next) {
 exports.favoriteshops = function (req, res, next) {
   var items = [];
   var limit = { limit: 4 };
-  if(req.condition){
+  if (req.condition) {
     limit = { limit: 100 };
   }
-  Shop.find({ isactiveshop: true }, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
+  var filter = { isactiveshop: true };
+  if (req.cateid) {
+    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+  }
+  Shop.find(filter, '_id name rating coverimage isAds', limit).sort('-created').exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -235,9 +247,9 @@ exports.favoriteshops = function (req, res, next) {
         };
         items.push(resShop);
       });
-      if(req.condition && req.condition === 'FAVORITE'){
+      if (req.condition && req.condition === 'FAVORITE') {
         res.json(items);
-      }else{
+      } else {
         req.listShop[2].items = items;
         next();
       }
@@ -252,4 +264,7 @@ exports.returnShop = function (req, res) {
     categories: req.categories,
     shops: req.listShop
   });
+};
+exports.returnShopByCate = function (req, res) {
+  res.jsonp(req.listShop);
 };

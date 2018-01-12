@@ -329,20 +329,20 @@ describe('Customer Home Stories Test', function () {
       ads2.save();
       ads3.save();
       categoryshop.save(function () {
-        shop1.save(function(){
+        shop1.save(function () {
           hotprice1.save();
         });
-        shop2.save(function(){
+        shop2.save(function () {
           hotprice2.save();
           hotprice6.save();
         });
-        shop3.save(function(){
+        shop3.save(function () {
           hotprice3.save();
         });
-        shop4.save(function(){
+        shop4.save(function () {
           hotprice4.save();
         });
-        shop5.save(function(){
+        shop5.save(function () {
           hotprice5.save();
         });
         done();
@@ -384,43 +384,50 @@ describe('Customer Home Stories Test', function () {
       });
   });
 
-  it('should be get Shops by Category',function(done){
-    agent.get('/api/customer/categoryshop/' + categoryshop._id)
-    .end(function(shopByCateErr,shopByCateRes){
-      if (shopByCateErr) {
-        return done(shopByCateErr);
-      }
+  it('should be get Shops by Category', function (done) {
+    agent.get('/api/customer/categoryshop/' + categoryshop._id + '/13.933522813836749/100.71915294868768')
+      .end(function (shopByCateErr, shopByCateRes) {
+        if (shopByCateErr) {
+          return done(shopByCateErr);
+        }
 
-      // Get Products list
-      var shopByCate = shopByCateRes.body;
+        // Get Products list
+        var home = shopByCateRes.body;
 
-      // Set assertions
-      shopByCate.should.be.instanceof(Array).and.have.lengthOf(5);
-      done();
-      
-    });
+        // Set assertions
+        home.should.not.be.empty();
+        home.should.be.instanceof(Array).and.have.lengthOf(3);
+        home[0].title.should.be.equal('NEAR_BY');
+        home[0].items.should.be.instanceof(Array).and.have.lengthOf(4);
+        home[1].title.should.be.equal('POPULAR');
+        home[1].items.should.be.instanceof(Array).and.have.lengthOf(4);
+        home[2].title.should.be.equal('FAVORITE');
+        home[2].items.should.be.instanceof(Array).and.have.lengthOf(4);
+        done();
+
+      });
   });
 
-  it('should be get Shops by Condition', function(done){
+  it('should be get Shops by Condition', function (done) {
     agent.get('/api/customer/shops/' + 'NEAR_BY')
-    .end(function(shopByCondErr,shopByCondRes){
-      if (shopByCondErr) {
-        return done(shopByCondErr);
-      }
+      .end(function (shopByCondErr, shopByCondRes) {
+        if (shopByCondErr) {
+          return done(shopByCondErr);
+        }
 
-      // Get Products list
-      var shopByCond = shopByCondRes.body;
+        // Get Products list
+        var shopByCond = shopByCondRes.body;
 
-      // Set assertions
-      shopByCond.should.be.instanceof(Array).and.have.lengthOf(4);
-      done();
-      
-    });
+        // Set assertions
+        shopByCond.should.be.instanceof(Array).and.have.lengthOf(4);
+        done();
+
+      });
   });
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Hotprice.remove().exec(function(){
+      Hotprice.remove().exec(function () {
         Shop.remove().exec(function () {
           Categoryshop.remove().exec(function () {
             Ad.remove().exec(done);
