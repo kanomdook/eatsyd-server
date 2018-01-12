@@ -384,6 +384,23 @@ describe('Customer Home Stories Test', function () {
       });
   });
 
+  it('should be get Shops by Category',function(done){
+    agent.get('/api/customer/categoryshop/' + categoryshop._id)
+    .end(function(shopByCateErr,shopByCateRes){
+      if (shopByCateErr) {
+        return done(shopByCateErr);
+      }
+
+      // Get Products list
+      var shopByCate = shopByCateRes.body;
+
+      // Set assertions
+      shopByCate.should.be.instanceof(Array).and.have.lengthOf(5);
+      done();
+      
+    });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Hotprice.remove().exec(function(){
