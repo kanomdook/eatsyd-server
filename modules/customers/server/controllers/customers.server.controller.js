@@ -156,7 +156,7 @@ exports.popshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: Shop.coverimage
+          image: shop.coverimage
         };
         req.listShop[1].items.push(resShop);
       });
@@ -178,7 +178,7 @@ exports.favoriteshops = function (req, res, next) {
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
-          image: Shop.coverimage
+          image: shop.coverimage
         };
         req.listShop[2].items.push(resShop);
       });
