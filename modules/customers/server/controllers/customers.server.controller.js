@@ -110,7 +110,7 @@ exports.categories = function (req, res, next) {
     "title": "Category",
     "items": []
   };
-  Categoryshop.find({}, '_id image').sort('-seq').exec(function (err, categories) {
+  Categoryshop.find({}, '_id image').sort('seq').exec(function (err, categories) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
