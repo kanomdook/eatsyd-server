@@ -25,8 +25,14 @@ module.exports = function (app) {
   app.route('/api/customer/categoryshop/:cateid')
   .get(customers.getshopbycate);
 
+  app.route('/api/customer/shops/:condition')
+  .get(customers.nearbyshops,
+    customers.popshops,
+    customers.favoriteshops);
+
       app.param('lat', customers.getlat);
       app.param('lng', customers.getlng);
       app.param('cateid', customers.getcateid);
+      app.param('condition', customers.getcondition);
   
 };
