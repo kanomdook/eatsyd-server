@@ -425,6 +425,23 @@ describe('Customer Home Stories Test', function () {
       });
   });
 
+  it('should be get Today Welcome',function(done){
+    agent.get('/api/customer/todaywelcome')
+      .end(function (getErr, getRes) {
+        if (getErr) {
+          return done(getErr);
+        }
+
+        // Get Products list
+        var gettoday = getRes.body;
+
+        // Set assertions
+        gettoday.title.should.be.equal('ยินดีด้วย');
+        done();
+
+      });
+  });
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Hotprice.remove().exec(function () {

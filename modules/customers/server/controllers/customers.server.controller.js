@@ -284,6 +284,16 @@ exports.returnShop = function (req, res) {
     shops: req.listShop
   });
 };
+
 exports.returnShopByCate = function (req, res) {
   res.jsonp(req.listShop);
+};
+
+exports.todaywelcome = function (req, res) {
+  res.jsonp({
+    title: 'ยินดีด้วย',
+    description: 'โปรโมชั่นประจำวัน คุณได้รับ 1 เหรียญ',
+    remark: 'หมายเหตุ: 1 วันต่อครั้งเท่านั้น',
+    image: './assets/imgs/Home-Collect.png'
+  });
 };

@@ -33,6 +33,9 @@ module.exports = function (app) {
   .get(customers.nearbyshops,
     customers.popshops,
     customers.favoriteshops);
+  
+  app.route('/api/customer/todaywelcome')
+  .get(customers.todaywelcome);
 
       app.param('lat', customers.getlat);
       app.param('lng', customers.getlng);
