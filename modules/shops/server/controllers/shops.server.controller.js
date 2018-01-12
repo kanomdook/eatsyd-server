@@ -978,6 +978,38 @@ exports.getShopsName = function (req, res) {
     }
   });
 };
+
+exports.checkShopByName = function (req, res, next) {
+  var shopfind = [];
+  Shop.find({}, 'name').sort('-created').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.body.forEach(function (imp) {
+        var findshop = shops.filter(function (obj) {
+          return obj.name.toString() === imp.name.toString();
+        });
+        if (findshop.length > 0) {
+          imp.ishave = true;
+          shopfind.push(imp);
+        } else {
+          imp.ishave = false;
+          shopfind.push(imp);
+        }
+      });
+      req.shopfind = shopfind;
+      next();
+    }
+  });
+};
+
+exports.listShopByName = function (req, res) {
+  res.jsonp({
+    shopfind: req.shopfind
+  });
+};
 //count page
 function countPage(shops) {
   var numpage = [];

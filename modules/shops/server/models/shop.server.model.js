@@ -112,6 +112,9 @@ var ShopSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  ishave: {
+    type: Boolean,
+  },
   created: {
     type: Date,
     default: Date.now
