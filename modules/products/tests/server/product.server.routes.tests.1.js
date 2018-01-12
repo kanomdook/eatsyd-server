@@ -54,7 +54,7 @@ describe('Product CRUD tests with token', function () {
       username: credentials.username,
       password: credentials.password,
       provider: 'local',
-      roles : ['admin']
+      roles: ['admin']
     });
 
     categoryshop = new Categoryshop({
@@ -111,7 +111,10 @@ describe('Product CRUD tests with token', function () {
             images: ['https://simg.kapook.com/o/photo/410/kapook_world-408206.jpg', 'https://f.ptcdn.info/408/051/000/oqi6tdf9uS1811y1XHx-o.png'],
             user: user,
             categories: categoryproduct,
-            shop: shop
+            shop: shop,
+            promotionprice: 40,
+            startdate: new Date(),
+            enddate: new Date(),
           };
         });
       });

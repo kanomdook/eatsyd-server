@@ -33,6 +33,15 @@ var ProductSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Shop'
   },
+  promotionprice: {
+    type: Number
+  },
+  startdate: {
+    type: Date
+  },
+  enddate: {
+    type: Date
+  },
   created: {
     type: Date,
     default: Date.now
