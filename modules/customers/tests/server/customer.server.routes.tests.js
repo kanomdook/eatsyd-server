@@ -5,6 +5,7 @@ var should = require('should'),
   path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Ad = mongoose.model('Ad'),
   Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop'),
   Categoryproduct = mongoose.model('Categoryproduct'),
@@ -18,6 +19,7 @@ var app,
   agent,
   credentials,
   user,
+  ads1,ads2,ads3,
   categoryshop,
   shop1,shop2,shop3,shop4,shop5,
   token;
@@ -52,6 +54,27 @@ describe('Customer Home Stories Test', function () {
       password: credentials.password,
       provider: 'local',
       roles: ['admin']
+    });
+
+    ads1 = new Ad({
+      image: "./assets/imgs/ads/ads1.png",
+      isvideo: true,
+      videoid: "###",
+      user: user
+    });
+
+    ads2 = new Ad({
+      image: "./assets/imgs/ads/ads2.png",
+      isvideo: false,
+      videoid: '',
+      user: user
+    });
+
+    ads3 = new Ad({
+      image: "./assets/imgs/ads/ads3.png",
+      isvideo: true,
+      videoid: "###",
+      user: user
     });
 
     categoryshop = new Categoryshop({
@@ -257,6 +280,9 @@ describe('Customer Home Stories Test', function () {
     token = '';
     // Save a user to the test db and create new Shop
     user.save(function () {
+      ads1.save();
+      ads2.save();
+      ads3.save();
       categoryshop.save(function () {
         shop1.save();
         shop2.save();
@@ -283,6 +309,7 @@ describe('Customer Home Stories Test', function () {
 
         // Set assertions
         home.ads.should.not.be.empty();
+        home.ads.items.should.be.instanceof(Array).and.have.lengthOf(3);
         home.hotprices.should.not.be.empty();
         home.categories.should.not.be.empty();
         home.categories.items.should.be.instanceof(Array).and.have.lengthOf(1);
@@ -302,7 +329,9 @@ describe('Customer Home Stories Test', function () {
   afterEach(function (done) {
     User.remove().exec(function () {
       Categoryshop.remove().exec(function(){
-        Shop.remove().exec(done);
+        Shop.remove().exec(function(){
+          Ad.remove().exec(done);
+        });
       });
     });
   });

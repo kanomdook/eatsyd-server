@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Ad = mongoose.model('Ad'),
   Categoryshop = mongoose.model('Categoryshop'),
   Shop = mongoose.model('Shop'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -16,39 +17,21 @@ var path = require('path'),
 exports.ads = function (req, res, next) {
   req.ads = {
     "title": "Advertise",
-    "items": [{
-      "_id": "ads001",
-      "image": "./assets/imgs/ads/ads1.png",
-      "isvideo": true,
-      "videoid": "###"
-    },
-    {
-      "_id": "ads002",
-      "image": "./assets/imgs/ads/ads2.png",
-      "isvideo": false,
-      "videoid": ""
-    },
-    {
-      "_id": "ads003",
-      "image": "./assets/imgs/ads/ads3.png",
-      "isvideo": true,
-      "videoid": "###"
-    },
-    {
-      "_id": "ads004",
-      "image": "./assets/imgs/ads/ads4.png",
-      "isvideo": false,
-      "videoid": ""
-    },
-    {
-      "_id": "ads005",
-      "image": "./assets/imgs/ads/ads5.png",
-      "isvideo": false,
-      "videoid": ""
-    }
-    ]
+    "items": []
   };
-  next();
+  Ad.find().sort().limit(5).exec(function(err, ads){
+    if(err){
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }else{
+      ads.forEach(function(ad){
+        req.ads.items.push(ad);
+      });
+      next();
+    }
+  });
+  
 };
 
 exports.hotprices = function (req, res, next) {
