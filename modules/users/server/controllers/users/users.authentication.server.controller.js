@@ -10,6 +10,7 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   _ = require('lodash'),
   jwt = require('jsonwebtoken'),
+  Benefitsetting = mongoose.model('Benefitsetting'),
   User = mongoose.model('User');
 
 var secret = 'keepitquiet';
@@ -72,28 +73,37 @@ exports.signup = function (req, res, next) {
  */
 exports.getnewregisterreward = function (req, res, next) {
   var user = req.user;
-  var resuser = {
-    _id: user._id,
-    created: user.created,
-    displayName: user.displayName,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    notificationids: user.notificationids,
-    profileImageURL: user.profileImageURL,
-    provider: user.provider,
-    roles: user.roles,
-    username: user.username,
-    loginToken: user.loginToken,
-    newregisterreward: {
-      items: [{
-        image: 'https://static.werally.com/3.0.11/img/registration/landing/your_rewards.png',
-        description: 'สม้ครสมาชิกใหม่ รับทันที 20 เหรียญ'
-      }
-      ]
+  Benefitsetting.findOne({name: 'newreg'}).sort('-created').exec(function (err, benefit) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var resuser = {
+        _id: user._id,
+        created: user.created,
+        displayName: user.displayName,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        notificationids: user.notificationids,
+        profileImageURL: user.profileImageURL,
+        provider: user.provider,
+        roles: user.roles,
+        username: user.username,
+        loginToken: user.loginToken,
+        newregisterreward: {
+          items: [{
+            image: benefit.image,
+            description: benefit.description
+          }
+          ]
+        }
+      };
+      res.json(resuser);
     }
-  };
-  res.json(resuser);
+  });
+  
 };
 
 /**

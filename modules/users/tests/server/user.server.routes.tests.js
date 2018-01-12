@@ -5,12 +5,13 @@ var should = require('should'),
   path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Benefitsetting = mongoose.model('Benefitsetting'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
  * Globals
  */
-var app, agent, credentials, user, _user, admin;
+var app, agent, credentials, user, _user, admin, benefitsetting;
 
 /**
  * User routes tests
@@ -45,8 +46,22 @@ describe('User CRUD tests', function () {
 
     user = new User(_user);
 
+    benefitsetting = new Benefitsetting({
+      name: 'newreg',
+      title: 'ยินดีด้วย',
+      description: 'โปรโมชั่นประจำวัน คุณได้รับ 20 เหรียญ',
+      remark: 'หมายเหตุ: 1 วันต่อครั้งเท่านั้น',
+      image: './assets/imgs/Home-Collect.png',
+      items: [{
+        benefittype: 'coin',
+        volume: 20
+      }],
+      user: user
+    });
+
     // Save a user to the test db and create new article
     user.save(function (err) {
+      benefitsetting.save();
       should.not.exist(err);
       done();
     });
@@ -918,6 +933,9 @@ describe('User CRUD tests', function () {
   });
 
   afterEach(function (done) {
-    User.remove().exec(done);
+    Benefitsetting.remove().exec(function(){
+      User.remove().exec(done);
+    });
+    
   });
 });
