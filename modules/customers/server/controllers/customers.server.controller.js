@@ -15,6 +15,13 @@ var path = require('path'),
 
 
 
+exports.getlat = function(req, res, next){
+   next();
+};
+exports.getlng = function(req, res, next){
+  next();
+};
+
 exports.ads = function (req, res, next) {
   req.ads = {
     "title": "Advertise",
