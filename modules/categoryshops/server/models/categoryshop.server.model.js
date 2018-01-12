@@ -18,7 +18,7 @@ var CategoryshopSchema = new Schema({
   },
   image: {
     type: String,
-    default: ''
+    default: './assets/imgs/Catagory/cat20.png'
   },
   created: {
     type: Date,
