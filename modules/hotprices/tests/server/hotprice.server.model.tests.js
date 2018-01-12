@@ -6,12 +6,14 @@
 var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Shop = mongoose.model('Shop'),
   Hotprice = mongoose.model('Hotprice');
 
 /**
  * Globals
  */
 var user,
+  shop,
   hotprice;
 
 /**
@@ -28,13 +30,47 @@ describe('Hotprice Model Unit Tests:', function() {
       password: 'password'
     });
 
-    user.save(function() {
-      hotprice = new Hotprice({
-        name: 'Hotprice Name',
-        user: user
-      });
+    shop = new Shop({
+      name: 'Shop name',
+      name_eng: 'Shop name english',
+      detail: 'Shop Detail',
+      tel: '0894447208',
+      email: 'test@gmail.com',
+      facebook: 'facebook.com',
+      line: '@lineid',
+      address: {
+        address: '77/7',
+        addressdetail: 'in font of 7-eleven',
+        subdistinct: 'Lumlukka',
+        distinct: 'Lumlukka',
+        province: 'BKK',
+        postcode: '12150',
+        lat: '13.9338949',
+        lng: '100.6827773'
+      },
+      times: [{
+        description: 'all days',
+        timestart: '08.00',
+        timeend: '20.00',
+        days: ['mon', 'thu', 'sun']
+      }],
+      coverimage: 'https://img.wongnai.com/p/l/2016/11/29/15ff08373d31409fb2f80ebf4623589a.jpg',
+      promoteimage: ['http://ed.files-media.com/ud/images/1/22/63943/IMG_7799_Cover.jpg'],
+      isactiveshop: false,
+      importform: 'manual',
+      user: user
+    });
 
-      done();
+    user.save(function() {
+      shop.save(function(){
+        hotprice = new Hotprice({
+          name: 'Hotprice Name',
+          image: './assets/imgs/hot_price/hotprice1.png',
+          shop: shop,
+          user: user
+        });
+        done();
+      });
     });
   });
 
@@ -59,8 +95,10 @@ describe('Hotprice Model Unit Tests:', function() {
 
   afterEach(function(done) {
     Hotprice.remove().exec(function() {
-      User.remove().exec(function() {
-        done();
+      Shop.remove().exec(function(){
+        User.remove().exec(function() {
+          done();
+        });
       });
     });
   });

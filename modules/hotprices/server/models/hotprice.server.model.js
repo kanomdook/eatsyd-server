@@ -16,6 +16,16 @@ var HotpriceSchema = new Schema({
     required: 'Please fill Hotprice name',
     trim: true
   },
+  image: {
+    type: String,
+    default: './assets/imgs/hot_price/hotprice1.png',
+    required: 'Please fill Hotprice image',
+  },
+  shop: {
+    type: Schema.ObjectId,
+    ref: 'Shop',
+    required: 'Please fill Hotprice shop',
+  },
   created: {
     type: Date,
     default: Date.now
