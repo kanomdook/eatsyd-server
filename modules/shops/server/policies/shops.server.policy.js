@@ -60,7 +60,13 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/checkshopbyname',
       permissions: '*'
     }, {
+      resources: '/api/deletecateproduct/:shopId',
+      permissions: '*'
+    }, {
       resources: '/api/removepromote/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/updateitems/:shopId',
       permissions: '*'
     }]
   }, {
@@ -105,7 +111,13 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/checkshopbyname',
       permissions: '*'
     }, {
+      resources: '/api/deletecateproduct/:shopId',
+      permissions: '*'
+    }, {
       resources: '/api/removepromote/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/updateitems/:shopId',
       permissions: '*'
     }]
   }, {

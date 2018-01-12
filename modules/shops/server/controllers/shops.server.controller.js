@@ -165,13 +165,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -365,13 +365,13 @@ exports.cookingHomeShop = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -726,13 +726,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-            path: 'cate',
-            model: 'Categoryproduct'
-          },
-          {
-            path: 'products',
-            model: 'Product'
-          }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -887,13 +887,13 @@ exports.findShopUser = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -920,13 +920,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -936,6 +936,7 @@ exports.updateShop = function (req, res, next) {
           message: 'shop not found'
         });
       }
+      shop.categories = _shop.categories;
       shop.coverimage = _shop.coverimage;
       shop.name = _shop.name;
       shop.name_eng = _shop.name_eng;
@@ -1050,6 +1051,83 @@ exports.listShopByName = function (req, res) {
   });
 };
 
+exports.cateProductByID = function (req, res, next) {
+  var cateId = req.body.cateId;
+  req.cateId = cateId;
+  Categoryproduct.findById(cateId).exec(function (err, category) {
+    if (err) {
+      return next(err);
+    } else if (!category) {
+      return res.status(404).send({
+        message: 'No category with that identifier has been found'
+      });
+    }
+    req.category = category;
+    next();
+  });
+};
+
+exports.findAllProduct = function (req, res, next) {
+  // categories
+  Product.find({ categories: req.cateId }, '_id').exec(function (err, products) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (products && products.length > 0) {
+        req.productIDs = products;
+        next();
+      } else {
+        next();
+      }
+    }
+  });
+};
+
+exports.deleteAllProduct = function (req, res, next) {
+  Product.remove({ user: req.user._id, _id: { $in: req.productIDs } }).exec(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      next();
+    }
+  });
+};
+
+exports.shopSliceItems = function (req, res, next) {
+  // console.log(req.shop.items);
+  var indexCate = 0;
+  var shop = req.shop;
+  shop.items.forEach(function (item, i) {
+    if (item.cate._id === req.cateId) {
+      indexCate = i;
+    }
+  });
+  shop.items.splice(indexCate, 1);
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+    }
+    req.shop = shop;
+    next();
+  });
+};
+
+exports.deleteCateProduct = function (req, res, next) {
+  req.category.remove(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      next();
+    }
+  });
+};
+
 exports.removePromote = function (req, res) {
   var shop = req.shop;
   shop.promoteimage.splice(req.body.index, 1);
@@ -1064,6 +1142,33 @@ exports.removePromote = function (req, res) {
     }
   });
 };
+
+exports.shopUpdateItems = function (req, res) {
+  var shop = req.shop;
+  var items = [];
+  req.body.items.forEach(function (itm) {
+    var data = {
+      cate: itm.cate._id,
+      products: []
+    };
+    itm.products.forEach(function (itmp) {
+      if (!itmp._id) {
+        data.products.push(req.defaultProd._id);        
+      } else {
+        data.products.push(itmp._id);
+      }
+    });
+    items.push(data);
+  });
+  shop.items = items;
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+    }
+    res.jsonp(shop);
+  });
+};
+
 
 //count page
 function countPage(shops) {
@@ -1083,23 +1188,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-        'name': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'detail': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'tel': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
+      'name': {
+        '$regex': keyWord,
+        '$options': 'i'
       }
+    },
+    {
+      'detail': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    },
+    {
+      'tel': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    }
     ]
   };
   return keyword;

@@ -36,6 +36,14 @@ var ProductSchema = new Schema({
   promotionprice: {
     type: Number
   },
+  ispromotionprice: {
+    type: Boolean,
+    default: false
+  },
+  isrecomment: {
+    type: Boolean,
+    default: false
+  },
   startdate: {
     type: Date
   },

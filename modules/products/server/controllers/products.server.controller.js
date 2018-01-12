@@ -87,7 +87,15 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var product = req.product;
 
-  product = _.extend(product, req.body);
+  // product = _.extend(product, req.body);
+  product.images = req.body.images ? req.body.images : product.images;
+  product.name = req.body.name ? req.body.name : product.name;
+  product.price = req.body.price ? req.body.price : product.price;
+  product.promotionprice = req.body.promotionprice ? req.body.promotionprice : product.promotionprice;
+  product.ispromotionprice = req.body.ispromotionprice ? req.body.ispromotionprice : product.ispromotionprice;
+  product.isrecomment = req.body.isrecomment ? req.body.isrecomment : product.isrecomment;
+  product.startdate = req.body.startdate ? req.body.startdate : product.startdate;
+  product.enddate = req.body.enddate ? req.body.enddate : product.enddate;
 
   product.save(function (err) {
     if (err) {
