@@ -30,7 +30,9 @@ describe('Ad Model Unit Tests:', function() {
 
     user.save(function() {
       ad = new Ad({
-        name: 'Ad Name',
+        image: './assets/imgs/ads/ads1.png',
+        isvideo: true,
+        videoid: '###',
         user: user
       });
 
@@ -47,8 +49,8 @@ describe('Ad Model Unit Tests:', function() {
       });
     });
 
-    it('should be able to show an error when try to save without name', function(done) {
-      ad.name = '';
+    it('should be able to show an error when try to save without image', function(done) {
+      ad.image = '';
 
       return ad.save(function(err) {
         should.exist(err);

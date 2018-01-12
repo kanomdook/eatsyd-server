@@ -8,13 +8,30 @@ var mongoose = require('mongoose'),
 
 /**
  * Ad Schema
+ * "image": "./assets/imgs/ads/ads1.png",
+      "isvideo": true,
+      "videoid": "###"
  */
 var AdSchema = new Schema({
-  name: {
+  image: {
     type: String,
     default: '',
-    required: 'Please fill Ad name',
+    required: 'Please fill Ad image',
     trim: true
+  },
+  isvideo:{
+    type: Boolean,
+    default: false
+  },
+  videoid:{
+    type: String,
+    default: ''
+  },
+  effectivedatestart:{
+    type: Date
+  },
+  effectivedateend:{
+    type: Date
   },
   created: {
     type: Date,

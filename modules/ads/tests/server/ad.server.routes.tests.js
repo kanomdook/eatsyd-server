@@ -51,7 +51,9 @@ describe('Ad CRUD tests', function () {
     // Save a user to the test db and create new Ad
     user.save(function () {
       ad = {
-        name: 'Ad name'
+        image: './assets/imgs/ads/ads1.png',
+        isvideo: true,
+        videoid: '###',
       };
 
       done();
@@ -94,7 +96,7 @@ describe('Ad CRUD tests', function () {
 
                 // Set assertions
                 (ads[0].user._id).should.equal(userId);
-                (ads[0].name).should.match('Ad name');
+                (ads[0].image).should.match('./assets/imgs/ads/ads1.png');
 
                 // Call the assertion callback
                 done();
@@ -115,7 +117,7 @@ describe('Ad CRUD tests', function () {
 
   it('should not be able to save an Ad if no name is provided', function (done) {
     // Invalidate name field
-    ad.name = '';
+    ad.image = '';
 
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -135,7 +137,7 @@ describe('Ad CRUD tests', function () {
           .expect(400)
           .end(function (adSaveErr, adSaveRes) {
             // Set message assertion
-            (adSaveRes.body.message).should.match('Please fill Ad name');
+            (adSaveRes.body.message).should.match('Please fill Ad image');
 
             // Handle Ad save error
             done(adSaveErr);
@@ -167,7 +169,7 @@ describe('Ad CRUD tests', function () {
             }
 
             // Update Ad name
-            ad.name = 'WHY YOU GOTTA BE SO MEAN?';
+            ad.image = 'WHY YOU GOTTA BE SO MEAN?';
 
             // Update an existing Ad
             agent.put('/api/ads/' + adSaveRes.body._id)
@@ -181,7 +183,7 @@ describe('Ad CRUD tests', function () {
 
                 // Set assertions
                 (adUpdateRes.body._id).should.equal(adSaveRes.body._id);
-                (adUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (adUpdateRes.body.image).should.match('WHY YOU GOTTA BE SO MEAN?');
 
                 // Call the assertion callback
                 done();
@@ -218,7 +220,7 @@ describe('Ad CRUD tests', function () {
       request(app).get('/api/ads/' + adObj._id)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('name', ad.name);
+          res.body.should.be.instanceof(Object).and.have.property('image', ad.image);
 
           // Call the assertion callback
           done();
@@ -363,7 +365,7 @@ describe('Ad CRUD tests', function () {
               }
 
               // Set assertions on new Ad
-              (adSaveRes.body.name).should.equal(ad.name);
+              (adSaveRes.body.image).should.equal(ad.image);
               should.exist(adSaveRes.body.user);
               should.equal(adSaveRes.body.user._id, orphanId);
 
@@ -390,7 +392,7 @@ describe('Ad CRUD tests', function () {
 
                         // Set assertions
                         (adInfoRes.body._id).should.equal(adSaveRes.body._id);
-                        (adInfoRes.body.name).should.equal(ad.name);
+                        (adInfoRes.body.image).should.equal(ad.image);
                         should.equal(adInfoRes.body.user, undefined);
 
                         // Call the assertion callback
