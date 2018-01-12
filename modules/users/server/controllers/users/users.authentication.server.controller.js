@@ -84,13 +84,13 @@ exports.getnewregisterreward = function (req, res, next) {
     provider: user.provider,
     roles: user.roles,
     username: user.username,
-    loginToken : user.loginToken,
+    loginToken: user.loginToken,
     newregisterreward: {
       items: [{
         image: 'https://static.werally.com/3.0.11/img/registration/landing/your_rewards.png',
         description: 'สม้ครสมาชิกใหม่ รับทันที 20 เหรียญ'
       }
-    ]
+      ]
     }
   };
   res.json(resuser);
@@ -340,5 +340,36 @@ exports.removeOAuthProvider = function (req, res, next) {
         }
       });
     }
+  });
+};
+
+exports.usermanage = function (req, res) {
+  var _user = req.body;
+  User.findById(req.user._id).exec(function (err, user) {
+    if (err) {
+      res.status(400).send(err);
+    } else if (!user) {
+      return res.status(404).send({
+        message: 'User not found'
+      });
+    }
+    user.firstName = _user.firstName ? _user.firstName : user.firstName;
+    user.lastName = _user.lastName ? _user.lastName : user.lastName;
+    user.displayName = _user.firstName + ' ' + _user.lastName;
+    user.profileImageURL = _user.profileImageURL ? _user.profileImageURL : user.profileImageURL;
+    user.dateOfBirth = _user.dateOfBirth ? _user.dateOfBirth : user.dateOfBirth;
+    user.citizenid = _user.citizenid ? _user.citizenid : user.citizenid;
+    user.bankaccount = _user.bankaccount ? _user.bankaccount : user.bankaccount;
+
+    user.save(function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(user);
+      }
+    });
   });
 };

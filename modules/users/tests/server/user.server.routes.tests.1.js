@@ -164,6 +164,50 @@ describe('User Mng tests', function () {
     });
   });
 
+  it('update user', function (done) {
+    user.roles = ['shop'];
+
+    user.save(function (err) {
+      should.not.exist(err);
+      agent.post('/api/auth/signin')
+        .send(credentials)
+        .expect(200)
+        .end(function (signinErr, signinRes) {
+          // Handle signin error
+          if (signinErr) {
+            return done(signinErr);
+          }
+
+          var editUser = {
+            profileImageURL: 'mypic.jpg',
+            firstName: 'my name is',
+            lastName: 'my lastname is',
+            dateOfBirth: new Date(),
+            citizenid: '12150',
+            bankaccount: '1122233'
+          };
+          // Request list of users
+          agent.put('/api/usermanage')
+            .send(editUser)
+            .set('authorization', 'Bearer ' + signinRes.body.loginToken)
+            .expect(200)
+            .end(function (usersGetErr, usersGetRes) {
+              if (usersGetErr) {
+                return done(usersGetErr);
+              }
+
+              var user = usersGetRes.body;
+              (user.profileImageURL).should.match(editUser.profileImageURL);
+              (user.firstName).should.match(editUser.firstName);
+              (user.lastName).should.match(editUser.lastName);
+              (user.dateOfBirth).should.match(editUser.dateOfBirth);
+              (user.citizenid).should.match(editUser.citizenid);
+              (user.bankaccount).should.match(editUser.bankaccount);
+              done();
+            });
+        });
+    });
+  });
 
 
   afterEach(function (done) {
