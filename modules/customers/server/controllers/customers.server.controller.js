@@ -84,7 +84,7 @@ exports.categories = function (req, res, next) {
     "title": "Category",
     "items": []
   };
-  Categoryshop.find({}, '_id, image').sort('-created').exec(function (err, categories) {
+  Categoryshop.find({}, '_id image').sort('-created').exec(function (err, categories) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -116,7 +116,7 @@ exports.listShop = function (req, res, next) {
 };
 
 exports.nearbyshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -138,7 +138,7 @@ exports.nearbyshops = function (req, res, next) {
 };
 
 exports.popshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -160,7 +160,7 @@ exports.popshops = function (req, res, next) {
 };
 
 exports.favoriteshops = function (req, res, next) {
-  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+  Shop.find({ isactiveshop: true }, '_id name rating coverimage').sort('-created').limit(4).exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
