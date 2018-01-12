@@ -114,7 +114,7 @@ describe('Customer Home Stories Test', function () {
         "http://soimilk.com/sites/default/files/u143056/unnamed.jpg",
         "http://soimilk.com/sites/default/files/u143056/2458.jpg"
       ],
-      isactiveshop: false,
+      isactiveshop: true,
       issendmail: false,
       importform: 'manual',
       categories: [categoryshop],
@@ -153,7 +153,7 @@ describe('Customer Home Stories Test', function () {
         "http://soimilk.com/sites/default/files/u143056/unnamed.jpg",
         "http://soimilk.com/sites/default/files/u143056/2458.jpg"
       ],
-      isactiveshop: false,
+      isactiveshop: true,
       issendmail: false,
       importform: 'manual',
       categories: [categoryshop],
@@ -192,7 +192,7 @@ describe('Customer Home Stories Test', function () {
         "http://soimilk.com/sites/default/files/u143056/unnamed.jpg",
         "http://soimilk.com/sites/default/files/u143056/2458.jpg"
       ],
-      isactiveshop: false,
+      isactiveshop: true,
       issendmail: false,
       importform: 'manual',
       categories: [categoryshop],
@@ -270,7 +270,7 @@ describe('Customer Home Stories Test', function () {
         "http://soimilk.com/sites/default/files/u143056/unnamed.jpg",
         "http://soimilk.com/sites/default/files/u143056/2458.jpg"
       ],
-      isactiveshop: false,
+      isactiveshop: true,
       issendmail: false,
       importform: 'manual',
       categories: [categoryshop],

@@ -19,19 +19,19 @@ exports.ads = function (req, res, next) {
     "title": "Advertise",
     "items": []
   };
-  Ad.find().sort().limit(5).exec(function(err, ads){
-    if(err){
+  Ad.find().sort('-created').limit(5).exec(function (err, ads) {
+    if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    }else{
-      ads.forEach(function(ad){
+    } else {
+      ads.forEach(function (ad) {
         req.ads.items.push(ad);
       });
       next();
     }
   });
-  
+
 };
 
 exports.hotprices = function (req, res, next) {
@@ -84,7 +84,7 @@ exports.categories = function (req, res, next) {
     "title": "Category",
     "items": []
   };
-  Categoryshop.find().sort('-created').exec(function (err, categories) {
+  Categoryshop.find({}, '_id, image').sort('-created').exec(function (err, categories) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -116,15 +116,15 @@ exports.listShop = function (req, res, next) {
 };
 
 exports.nearbyshops = function (req, res, next) {
-  Shop.find({}, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function(err, shops){
-    if(err){
+  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+    if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    }else{
-      shops.forEach(function(shop){
+    } else {
+      shops.forEach(function (shop) {
         var resShop = {
-          _id : shop._id,
+          _id: shop._id,
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
@@ -138,15 +138,15 @@ exports.nearbyshops = function (req, res, next) {
 };
 
 exports.popshops = function (req, res, next) {
-  Shop.find().sort('-created').limit(4).exec(function(err, shops){
-    if(err){
+  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+    if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    }else{
-      shops.forEach(function(shop){
+    } else {
+      shops.forEach(function (shop) {
         var resShop = {
-          _id : shop._id,
+          _id: shop._id,
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
@@ -160,15 +160,15 @@ exports.popshops = function (req, res, next) {
 };
 
 exports.favoriteshops = function (req, res, next) {
-  Shop.find().sort('-created').limit(4).exec(function(err, shops){
-    if(err){
+  Shop.find({ isactiveshop: true }, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function (err, shops) {
+    if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    }else{
-      shops.forEach(function(shop){
+    } else {
+      shops.forEach(function (shop) {
         var resShop = {
-          _id : shop._id,
+          _id: shop._id,
           name: shop.name,
           rating: shop.rating,
           distance: 1.5,
