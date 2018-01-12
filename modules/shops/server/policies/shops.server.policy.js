@@ -53,6 +53,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/getshopsname',
       permissions: '*'
+    }, {
+      resources: '/api/deleteproduct/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/checkshopbyname',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -89,6 +95,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/manageshopinfo',
       permissions: '*'
+    }, {
+      resources: '/api/deleteproduct/:shopId',
+      permissions: '*'
+    }, {
+      resources: '/api/checkshopbyname',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -107,6 +119,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/getshopsname',
       permissions: ['get']
+    }, {
+      resources: '/api/checkshopbyname',
+      permissions: '*'
     }]
   }, {
     roles: ['guest'],

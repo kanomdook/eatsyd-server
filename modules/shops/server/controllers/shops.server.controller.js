@@ -165,13 +165,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -365,13 +365,13 @@ exports.cookingHomeShop = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -726,13 +726,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-            path: 'cate',
-            model: 'Categoryproduct'
-          },
-          {
-            path: 'products',
-            model: 'Product'
-          }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -887,13 +887,13 @@ exports.findShopUser = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -920,13 +920,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -978,6 +978,77 @@ exports.getShopsName = function (req, res) {
     }
   });
 };
+
+exports.deleteProductUpdateShop = function (req, res, next) {
+  var shop = req.shop;
+  var index = parseInt(req.body.index);
+  var cateindex = parseInt(req.body.cateindex);
+  var items = shop.items[cateindex].products ? shop.items[cateindex].products : [];
+  items[index] = req.defaultProd._id;
+  shop.items[cateindex].products = items;
+  shop.save(function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.shop = shop;
+      next();
+    }
+  });
+};
+exports.checkShopByName = function (req, res, next) {
+  var shopfind = [];
+  Shop.find({}, 'name').sort('-created').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.body.forEach(function (imp) {
+        var findshop = shops.filter(function (obj) {
+          return obj.name.toString() === imp.name.toString();
+        });
+        if (findshop.length > 0) {
+          imp.ishave = true;
+          shopfind.push(imp);
+        } else {
+          imp.ishave = false;
+          shopfind.push(imp);
+        }
+      });
+      req.shopfind = shopfind;
+      next();
+    }
+  });
+};
+exports.deleteProduct = function (req, res, next) {
+  Product.findById(req.body._id).exec(function (err, product) {
+    if (err) {
+      return next(err);
+    } else if (!product) {
+      return res.status(404).send({
+        message: 'No product with that identifier has been found'
+      });
+    }
+    product.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        next();
+      }
+    });
+  });
+};
+
+exports.listShopByName = function (req, res) {
+  res.jsonp({
+    shopfind: req.shopfind
+  });
+};
 //count page
 function countPage(shops) {
   var numpage = [];
@@ -996,23 +1067,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-        'name': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'detail': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'tel': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
+      'name': {
+        '$regex': keyWord,
+        '$options': 'i'
       }
+    },
+    {
+      'detail': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    },
+    {
+      'tel': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    }
     ]
   };
   return keyword;
