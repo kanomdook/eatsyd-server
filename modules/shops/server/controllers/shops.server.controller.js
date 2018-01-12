@@ -936,6 +936,7 @@ exports.updateShop = function (req, res, next) {
           message: 'shop not found'
         });
       }
+      shop.categories = _shop.categories;      
       shop.coverimage = _shop.coverimage;
       shop.name = _shop.name;
       shop.name_eng = _shop.name_eng;
