@@ -87,9 +87,10 @@ exports.getnewregisterreward = function (req, res, next) {
     loginToken : user.loginToken,
     newregisterreward: {
       items: [{
-        image: '',
-        description: ''
-      }]
+        image: 'https://static.werally.com/3.0.11/img/registration/landing/your_rewards.png',
+        description: 'สม้ครสมาชิกใหม่ รับทันที 20 เหรียญ'
+      }
+    ]
     }
   };
   res.json(resuser);
