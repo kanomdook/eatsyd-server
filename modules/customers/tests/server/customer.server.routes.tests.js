@@ -12,6 +12,7 @@ var should = require('should'),
   Categoryproduct = mongoose.model('Categoryproduct'),
   Product = mongoose.model('Product'),
   Benefitsetting = mongoose.model('Benefitsetting'),
+  Coinbalance = mongoose.model('Coinbalance'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -459,17 +460,20 @@ describe('Customer Home Stories Test', function () {
   });
 
   afterEach(function (done) {
-    Benefitsetting.remove().exec(function () {
-      User.remove().exec(function () {
-        Hotprice.remove().exec(function () {
-          Shop.remove().exec(function () {
-            Categoryshop.remove().exec(function () {
-              Ad.remove().exec(done);
+    Coinbalance.remove().exec(function(){
+      Benefitsetting.remove().exec(function () {
+        User.remove().exec(function () {
+          Hotprice.remove().exec(function () {
+            Shop.remove().exec(function () {
+              Categoryshop.remove().exec(function () {
+                Ad.remove().exec(done);
+              });
             });
           });
         });
       });
     });
+    
 
   });
 });

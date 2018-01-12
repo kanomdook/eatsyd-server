@@ -11,6 +11,7 @@ var path = require('path'),
   Shop = mongoose.model('Shop'),
   Hotprice = mongoose.model('Hotprice'),
   Benefitsetting = mongoose.model('Benefitsetting'),
+  Coinbalance = mongoose.model('Coinbalance'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -304,5 +305,22 @@ exports.getbenefitlogin = function (req, res, next) {
 };
 
 exports.todaywelcome = function (req, res) {
-  res.jsonp(req.benefit);
+  var benefit = req.benefit;
+  var coinbalance = new Coinbalance({
+    name: benefit.name,
+    balancetype: 'in',
+    volume: benefit.items[0].volume,
+    refbenefit: benefit,
+    user: req.user
+  });
+  coinbalance.save(function(errsave){
+    if(errsave){
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(errsave)
+      });
+    }else{
+      res.jsonp(req.benefit);
+    }
+  });
+  
 };
