@@ -22,7 +22,11 @@ module.exports = function (app) {
       customers.favoriteshops, 
       customers.returnShop);
 
+  app.route('/api/customer/categoryshop/:cateid')
+  .get(customers.getshopbycate);
+
       app.param('lat', customers.getlat);
       app.param('lng', customers.getlng);
+      app.param('cateid', customers.getcateid);
   
 };

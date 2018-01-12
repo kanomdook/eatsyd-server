@@ -15,11 +15,29 @@ var path = require('path'),
 
 
 
-exports.getlat = function(req, res, next){
-   next();
-};
-exports.getlng = function(req, res, next){
+exports.getlat = function (req, res, next, lat, lng) {
   next();
+};
+exports.getlng = function (req, res, next, lat, lng) {
+  next();
+};
+
+exports.getcateid = function (req, res, next, cateid) {
+  req.cateid = cateid;
+  next();
+};
+
+exports.getshopbycate = function (req, res) {
+  Shop.find({categories: mongoose.Types.ObjectId(req.cateid)}).sort().exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(shops);
+    }
+  });
+  
 };
 
 exports.ads = function (req, res, next) {
@@ -52,13 +70,13 @@ exports.hotprices = function (req, res, next) {
 };
 
 exports.hotpricesItm1 = function (req, res, next) {
-  Hotprice.find({},'_id image',{ skip: 0, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+  Hotprice.find({}, '_id image', { skip: 0, limit: 6 }).sort('-created').exec(function (err, hotprices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      hotprices.forEach(function(hotprice){
+      hotprices.forEach(function (hotprice) {
         req.hotprices.items1.push(hotprice);
       });
       next();
@@ -67,13 +85,13 @@ exports.hotpricesItm1 = function (req, res, next) {
 };
 
 exports.hotpricesItm2 = function (req, res, next) {
-  Hotprice.find({},'_id image', { skip: 6, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+  Hotprice.find({}, '_id image', { skip: 6, limit: 6 }).sort('-created').exec(function (err, hotprices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      hotprices.forEach(function(hotprice){
+      hotprices.forEach(function (hotprice) {
         req.hotprices.items2.push(hotprice);
       });
       next();
