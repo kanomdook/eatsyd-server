@@ -133,14 +133,21 @@ exports.listShop = function (req, res, next) {
 };
 
 exports.nearbyshops = function (req, res, next) {
-  Shop.find().sort('-created').limit(4).exec(function(err, shops){
+  Shop.find({}, '_id, name, rating, coverimage').sort('-created').limit(4).exec(function(err, shops){
     if(err){
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     }else{
       shops.forEach(function(shop){
-        req.listShop[0].items.push(shop);
+        var resShop = {
+          _id : shop._id,
+          name: shop.name,
+          rating: shop.rating,
+          distance: 1.5,
+          image: Shop.coverimage
+        };
+        req.listShop[0].items.push(resShop);
       });
       next();
     }
@@ -155,7 +162,14 @@ exports.popshops = function (req, res, next) {
       });
     }else{
       shops.forEach(function(shop){
-        req.listShop[1].items.push(shop);
+        var resShop = {
+          _id : shop._id,
+          name: shop.name,
+          rating: shop.rating,
+          distance: 1.5,
+          image: Shop.coverimage
+        };
+        req.listShop[1].items.push(resShop);
       });
       next();
     }
@@ -170,7 +184,14 @@ exports.favoriteshops = function (req, res, next) {
       });
     }else{
       shops.forEach(function(shop){
-        req.listShop[2].items.push(shop);
+        var resShop = {
+          _id : shop._id,
+          name: shop.name,
+          rating: shop.rating,
+          distance: 1.5,
+          image: Shop.coverimage
+        };
+        req.listShop[2].items.push(resShop);
       });
       next();
     }

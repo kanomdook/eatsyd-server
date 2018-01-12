@@ -51,6 +51,10 @@ var ShopSchema = new Schema({
     type: String,
     default: ''
   },
+  rating: {
+    type: Number,
+    default: 0
+  },
   othercontact: {
     type: String,
     default: ''
