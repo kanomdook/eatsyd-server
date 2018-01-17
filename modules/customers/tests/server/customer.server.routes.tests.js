@@ -465,7 +465,7 @@ describe('Customer Home Stories Test', function () {
             var gettoday2 = getRes2.body;
 
             // Set assertions
-            gettoday2.should.be.equal('today welcome already!!!');
+            gettoday2.should.be.equal('today welcome already');
             done();
 
           });

@@ -301,7 +301,7 @@ exports.gettodaybyuser = function (req, res, next) {
       });
     } else {
       if(todays.length > 0){
-        res.json('today welcome aleady');
+        res.json('today welcome already');
       }else{
         next();
       }
