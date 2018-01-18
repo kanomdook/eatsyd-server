@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Userinterests
  */
 exports.list = function(req, res) {
-  Userinterest.find().sort('-created').populate('user', 'displayName').exec(function(err, userinterests) {
+  Userinterest.find().sort('-created').populate('user', 'displayName').populate('shopinterest').populate('promotioninterest').exec(function(err, userinterests) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -103,7 +103,7 @@ exports.userinterestByID = function(req, res, next, id) {
     });
   }
 
-  Userinterest.findById(id).populate('user', 'displayName').exec(function (err, userinterest) {
+  Userinterest.findById(id).populate('user', 'displayName').populate('shopinterest').populate('promotioninterest').exec(function (err, userinterest) {
     if (err) {
       return next(err);
     } else if (!userinterest) {

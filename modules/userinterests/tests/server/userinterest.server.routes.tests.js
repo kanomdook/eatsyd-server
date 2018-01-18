@@ -112,8 +112,8 @@ describe('Userinterest CRUD tests', function () {
 
                 // Set assertions
                 (userinterests[0].user._id).should.equal(userId);
-                (userinterests[0].shopinterest[0]).should.match(shopinterest.id);
-                (userinterests[0].promotioninterest[0]).should.match(promotioninterest.id);
+                (userinterests[0].shopinterest[0].shopinterest).should.match(shopinterest.shopinterest);
+                (userinterests[0].promotioninterest[0].promotioninterest).should.match(promotioninterest.promotioninterest);
 
 
                 // Call the assertion callback
@@ -165,7 +165,7 @@ describe('Userinterest CRUD tests', function () {
               promotioninterest: '666666666666'
             });
             userinterest.shopinterest = [shopinterest2];
-            userinterest.promotioninterest = [promotioninterest2];            
+            userinterest.promotioninterest = [promotioninterest2];
 
             // Update an existing Userinterest
             agent.put('/api/userinterests/' + userinterestSaveRes.body._id)
@@ -179,9 +179,9 @@ describe('Userinterest CRUD tests', function () {
 
                 // Set assertions
                 (userinterestUpdateRes.body._id).should.equal(userinterestSaveRes.body._id);
-                (userinterestUpdateRes.body.shopinterest[0]).should.match(shopinterest2.id);
-                (userinterestUpdateRes.body.promotioninterest[0]).should.match(promotioninterest2.id);
-                
+                (userinterestUpdateRes.body.shopinterest[0].shopinterest).should.match(shopinterest2.shopinterest);
+                (userinterestUpdateRes.body.promotioninterest[0].promotioninterest).should.match(promotioninterest2.promotioninterest);
+
 
                 // Call the assertion callback
                 done();
@@ -202,7 +202,7 @@ describe('Userinterest CRUD tests', function () {
           // Set assertion
           res.body.should.be.instanceof(Array).and.have.lengthOf(1);
           res.body.should.be.instanceof(Array).and.have.lengthOf(1);
-          
+
           // Call the assertion callback
           done();
         });
@@ -391,7 +391,7 @@ describe('Userinterest CRUD tests', function () {
 
                         // Set assertions
                         (userinterestInfoRes.body._id).should.equal(userinterestSaveRes.body._id);
-                        (userinterestInfoRes.body.promotioninterest[0]).should.equal(promotioninterest.id);
+                        (userinterestInfoRes.body.promotioninterest[0].promotioninterest).should.equal(promotioninterest.promotioninterest);
                         should.equal(userinterestInfoRes.body.user, undefined);
 
                         // Call the assertion callback
