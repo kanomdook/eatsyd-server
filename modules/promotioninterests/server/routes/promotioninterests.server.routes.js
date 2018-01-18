@@ -4,15 +4,16 @@
  * Module dependencies
  */
 var promotioninterestsPolicy = require('../policies/promotioninterests.server.policy'),
+  core = require('../../../core/server/controllers/core.server.controller'),
   promotioninterests = require('../controllers/promotioninterests.server.controller');
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Promotioninterests Routes
-  app.route('/api/promotioninterests').all(promotioninterestsPolicy.isAllowed)
+  app.route('/api/promotioninterests').all(core.jwtCheck, promotioninterestsPolicy.isAllowed)
     .get(promotioninterests.list)
     .post(promotioninterests.create);
 
-  app.route('/api/promotioninterests/:promotioninterestId').all(promotioninterestsPolicy.isAllowed)
+  app.route('/api/promotioninterests/:promotioninterestId').all(core.jwtCheck, promotioninterestsPolicy.isAllowed)
     .get(promotioninterests.read)
     .put(promotioninterests.update)
     .delete(promotioninterests.delete);
