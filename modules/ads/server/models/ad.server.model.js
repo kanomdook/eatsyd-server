@@ -13,12 +13,12 @@ var mongoose = require('mongoose'),
       "videoid": "###"
  */
 var AdSchema = new Schema({
-  name:{
+  name: {
     type: String,
     default: '',
     trim: true
   },
-  description:{
+  description: {
     type: String,
     default: ''
   },
@@ -28,23 +28,27 @@ var AdSchema = new Schema({
     required: 'Please fill Ad image',
     trim: true
   },
-  isvideo:{
+  isvideo: {
     type: Boolean,
     default: false
   },
-  videoid:{
+  videoid: {
     type: String,
     default: ''
   },
-  website:{
+  website: {
     type: String,
     default: 'www.bitebite.com'
   },
-  effectivedatestart:{
+  effectivedatestart: {
     type: Date
   },
-  effectivedateend:{
+  effectivedateend: {
     type: Date
+  },
+  status: {
+    type: Boolean,
+    default: false
   },
   created: {
     type: Date,
