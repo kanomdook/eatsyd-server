@@ -413,13 +413,13 @@ describe('Customer Home Stories Test', function () {
 
         // Set assertions
         home.should.not.be.empty();
-        home.should.be.instanceof(Array).and.have.lengthOf(3);
+        home.should.be.instanceof(Array).and.have.lengthOf(2);
         home[0].title.should.be.equal('NEAR_BY');
         home[0].items.should.be.instanceof(Array).and.have.lengthOf(4);
         home[1].title.should.be.equal('POPULAR');
         home[1].items.should.be.instanceof(Array).and.have.lengthOf(4);
-        home[2].title.should.be.equal('FAVORITE');
-        home[2].items.should.be.instanceof(Array).and.have.lengthOf(4);
+        // home[2].title.should.be.equal('FAVORITE');
+        // home[2].items.should.be.instanceof(Array).and.have.lengthOf(4);
         done();
 
       });

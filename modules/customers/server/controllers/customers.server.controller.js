@@ -288,6 +288,7 @@ exports.returnShop = function (req, res) {
 };
 
 exports.returnShopByCate = function (req, res) {
+  req.listShop.splice(2,1);
   res.jsonp(req.listShop);
 };
 
