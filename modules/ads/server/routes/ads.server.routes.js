@@ -4,7 +4,7 @@
  * Module dependencies
  */
 var adsPolicy = require('../policies/ads.server.policy'),
-  categoryshops = require('../controllers/categoryshops.server.controller'),
+  core = require('../../../core/server/controllers/core.server.controller'),
   ads = require('../controllers/ads.server.controller');
 
 module.exports = function (app) {
