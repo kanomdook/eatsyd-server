@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Contactchoices
  */
 exports.list = function(req, res) {
-  Contactchoice.find().sort('-created').populate('user', 'displayName').exec(function(err, contactchoices) {
+  Contactchoice.find().sort('created').populate('user', 'displayName').exec(function(err, contactchoices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

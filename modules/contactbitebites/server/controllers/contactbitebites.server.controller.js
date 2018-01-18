@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Contactbitebites
  */
 exports.list = function(req, res) {
-  Contactbitebite.find().sort('created').populate('user', 'displayName').populate('title','name').exec(function(err, contactbitebites) {
+  Contactbitebite.find().sort('-created').populate('user', 'displayName').populate('title','name').exec(function(err, contactbitebites) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
