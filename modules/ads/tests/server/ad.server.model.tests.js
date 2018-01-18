@@ -49,14 +49,14 @@ describe('Ad Model Unit Tests:', function() {
       });
     });
 
-    it('should be able to show an error when try to save without image', function(done) {
-      ad.image = '';
+    // it('should be able to show an error when try to save without image', function(done) {
+    //   ad.image = '';
 
-      return ad.save(function(err) {
-        should.exist(err);
-        done();
-      });
-    });
+    //   return ad.save(function(err) {
+    //     should.exist(err);
+    //     done();
+    //   });
+    // });
   });
 
   afterEach(function(done) {

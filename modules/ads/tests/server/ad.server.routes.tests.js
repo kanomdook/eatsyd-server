@@ -115,35 +115,35 @@ describe('Ad CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an Ad if no name is provided', function (done) {
-    // Invalidate name field
-    ad.image = '';
+  // it('should not be able to save an Ad if no name is provided', function (done) {
+  //   // Invalidate name field
+  //   ad.image = '';
 
-    agent.post('/api/auth/signin')
-      .send(credentials)
-      .expect(200)
-      .end(function (signinErr, signinRes) {
-        // Handle signin error
-        if (signinErr) {
-          return done(signinErr);
-        }
+  //   agent.post('/api/auth/signin')
+  //     .send(credentials)
+  //     .expect(200)
+  //     .end(function (signinErr, signinRes) {
+  //       // Handle signin error
+  //       if (signinErr) {
+  //         return done(signinErr);
+  //       }
 
-        // Get the userId
-        var userId = user.id;
+  //       // Get the userId
+  //       var userId = user.id;
 
-        // Save a new Ad
-        agent.post('/api/ads')
-          .send(ad)
-          .expect(400)
-          .end(function (adSaveErr, adSaveRes) {
-            // Set message assertion
-            (adSaveRes.body.message).should.match('Please fill Ad image');
+  //       // Save a new Ad
+  //       agent.post('/api/ads')
+  //         .send(ad)
+  //         .expect(400)
+  //         .end(function (adSaveErr, adSaveRes) {
+  //           // Set message assertion
+  //           (adSaveRes.body.message).should.match('Please fill Ad image');
 
-            // Handle Ad save error
-            done(adSaveErr);
-          });
-      });
-  });
+  //           // Handle Ad save error
+  //           done(adSaveErr);
+  //         });
+  //     });
+  // });
 
   it('should be able to update an Ad if signed in', function (done) {
     agent.post('/api/auth/signin')
