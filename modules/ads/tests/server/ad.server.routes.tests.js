@@ -54,6 +54,7 @@ describe('Ad CRUD tests', function () {
         image: './assets/imgs/ads/ads1.png',
         isvideo: true,
         videoid: '###',
+        status:true
       };
 
       done();
@@ -95,6 +96,7 @@ describe('Ad CRUD tests', function () {
                 var ads = adsGetRes.body;
 
                 // Set assertions
+                //ads.should.equal('');
                 (ads[0].user._id).should.equal(userId);
                 (ads[0].image).should.match('./assets/imgs/ads/ads1.png');
 

@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Ads
  */
 exports.list = function(req, res) {
-  Ad.find().sort('-created').populate('user', 'displayName').exec(function(err, ads) {
+  Ad.find({status:true}).sort('-created').populate('user', 'displayName').exec(function(err, ads) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
