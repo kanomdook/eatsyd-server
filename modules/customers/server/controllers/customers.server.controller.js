@@ -53,7 +53,7 @@ exports.ads = function (req, res, next) {
     "title": "Advertise",
     "items": []
   };
-  Ad.find({status:true}).sort('-created').limit(15).exec(function (err, ads) {
+  Ad.find({status:true}).sort('-created').limit(5).exec(function (err, ads) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
