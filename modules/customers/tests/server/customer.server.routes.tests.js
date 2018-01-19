@@ -78,6 +78,7 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads1.png",
       isvideo: true,
       videoid: "###",
+      status:true,
       user: user
     });
 
@@ -85,6 +86,7 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads2.png",
       isvideo: false,
       videoid: '',
+      status:true,
       user: user
     });
 
@@ -92,6 +94,7 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads3.png",
       isvideo: true,
       videoid: "###",
+      status:true,
       user: user
     });
 
