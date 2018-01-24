@@ -381,6 +381,70 @@ describe('Product CRUD tests with token', function () {
   //     });
   // });
 
+
+  it('get product list by shop', function (done) {
+    var ProductObj = new Product(product);
+
+    ProductObj.save();
+    agent.get('/api/getproductlistbyshop/' + shop.id)
+      .set('authorization', 'Bearer ' + token)
+      .end(function (productsGetErr, productsGetRes) {
+        // Handle Products save error
+        if (productsGetErr) {
+          return done(productsGetErr);
+        }
+        var products = productsGetRes.body;
+
+        (products.length).should.match(1);
+        (products[0]._id).should.match(ProductObj.id);
+        (products[0].name).should.match(ProductObj.name);
+        (products[0].image).should.match(ProductObj.images[0]);
+        (products[0].price).should.match(ProductObj.price);
+        (products[0].cateid).should.match(ProductObj.categories.id);
+        (products[0].ispromotion).should.match(ProductObj.ispromotionprice);
+        (products[0].isrecommend).should.match(ProductObj.isrecomment);
+        (products[0].ispopular).should.match(false);
+
+        done();
+      });
+  });
+
+
+  it('get product detail', function (done) {
+    agent.post('/api/products')
+      .set('authorization', 'Bearer ' + token)
+      .send(product)
+      .expect(200)
+      .end(function (productSaveErr, productSaveRes) {
+        // Handle Product save error
+        if (productSaveErr) {
+          return done(productSaveErr);
+        }
+
+        var productObj = productSaveRes.body;
+        agent.get('/api/customerproductdetail/' + productSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .end(function (productGetErr, productsGetRes) {
+            // Handle Product save error
+            if (productGetErr) {
+              return done(productGetErr);
+            }
+            // Get Products list
+            var product = productsGetRes.body;
+
+            // Set assertions
+            (product.name).should.match(productObj.name);
+            (product.images[0]).should.match(productObj.images[0]);
+            (product.images[1]).should.match(productObj.images[1]);
+            (product.price).should.match(productObj.price);
+
+            done();
+          });
+      });
+
+  });
+
+
   afterEach(function (done) {
     User.remove().exec(function () {
       Shop.remove().exec(function () {

@@ -36,7 +36,9 @@ exports.getcondition = function (req, res, next, condition) {
 
 
 exports.getshopbycate = function (req, res) {
-  Shop.find({ categories: mongoose.Types.ObjectId(req.cateid) }).sort().exec(function (err, shops) {
+  Shop.find({
+    categories: mongoose.Types.ObjectId(req.cateid)
+  }).sort().exec(function (err, shops) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -53,7 +55,9 @@ exports.ads = function (req, res, next) {
     "title": "Advertise",
     "items": []
   };
-  Ad.find({status:true}).sort('-created').limit(5).exec(function (err, ads) {
+  Ad.find({
+    status: true
+  }).sort('-created').limit(5).exec(function (err, ads) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -78,7 +82,10 @@ exports.hotprices = function (req, res, next) {
 };
 
 exports.hotpricesItm1 = function (req, res, next) {
-  Hotprice.find({}, '_id image shop', { skip: 0, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+  Hotprice.find({}, '_id image shop', {
+    skip: 0,
+    limit: 6
+  }).sort('-created').exec(function (err, hotprices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -93,7 +100,10 @@ exports.hotpricesItm1 = function (req, res, next) {
 };
 
 exports.hotpricesItm2 = function (req, res, next) {
-  Hotprice.find({}, '_id image shop', { skip: 6, limit: 6 }).sort('-created').exec(function (err, hotprices) {
+  Hotprice.find({}, '_id image shop', {
+    skip: 6,
+    limit: 6
+  }).sort('-created').exec(function (err, hotprices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -112,7 +122,7 @@ exports.categories = function (req, res, next) {
     "title": "Category",
     "items": []
   };
-  Categoryshop.find({}, '_id image').sort('seq').exec(function (err, categories) {
+  Categoryshop.find({}, '_id image imageen').sort('seq').exec(function (err, categories) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -121,7 +131,9 @@ exports.categories = function (req, res, next) {
       categories.forEach(function (category) {
         var resCate = {
           _id: category._id,
-          image: category.image
+          image: category.image,
+          imageen: category.imageen
+          
         };
         req.categories.items.push(category);
       });
@@ -132,30 +144,39 @@ exports.categories = function (req, res, next) {
 
 exports.listShop = function (req, res, next) {
   req.listShop = [{
-    "title": "NEAR_BY",
-    "items": []
-  },
-  {
-    "title": "POPULAR",
-    "items": []
-  },
-  {
-    "title": "FAVORITE",
-    "items": []
-  }
+      "title": "NEAR_BY",
+      "items": []
+    },
+    {
+      "title": "POPULAR",
+      "items": []
+    },
+    {
+      "title": "FAVORITE",
+      "items": []
+    }
   ];
   next();
 };
 
 exports.nearbyshops = function (req, res, next) {
   var items = [];
-  var limit = { limit: 4 };
+  var limit = {
+    limit: 4
+  };
   if (req.condition || req.cateid) {
-    limit = { limit: 100 };
+    limit = {
+      limit: 100
+    };
   }
-  var filter = { isactiveshop: true };
+  var filter = {
+    isactiveshop: true
+  };
   if (req.cateid) {
-    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+    filter = {
+      isactiveshop: true,
+      categories: mongoose.Types.ObjectId(req.cateid)
+    };
   }
   Shop.find(filter, '_id name rating coverimage isAds address', limit).sort('-created').exec(function (err, shops) {
     if (err) {
@@ -194,13 +215,22 @@ exports.nearbyshops = function (req, res, next) {
 exports.popshops = function (req, res, next) {
 
   var items = [];
-  var limit = { limit: 4 };
+  var limit = {
+    limit: 4
+  };
   if (req.condition) {
-    limit = { limit: 100 };
+    limit = {
+      limit: 100
+    };
   }
-  var filter = { isactiveshop: true };
+  var filter = {
+    isactiveshop: true
+  };
   if (req.cateid) {
-    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+    filter = {
+      isactiveshop: true,
+      categories: mongoose.Types.ObjectId(req.cateid)
+    };
   }
   Shop.find(filter, '_id name rating coverimage isAds address', limit).sort('-created').exec(function (err, shops) {
     if (err) {
@@ -237,13 +267,22 @@ exports.popshops = function (req, res, next) {
 
 exports.favoriteshops = function (req, res, next) {
   var items = [];
-  var limit = { limit: 4 };
+  var limit = {
+    limit: 4
+  };
   if (req.condition) {
-    limit = { limit: 100 };
+    limit = {
+      limit: 100
+    };
   }
-  var filter = { isactiveshop: true };
+  var filter = {
+    isactiveshop: true
+  };
   if (req.cateid) {
-    filter = { isactiveshop: true, categories: mongoose.Types.ObjectId(req.cateid) };
+    filter = {
+      isactiveshop: true,
+      categories: mongoose.Types.ObjectId(req.cateid)
+    };
   }
   Shop.find(filter, '_id name rating coverimage isAds address', limit).sort('-created').exec(function (err, shops) {
     if (err) {
@@ -288,22 +327,27 @@ exports.returnShop = function (req, res) {
 };
 
 exports.returnShopByCate = function (req, res) {
-  req.listShop.splice(2,1);
+  req.listShop.splice(2, 1);
   res.jsonp(req.listShop);
 };
 
 exports.gettodaybyuser = function (req, res, next) {
   var now = new Date();
   var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  Coinbalance.find({ user: req.user, created : {$gte: startOfToday}}).exec(function (err, todays) {
+  Coinbalance.find({
+    user: req.user,
+    created: {
+      $gte: startOfToday
+    }
+  }).exec(function (err, todays) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      if(todays.length > 0){
+      if (todays.length > 0) {
         res.json('today welcome already');
-      }else{
+      } else {
         next();
       }
     }
@@ -311,7 +355,9 @@ exports.gettodaybyuser = function (req, res, next) {
 };
 
 exports.getbenefitlogin = function (req, res, next) {
-  Benefitsetting.findOne({ name: 'login' }).sort('-created').exec(function (err, benefit) {
+  Benefitsetting.findOne({
+    name: 'login'
+  }).sort('-created').exec(function (err, benefit) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

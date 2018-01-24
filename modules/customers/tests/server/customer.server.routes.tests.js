@@ -78,7 +78,7 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads1.png",
       isvideo: true,
       videoid: "###",
-      status:true,
+      status: true,
       user: user
     });
 
@@ -86,7 +86,7 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads2.png",
       isvideo: false,
       videoid: '',
-      status:true,
+      status: true,
       user: user
     });
 
@@ -94,13 +94,14 @@ describe('Customer Home Stories Test', function () {
       image: "./assets/imgs/ads/ads3.png",
       isvideo: true,
       videoid: "###",
-      status:true,
+      status: true,
       user: user
     });
 
     categoryshop = new Categoryshop({
       name: 'อาหารและเครื่องดื่ม',
-      image: './assets/imgs/Catagory/cat0.png'
+      image: './assets/imgs/Catagory/cat0.png',
+      imageen: './assets/imgs/Catagory/cat0.png'
     });
 
     shop1 = new Shop({

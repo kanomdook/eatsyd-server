@@ -23,6 +23,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/productsbyshop/:productbyshopId',
       permissions: '*'
+    }, {
+      resources: '/api/getproductlistbyshop/:getproductbyshopId',
+      permissions: '*'
+    }, {
+      resources: '/api/customerproductdetail/:productId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -35,6 +41,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/productsbyshop/:productbyshopId',
       permissions: '*'
+    }, {
+      resources: '/api/getproductlistbyshop/:getproductbyshopId',
+      permissions: '*'
+    }, {
+      resources: '/api/customerproductdetail/:productId',
+      permissions: ['get']
     }]
   }, {
     roles: ['user'],
@@ -47,6 +59,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/productsbyshop/:productbyshopId',
       permissions: ['get']
+    }, {
+      resources: '/api/getproductlistbyshop/:getproductbyshopId',
+      permissions: ['get']
+    }, {
+      resources: '/api/customerproductdetail/:productId',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
@@ -55,6 +73,12 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/products/:productId',
+      permissions: ['get']
+    }, {
+      resources: '/api/getproductlistbyshop/:getproductbyshopId',
+      permissions: ['get']
+    }, {
+      resources: '/api/customerproductdetail/:productId',
       permissions: ['get']
     }]
   }]);

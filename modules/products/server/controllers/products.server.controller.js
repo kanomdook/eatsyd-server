@@ -209,3 +209,51 @@ exports.productByShop = function (req, res) {
     items: req.productsCookingList ? req.productsCookingList : []
   });
 };
+
+exports.getShopID = function (req, res, next, shopid) {
+  Product.find({
+    shop: shopid
+  }, '_id name images price categories ispromotionprice isrecomment').sort('-created').populate('user', 'displayName').populate('categories').exec(function (err, products) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      req.products = products;
+      next();
+    }
+  });
+};
+
+exports.getListProduct = function (req, res, next) {
+  var products = [];
+  req.products.forEach(function (element) {
+    products.push({
+      _id: element._id,
+      name: element.name,
+      image: element.images[0],
+      price: element.price,
+      cateid: element.categories._id,
+      ispromotion: element.ispromotionprice,
+      isrecommend: element.isrecomment,
+      ispopular: false
+    });
+  });
+  req.getProducList = products;
+  next();
+};
+
+exports.getProductListByShop = function (req, res) {
+  res.jsonp(req.getProducList);
+};
+
+exports.productDetail = function (req, res) {
+  var productDB = req.product ? req.product.toJSON() : {};
+  var product = {
+    name: productDB.name,
+    images: productDB.images,
+    price: productDB.price
+  };
+  product.isCurrentUserOwner = req.user && product.user && product.user._id.toString() === req.user._id.toString();
+  res.jsonp(product);
+};
