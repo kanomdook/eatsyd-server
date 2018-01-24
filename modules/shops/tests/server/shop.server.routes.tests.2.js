@@ -1167,6 +1167,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                 (shopsres.products[1].popularcount).should.match(0);
                                                 (shopsres.products[1].isrecommend).should.match(false);
 
+                                                
                                                 done();
                                               });
                                           });
