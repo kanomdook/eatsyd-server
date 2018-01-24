@@ -77,6 +77,9 @@ module.exports = function (app) {
 
   app.route('/api/updateitems/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
     .put(shops.defaultProduct, shops.shopUpdateItems);
+
+  app.route('/api/customershopdetail/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
+    .get(shops.cookingShopDetail, shops.getCateByShop, shops.getProductsByShop, shops.shopDetail);
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

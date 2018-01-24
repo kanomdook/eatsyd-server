@@ -68,6 +68,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/updateitems/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/customershopdetail/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -119,6 +122,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/updateitems/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/customershopdetail/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -140,6 +146,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/checkshopbyname',
       permissions: '*'
+    }, {
+      resources: '/api/customershopdetail/:shopId',
+      permissions: '*'
     }]
   }, {
     roles: ['guest'],
@@ -154,6 +163,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/customerhome',
+      permissions: ['get']
+    }, {
+      resources: '/api/customershopdetail/:shopId',
       permissions: ['get']
     }]
   }]);

@@ -1210,6 +1210,79 @@ exports.shopUpdateItems = function (req, res) {
   });
 };
 
+exports.cookingShopDetail = function (req, res, next) {
+  var cusShopDetail = {
+    _id: req.shop._id,
+    name: req.shop.name,
+    detail: req.shop.detail,
+    isopen: true,
+    address: {
+      addressdetail: req.shop.address.addressdetail ? req.shop.address.addressdetail : ''
+    },
+    promoteimage: req.shop.promoteimage,
+    coverimage: req.shop.coverimage,
+    times: req.shop.times,
+    categories: [],
+    products: []
+  };
+  req.cusShopDetail = cusShopDetail;
+  next();
+};
+
+exports.getCateByShop = function (req, res, next) {
+  Categoryproduct.find({ shop: req.shop._id }).exec(function (err, categorys) {
+    if (err) {
+      return next(err);
+    } else if (!categorys) {
+      return res.status(404).send({
+        message: 'No category with that identifier has been found'
+      });
+    }
+    if (categorys && categorys.length > 0) {
+      categorys.forEach(function (cate) {
+        req.cusShopDetail.categories.push({
+          _id: cate._id,
+          name: cate.name,
+          image: cate.image
+        });
+      });
+    }
+
+    next();
+  });
+};
+
+exports.getProductsByShop = function (req, res, next) {
+  Product.find({ shop: req.shop._id }).exec(function (err, products) {
+    if (err) {
+      return next(err);
+    } else if (!products) {
+      return res.status(404).send({
+        message: 'No products with that identifier has been found'
+      });
+    }
+    if (products && products.length > 0) {
+      products.forEach(function (prod) {
+        req.cusShopDetail.products.push({
+          _id: prod._id,
+          cateid: prod.categories,
+          name: prod.name,
+          image: prod.images ? prod.images[0] : 'no image',
+          price: prod.price,
+          ispromotion: false,
+          popularcount: 0,
+          isrecommend: false
+        });
+      });
+    }
+
+    next();
+  });
+};
+
+exports.shopDetail = function (req, res) {
+  res.jsonp(req.cusShopDetail);
+};
 
 //count page
 function countPage(shops) {
