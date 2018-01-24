@@ -1052,11 +1052,11 @@ describe('Shop CRUD edit and delete items token tests', function () {
                             (shopsssxxx.items[0].products.length).should.match(30);
                             // (shopsssxxx.items[0].products[0].name).should.match('sadf');
                             var productCreate = {
-                              name: 'sadf',
+                              name: '1',
                               images: ['asdf', 'asdf'],
                               price: 1234,
                               categories: shopchange.items[0].cate,
-                              index: 0,
+                              index: 2,
                               cateindex: 0
                             };
                             agent.put('/api/createproduct/' + shops._id)
@@ -1075,7 +1075,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                 (shopProduct.items[0].cate.name).should.match(cate.name);
                                 (shopProduct.items[0].products.length).should.match(30);
                                 var productCreate2 = {
-                                  name: 'sadf2',
+                                  name: '2',
                                   images: ['asdf2', 'asdf'],
                                   price: 1234,
                                   categories: shopchange.items[0].cate,
@@ -1083,7 +1083,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                   promotionprice: 900,
                                   startdate: new Date(),
                                   expiredate: new Date(),
-                                  index: 1,
+                                  index: 0,
                                   cateindex: 0
                                 };
                                 agent.put('/api/createproduct/' + shops._id)
@@ -1113,8 +1113,8 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                         (shopsssx.promoteimage).should.match(shop.promoteimage);
                                         (shopsssx.items.length).should.match(1);
                                         (shopsssx.items[0].products.length).should.match(30);
-                                        (shopsssx.items[0].products[0].name).should.match('sadf');
-                                        (shopsssx.items[0].products[1].name).should.match('sadf2');
+                                        (shopsssx.items[0].products[0].name).should.match('2');
+                                        (shopsssx.items[0].products[2].name).should.match('1');
                                         agent.get('/api/products')
                                           .expect(200)
                                           .end(function (productsGetErr, productsGetRes) {
@@ -1133,48 +1133,39 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                 }
                                                 // Get shop list
                                                 var shopsres = shopsresGetRes.body;
-                                                    (shopsres._id).should.match(shopSaveRes.body._id);
-                                                    (shopsres.name).should.match(shop.name);
-                                                    (shopsres.detail).should.match(shop.detail);
-                                                    (shopsres.isopen).should.match(true);
-                                                    (shopsres.address.addressdetail).should.match(shop.address.addressdetail);
-                                                    (shopsres.coverimage).should.match(shop.coverimage);
-                                                    (shopsres.promoteimage).should.match(shop.promoteimage);
-                                                    (shopsres.times).should.match(shop.times);
-                                                    (shopsres.categories.length).should.match(1);
-                                                    (shopsres.categories[0]._id).should.match(shopchange.items[0].cate._id);
-                                                    (shopsres.categories[0].name).should.match(shopchange.items[0].cate.name);
-                                                    (shopsres.categories[0].image).should.match(shopchange.items[0].cate.image);
-                                                    (shopsres.products.length).should.match(2);
-                                                    (shopsres.products[0]._id).should.match(shopsssx.items[0].products[0]._id);
-                                                    (shopsres.products[0].cateid).should.match(shopchange.items[0].cate._id);
-                                                    (shopsres.products[0].name).should.match(shopsssx.items[0].products[0].name);
-                                                    (shopsres.products[0].image).should.match('asdf');
-                                                    (shopsres.products[0].price).should.match(shopsssx.items[0].products[0].price);
-                                                    (shopsres.products[0].ispromotion).should.match(false);
-                                                    (shopsres.products[0].popularcount).should.match(0);
-                                                    (shopsres.products[0].isrecommend).should.match(false);
+                                                (shopsres._id).should.match(shopSaveRes.body._id);
+                                                (shopsres.name).should.match(shop.name);
+                                                (shopsres.detail).should.match(shop.detail);
+                                                (shopsres.isopen).should.match(true);
+                                                (shopsres.address.addressdetail).should.match(shop.address.addressdetail);
+                                                (shopsres.coverimage).should.match(shop.coverimage);
+                                                (shopsres.promoteimage).should.match(shop.promoteimage);
+                                                (shopsres.times).should.match(shop.times);
+                                                (shopsres.categories.length).should.match(1);
+                                                (shopsres.categories[0]._id).should.match(shopchange.items[0].cate._id);
+                                                (shopsres.categories[0].name).should.match(shopchange.items[0].cate.name);
+                                                (shopsres.categories[0].image).should.match(shopchange.items[0].cate.image);
+                                                (shopsres.products.length).should.match(2);
 
-                                                    (shopsres.products[1]._id).should.match(shopsssx.items[0].products[1]._id);
-                                                    (shopsres.products[1].cateid).should.match(shopchange.items[0].cate._id);
-                                                    (shopsres.products[1].name).should.match(shopsssx.items[0].products[1].name);
-                                                    (shopsres.products[1].image).should.match('asdf2');
-                                                    (shopsres.products[1].price).should.match(shopsssx.items[0].products[1].price);
-                                                    (shopsres.products[1].ispromotion).should.match(false);
-                                                    (shopsres.products[1].popularcount).should.match(0);
-                                                    (shopsres.products[1].isrecommend).should.match(false);
+                                                (shopsres.products[0]._id).should.match(shopsssx.items[0].products[0]._id);
+                                                (shopsres.products[0].cateid).should.match(shopchange.items[0].cate._id);
+                                                (shopsres.products[0].name).should.match(shopsssx.items[0].products[0].name);
+                                                // (shopsres.products[1].name).should.match('1');
+                                                (shopsres.products[0].image).should.match('asdf2');
+                                                (shopsres.products[0].price).should.match(shopsssx.items[0].products[0].price);
+                                                (shopsres.products[0].ispromotion).should.match(false);
+                                                (shopsres.products[0].popularcount).should.match(0);
+                                                (shopsres.products[0].isrecommend).should.match(false);
 
-                                                // "ispromotion": true,
-                                                // "popularcount": 7,
-                                                // "isrecommend": false
-                                                // (shopsres.items.length).should.match(1);
-                                                // (shopsres.items[0].products.length).should.match(30);
-                                                // (shopsres.items[0].products[0].name).should.match('sadf');
-                                                // (shopsres.items[0].products[1].name).should.match('sadf2');
-                                                // (shopsres.items[0].products[1].isrecomment).should.match(true);
-                                                // (shopsres.items[0].products[1].ispromotionprice).should.match(true);
-                                                // (shopsres.items[0].products[1].price).should.match(900);
-                                                // (shopsres.items[0].products[2].name).should.match('');
+                                                (shopsres.products[1]._id).should.match(shopsssx.items[0].products[2]._id);
+                                                (shopsres.products[1].cateid).should.match(shopchange.items[0].cate._id);
+                                                (shopsres.products[1].name).should.match(shopsssx.items[0].products[2].name);
+                                                // (shopsres.products[0].name).should.match('2');
+                                                (shopsres.products[1].image).should.match('asdf');
+                                                (shopsres.products[1].price).should.match(shopsssx.items[0].products[2].price);
+                                                (shopsres.products[1].ispromotion).should.match(false);
+                                                (shopsres.products[1].popularcount).should.match(0);
+                                                (shopsres.products[1].isrecommend).should.match(false);
 
                                                 done();
                                               });

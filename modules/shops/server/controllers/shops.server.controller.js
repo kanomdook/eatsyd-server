@@ -1238,13 +1238,20 @@ exports.getCateByShop = function (req, res, next) {
         message: 'No category with that identifier has been found'
       });
     }
-    if (categorys && categorys.length > 0) {
-      categorys.forEach(function (cate) {
-        req.cusShopDetail.categories.push({
-          _id: cate._id,
-          name: cate.name,
-          image: cate.image
-        });
+    if (req.shop.items && req.shop.items.length > 0) {
+      req.shop.items.forEach(function (itm) {
+        if (categorys && categorys.length > 0) {
+          categorys.forEach(function (cate) {
+            // console.log(itm.cate.toString() + ' ' + cate._id.toString());
+            if (itm.cate._id.toString() === cate._id.toString()) {
+              req.cusShopDetail.categories.push({
+                _id: cate._id,
+                name: cate.name,
+                image: cate.image
+              });
+            }
+          });
+        }
       });
     }
 
@@ -1261,18 +1268,28 @@ exports.getProductsByShop = function (req, res, next) {
         message: 'No products with that identifier has been found'
       });
     }
-    if (products && products.length > 0) {
-      products.forEach(function (prod) {
-        req.cusShopDetail.products.push({
-          _id: prod._id,
-          cateid: prod.categories,
-          name: prod.name,
-          image: prod.images ? prod.images[0] : 'no image',
-          price: prod.price,
-          ispromotion: false,
-          popularcount: 0,
-          isrecommend: false
-        });
+    if (req.shop.items && req.shop.items.length > 0) {
+      req.shop.items.forEach(function (itm) {
+        if (itm.products && itm.products.length > 0) {
+          itm.products.forEach(function (product) {
+            if (products && products.length > 0) {
+              products.forEach(function (prod) {
+                if (product._id.toString() === prod._id.toString()) {
+                  req.cusShopDetail.products.push({
+                    _id: prod._id,
+                    cateid: prod.categories,
+                    name: prod.name,
+                    image: prod.images ? prod.images[0] : 'no image',
+                    price: prod.price,
+                    ispromotion: false,
+                    popularcount: 0,
+                    isrecommend: false
+                  });
+                }
+              });
+            }
+          });
+        }
       });
     }
 
