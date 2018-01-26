@@ -2947,7 +2947,7 @@ describe('Shop CRUD token tests', function () {
                           index: 0
                         };
 
-                        agent.delete('/api/removepromote/' + shops._id)
+                        agent.put('/api/removepromote/' + shops._id)
                           .set('authorization', 'Bearer ' + signinRes.body.loginToken)
                           .send(datapromote)
                           .expect(200)

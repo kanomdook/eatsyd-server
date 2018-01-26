@@ -49,7 +49,7 @@ module.exports = function (app) {
     .put(shops.addPromote, shops.resShopData);
 
   app.route('/api/removepromote/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
-    .delete(shops.removePromote);
+    .put(shops.removePromote);
 
   app.route('/api/createcate/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
     .put(shops.createCate, shops.defaultProduct, shops.addCateToShop, shops.resShopData);
