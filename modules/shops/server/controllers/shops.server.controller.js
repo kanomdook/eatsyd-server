@@ -1154,18 +1154,18 @@ exports.shopSliceItems = function (req, res, next) {
       indexCate = i;
     }
   });
-  console.log(shop.items[0].cate);  
-  console.log(shop.items[1].cate);  
-  console.log(shop.items[2].cate);  
+  // console.log(shop.items[0].cate);  
+  // console.log(shop.items[1].cate);  
+  // console.log(shop.items[2].cate);  
   shop.items.splice(indexCate, 1);
-  console.log(shop.items[0].cate);  
-  console.log(shop.items[1].cate);  
+  // console.log(shop.items[0].cate);  
+  // console.log(shop.items[1].cate);  
   shop.save(function (err) {
     if (err) {
       console.log(err);
     }
     req.shop = shop;
-    console.log(req.shop.items);    
+    // console.log(req.shop.items);    
     next();
   });
 };
