@@ -67,13 +67,13 @@ module.exports = function (app) {
     .get(shops.getShopsName);
 
   app.route('/api/deleteproduct/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
-    .delete(shops.defaultProduct, shops.deleteProductUpdateShop, shops.deleteProduct, shops.resShopData);
+    .put(shops.defaultProduct, shops.deleteProductUpdateShop, shops.deleteProduct, shops.resShopData);
 
   app.route('/api/checkshopbyname').all(core.jwtCheck, shopsPolicy.isAllowed)
     .post(shops.checkShopByName, shops.listShopByName);
 
   app.route('/api/deletecateproduct/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
-    .delete(shops.cateProductByID, shops.findAllProduct, shops.deleteAllProduct, shops.shopSliceItems, shops.deleteCateProduct, shops.resShopData);
+    .put(shops.cateProductByID, shops.findAllProduct, shops.deleteAllProduct, shops.shopSliceItems, shops.deleteCateProduct, shops.resShopData);
 
   app.route('/api/updateitems/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
     .put(shops.defaultProduct, shops.shopUpdateItems);
