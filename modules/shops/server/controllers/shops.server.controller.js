@@ -1150,7 +1150,7 @@ exports.shopSliceItems = function (req, res, next) {
   var indexCate = 0;
   var shop = req.shop;
   shop.items.forEach(function (item, i) {
-    if (item.cate._id === req.cateId) {
+    if (item.cate._id.toString() === req.body.cateId.toString()) {
       indexCate = i;
     }
   });
