@@ -314,7 +314,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                   index: 1,
                                                   cateindex: 0
                                                 };
-                                                agent.delete('/api/deleteproduct/' + shops._id)
+                                                agent.put('/api/deleteproduct/' + shops._id)
                                                   .set('authorization', 'Bearer ' + signinRes.body.loginToken)
                                                   .send(deleteProduct)
                                                   .expect(200)
@@ -532,7 +532,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                 var datadelete = {
                                                   cateId: shopsres.items[0].cate._id
                                                 };
-                                                agent.delete('/api/deletecateproduct/' + shops._id)
+                                                agent.put('/api/deletecateproduct/' + shops._id)
                                                   .set('authorization', 'Bearer ' + signinRes.body.loginToken)
                                                   .send(datadelete)
                                                   .expect(200)
