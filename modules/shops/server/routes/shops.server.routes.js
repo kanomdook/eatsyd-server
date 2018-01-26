@@ -80,6 +80,11 @@ module.exports = function (app) {
 
   app.route('/api/customershopdetail/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
     .get(shops.cookingShopDetail, shops.getCateByShop, shops.getProductsByShop, shops.shopDetail);
+
+  // /:search/:keyword
+  app.route('/api/searchkeyword').all(core.jwtCheck, shopsPolicy.isAllowed)
+    .post(shops.searchShopKeyword, shops.searchProductKeyword, shops.resSearch);
+
   // // Finish by binding the Shop middleware
   app.param('shopId', shops.shopByID);
 };

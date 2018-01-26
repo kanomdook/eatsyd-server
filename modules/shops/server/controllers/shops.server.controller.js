@@ -165,13 +165,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -366,13 +366,13 @@ exports.cookingHomeShop = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -765,13 +765,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+            path: 'cate',
+            model: 'Categoryproduct'
+          },
+          {
+            path: 'products',
+            model: 'Product'
+          }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -928,13 +928,13 @@ exports.findShopUser = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-      path: 'cate',
-      model: 'Categoryproduct'
-    },
-    {
-      path: 'products',
-      model: 'Product'
-    }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -961,13 +961,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -1110,7 +1110,9 @@ exports.cateProductByID = function (req, res, next) {
 
 exports.findAllProduct = function (req, res, next) {
   // categories
-  Product.find({ categories: req.cateId }, '_id').exec(function (err, products) {
+  Product.find({
+    categories: req.cateId
+  }, '_id').exec(function (err, products) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -1127,7 +1129,12 @@ exports.findAllProduct = function (req, res, next) {
 };
 
 exports.deleteAllProduct = function (req, res, next) {
-  Product.remove({ user: req.user._id, _id: { $in: req.productIDs } }).exec(function (err) {
+  Product.remove({
+    user: req.user._id,
+    _id: {
+      $in: req.productIDs
+    }
+  }).exec(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -1230,7 +1237,9 @@ exports.cookingShopDetail = function (req, res, next) {
 };
 
 exports.getCateByShop = function (req, res, next) {
-  Categoryproduct.find({ shop: req.shop._id }).exec(function (err, categorys) {
+  Categoryproduct.find({
+    shop: req.shop._id
+  }).exec(function (err, categorys) {
     if (err) {
       return next(err);
     } else if (!categorys) {
@@ -1260,7 +1269,9 @@ exports.getCateByShop = function (req, res, next) {
 };
 
 exports.getProductsByShop = function (req, res, next) {
-  Product.find({ shop: req.shop._id }).exec(function (err, products) {
+  Product.find({
+    shop: req.shop._id
+  }).exec(function (err, products) {
     if (err) {
       return next(err);
     } else if (!products) {
@@ -1301,6 +1312,72 @@ exports.shopDetail = function (req, res) {
   res.jsonp(req.cusShopDetail);
 };
 
+exports.searchShopKeyword = function (req, res, next) {
+  var keywords = {};
+  if (req.body.keywordname) {
+    keywords = searchName(req.body.keywordname);
+  }
+  Shop.find(keywords).sort('name').populate('categories').populate('user', 'firstName').exec(function (err, shops) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var dataShop = [];
+      if (shops && shops.length > 0) {
+        shops.forEach(function (data) {
+          dataShop.push({
+            _id: data._id,
+            name: data.name,
+            rating: data.rating,
+            distance: null,
+            image: data.coverimage,
+            isAds: false
+          });
+        });
+      }
+      req.shops = dataShop;
+      next();
+    }
+  });
+};
+
+exports.searchProductKeyword = function (req, res, next) {
+  var keywords = {};
+  if (req.body.keywordname) {
+    keywords = searchName(req.body.keywordname);
+  }
+  Product.find(keywords).sort('name').populate('categories').populate('user', 'firstName').exec(function (err, products) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var dataProduct = [];
+      if (products && products.length > 0) {
+        products.forEach(function (data) {
+          dataProduct.push({
+            _id: data._id,
+            cateid: data.categories._id,
+            name: data.name,
+            image: data.images[0],
+            price: data.price
+          });
+        });
+      }
+      req.products = dataProduct;
+      next();
+    }
+  });
+};
+
+exports.resSearch = function (req, res) {
+  res.jsonp({
+    shops: req.shops,
+    products: req.products
+  });
+};
+
 //count page
 function countPage(shops) {
   var numpage = [];
@@ -1319,24 +1396,36 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-      'name': {
-        '$regex': keyWord,
-        '$options': 'i'
+        'name': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'detail': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
+      },
+      {
+        'tel': {
+          '$regex': keyWord,
+          '$options': 'i'
+        }
       }
-    },
-    {
-      'detail': {
-        '$regex': keyWord,
-        '$options': 'i'
-      }
-    },
-    {
-      'tel': {
-        '$regex': keyWord,
-        '$options': 'i'
-      }
-    }
     ]
   };
   return keyword;
+}
+
+function searchName(keyWordName) {
+  var keywordname = {
+    $or: [{
+      'name': {
+        '$regex': keyWordName,
+        '$options': 'i'
+      }
+    }]
+  };
+  return keywordname;
 }
