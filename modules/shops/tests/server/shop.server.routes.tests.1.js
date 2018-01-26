@@ -2972,6 +2972,98 @@ describe('Shop CRUD token tests', function () {
       });
   });
 
+  it('search shop name by keyword', function (done) {
+    var shop1 = new Shop(shop);
+    var shop2 = new Shop(shop);
+    var shop3 = new Shop(shop);
+
+    shop1.name = 'xxxx1';
+    shop2.name = 'xxxx2';
+    shop3.name = 'cccc3';
+
+    shop1.save();
+    shop2.save();
+    shop3.save();
+
+    var data = {
+      keywordname: 'ccc'
+    };
+
+    agent.post('/api/searchkeyword')
+      .set('authorization', 'Bearer ' + token)
+      .send(data)
+      .expect(200)
+      .end(function (shopGetErr, shopsGetRes) {
+        // Handle shop save error
+        if (shopGetErr) {
+          return done(shopGetErr);
+        }
+        // Get shop list
+        var shops = shopsGetRes.body;
+
+        // Set assertions
+        (shops.shops.length).should.match(1);
+
+        done();
+      });
+  });
+
+  it('search product name by keyword', function (done) {
+    var prod1 = new Product({
+      name: 'xxxx1',
+      price: 50,
+      priorityofcate: 1,
+      images: ['https://simg.kapook.com/o/photo/410/kapook_world-408206.jpg', 'https://f.ptcdn.info/408/051/000/oqi6tdf9uS1811y1XHx-o.png'],
+      user: user,
+      categories: categoryproduct
+    });
+    var prod2 = new Product({
+      name: 'xxx2',
+      price: 50,
+      priorityofcate: 1,
+      images: ['https://simg.kapook.com/o/photo/410/kapook_world-408206.jpg', 'https://f.ptcdn.info/408/051/000/oqi6tdf9uS1811y1XHx-o.png'],
+      user: user,
+      categories: categoryproduct
+    });
+    var prod3 = new Product({
+      name: 'cccccc2',
+      price: 50,
+      priorityofcate: 1,
+      images: ['https://simg.kapook.com/o/photo/410/kapook_world-408206.jpg', 'https://f.ptcdn.info/408/051/000/oqi6tdf9uS1811y1XHx-o.png'],
+      user: user,
+      categories: categoryproduct
+    });
+
+    // prod1.name = 'xxxx1';
+    // prod2.name = 'xxxx2';
+    // prod3.name = 'cccc3';
+
+    prod1.save();
+    prod2.save();
+    prod3.save();
+
+    var data = {
+      keywordname: 'xx'
+    };
+
+    agent.post('/api/searchkeyword')
+      .set('authorization', 'Bearer ' + token)
+      .send(data)
+      .expect(200)
+      .end(function (productGetErr, productGetRes) {
+        // Handle shop save error
+        if (productGetErr) {
+          return done(productGetErr);
+        }
+        // Get shop list
+        var products = productGetRes.body;
+
+        // Set assertions
+        (products.products.length).should.match(2);
+
+        done();
+      });
+  });
   afterEach(function (done) {
     User.remove().exec(function () {
       Categoryshop.remove().exec(function () {

@@ -71,6 +71,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/customershopdetail/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/searchkeyword',
+      permissions: '*'
     }]
   }, {
     roles: ['shop'],
@@ -125,6 +128,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/customershopdetail/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/searchkeyword',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -149,6 +155,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/customershopdetail/:shopId',
       permissions: '*'
+    }, {
+      resources: '/api/searchkeyword',
+      permissions: '*'
     }]
   }, {
     roles: ['guest'],
@@ -167,6 +176,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/customershopdetail/:shopId',
       permissions: ['get']
+    }, {
+      resources: '/api/searchkeyword',
+      permissions: '*'
     }]
   }]);
 };
