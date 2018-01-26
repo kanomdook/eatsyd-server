@@ -145,7 +145,9 @@ exports.updateIslikes = function (req, res) {
 };
 
 exports.getListReview = function (req, res, next) {
-  Review.find({ active: true }).sort('-created').populate('user', 'displayName profileImageURL').exec(function (err, reviews) {
+  Review.find({
+    active: true
+  }).sort('-created').populate('user', 'displayName profileImageURL').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -160,7 +162,7 @@ exports.getListReview = function (req, res, next) {
 exports.cookingListReview = function (req, res, next) {
   var cookingreviews = [];
   var reviews = req.reviews;
-  reviews.forEach(review => {
+  reviews.forEach(function (review) {
     if (review.likes.indexOf(req.user._id) > -1) {
       // have
       cookingreviews.push({
