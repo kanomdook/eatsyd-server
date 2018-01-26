@@ -73,7 +73,7 @@ module.exports = function (app) {
     .post(shops.checkShopByName, shops.listShopByName);
 
   app.route('/api/deletecateproduct/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
-    .put(shops.cateProductByID, shops.findAllProduct, shops.deleteAllProduct, shops.shopSliceItems, shops.deleteCateProduct, shops.resShopData);
+    .put(shops.cateProductByID, shops.findAllProduct, shops.deleteAllProduct, shops.shopSliceItems, shops.deleteCateProduct, shops.resDeleteCate);
 
   app.route('/api/updateitems/:shopId').all(core.jwtCheck, shopsPolicy.isAllowed)
     .put(shops.defaultProduct, shops.shopUpdateItems);

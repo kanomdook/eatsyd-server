@@ -1169,6 +1169,10 @@ exports.deleteCateProduct = function (req, res, next) {
   });
 };
 
+exports.resDeleteCate = function (req, res) {
+  res.jsonp(req.shop);
+};
+
 exports.removePromote = function (req, res) {
   var shop = req.shop;
   shop.promoteimage.splice(req.body.index, 1);
