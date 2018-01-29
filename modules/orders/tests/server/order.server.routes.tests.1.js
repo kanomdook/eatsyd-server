@@ -10,6 +10,10 @@ var should = require('should'),
   Product = mongoose.model('Product'),
   Categoryshop = mongoose.model('Categoryshop'),
   Categoryproduct = mongoose.model('Categoryproduct'),
+  omise = require('omise')({
+    'publicKey': 'pkey_test_5asc1ucstk1imcxnhy7',
+    'secretKey': 'skey_test_5asc1uct2yat7bftf3j'
+  }),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -144,7 +148,8 @@ describe('Order omise create tests', function () {
             amount: 100,
             discount: 10,
             distance: '1 km',
-            user: user
+            user: user,
+            payment: {}
           };
         });
       });
@@ -169,43 +174,44 @@ describe('Order omise create tests', function () {
     done();
   });
 
-  it('test omise', function (done) {
-    // var cardDetails = {
-    //   card: {
-    //     'name': 'JOHN DOE',
-    //     'city': 'Bangkok',
-    //     'postal_code': 10320,
-    //     'number': '4242424242424242',
-    //     'expiration_month': 2,
-    //     'expiration_year': 2017
-    //   }
-    // };
+  it('omise payment', function (done) {
+    var cardDetails = {
+      card: {
+        'name': 'JOHN DOE',
+        'city': 'Bangkok',
+        'postal_code': 10320,
+        'number': '4242424242424242',
+        'expiration_month': 2,
+        'expiration_year': 2018
+      }
+    };
 
-    // omise.tokens.create(cardDetails).then(function (token1) {
-    //   order.omiseToken = token1.id;
-    agent.post('/api/orders')
-      .set('authorization', 'Bearer ' + token)
-      .send(order)
-      .expect(200)
-      .end(function (orderErr, orderRes) {
-        // Handle signin error
-        if (orderErr) {
-          return done(orderErr);
-        }
-        agent.get('/api/orders')
-          // .set('authorization', 'Bearer ' + token)
-          .end(function (order2Err, order2Res) {
-            // Handle signin error
-            if (order2Err) {
-              return done(order2Err);
-            }
-            var ord2 = order2Res.body;
-            (ord2.length).should.match(1);
-            done();
+    omise.tokens.create(cardDetails).then(function (token1) {
+      order.omiseToken = token1.id;
+      order.payment.paymenttype = 'Credit Card';
+      agent.post('/api/orders')
+        .set('authorization', 'Bearer ' + token)
+        .send(order)
+        .expect(200)
+        .end(function (orderErr, orderRes) {
+          // Handle signin error
+          if (orderErr) {
+            return done(orderErr);
+          }
+          agent.get('/api/orders')
+            // .set('authorization', 'Bearer ' + token)
+            .end(function (order2Err, order2Res) {
+              // Handle signin error
+              if (order2Err) {
+                return done(order2Err);
+              }
+              var ord2 = order2Res.body;
+              (ord2.length).should.match(1);
+              done();
 
-          });
-      });
-    // });
+            });
+        });
+    });
 
   });
 

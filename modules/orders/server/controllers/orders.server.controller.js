@@ -22,7 +22,7 @@ var path = require('path'),
 exports.omiseCard = function (req, res, next) {
   var order = req.body;
   if (order.payment && order.payment.paymenttype === 'Credit Card') {
-    var money = order.totalamount * 100;
+    var money = order.amount * 100;
     var id = order.omiseToken;
     omise.charges.create({
       'description': 'Charge for order ID: 888',
@@ -64,6 +64,7 @@ exports.create = function (req, res) {
           Shop.populate(orderRes2, {
             path: 'shop'
           }, function (err, orderRes3) {
+            console.log(orderRes3);
             res.jsonp(orderRes3);
           });
         });
