@@ -926,7 +926,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                   images: ['asdf2', 'asdf'],
                                   price: 1234,
                                   categories: shopchange.items[0].cate,
-                                  isrecomment: true,
+                                  isrecommend: true,
                                   promotionprice: 900,
                                   startdate: new Date(),
                                   expiredate: new Date(),
@@ -987,7 +987,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                 (shopsres.items[0].products.length).should.match(30);
                                                 (shopsres.items[0].products[0].name).should.match('sadf');
                                                 (shopsres.items[0].products[1].name).should.match('sadf2');
-                                                (shopsres.items[0].products[1].isrecomment).should.match(true);
+                                                (shopsres.items[0].products[1].isrecommend).should.match(true);
                                                 (shopsres.items[0].products[1].ispromotionprice).should.match(true);
                                                 (shopsres.items[0].products[1].price).should.match(900);
                                                 (shopsres.items[0].products[2].name).should.match('');

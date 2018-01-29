@@ -93,7 +93,7 @@ exports.update = function (req, res) {
   product.price = req.body.price ? req.body.price : product.price;
   product.promotionprice = req.body.promotionprice ? req.body.promotionprice : product.promotionprice;
   product.ispromotionprice = req.body.ispromotionprice ? req.body.ispromotionprice : product.ispromotionprice;
-  product.isrecomment = req.body.isrecomment ? req.body.isrecomment : product.isrecomment;
+  product.isrecommend = req.body.isrecommend ? req.body.isrecommend : product.isrecommend;
   product.startdate = req.body.startdate ? req.body.startdate : product.startdate;
   product.expiredate = req.body.expiredate ? req.body.expiredate : product.expiredate;
 
@@ -168,7 +168,7 @@ exports.productByID = function (req, res, next, id) {
 exports.shopID = function (req, res, next, shopid) {
   Product.find({
     shop: shopid
-  }, '_id name images price categories priorityofcate').sort('-created').populate('user', 'displayName').populate('categories').exec(function (err, products) {
+  }, '_id name images price categories priorityofcate recommend').sort('-created').populate('user', 'displayName').populate('categories').exec(function (err, products) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -196,7 +196,8 @@ exports.cookingProductList = function (req, res, next) {
       images: element.images[0],
       price: element.price,
       priorityofcate: element.priorityofcate,
-      categories: element.categories
+      categories: element.categories,
+      recommend: element.recommend
     });
   });
   req.productsCookingList = products;
@@ -213,7 +214,7 @@ exports.productByShop = function (req, res) {
 exports.getShopID = function (req, res, next, shopid) {
   Product.find({
     shop: shopid
-  }, '_id name images price categories ispromotionprice isrecomment').sort('-created').populate('user', 'displayName').populate('categories').exec(function (err, products) {
+  }, '_id name images price categories ispromotionprice isrecommend').sort('-created').populate('user', 'displayName').populate('categories').exec(function (err, products) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -235,7 +236,7 @@ exports.getListProduct = function (req, res, next) {
       price: element.price,
       cateid: element.categories._id,
       ispromotion: element.ispromotionprice,
-      isrecommend: element.isrecomment,
+      isrecommend: element.isrecommend,
       ispopular: false
     });
   });

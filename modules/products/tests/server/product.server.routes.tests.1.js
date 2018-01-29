@@ -113,7 +113,7 @@ describe('Product CRUD tests with token', function () {
             categories: categoryproduct,
             shop: shop,
             promotionprice: 40,
-            isrecomment: false,
+            isrecommend: false,
             ispromotionprice: false,
             startdate: new Date(),
             enddate: new Date(),
@@ -402,7 +402,7 @@ describe('Product CRUD tests with token', function () {
         (products[0].price).should.match(ProductObj.price);
         (products[0].cateid).should.match(ProductObj.categories.id);
         (products[0].ispromotion).should.match(ProductObj.ispromotionprice);
-        (products[0].isrecommend).should.match(ProductObj.isrecomment);
+        (products[0].isrecommend).should.match(ProductObj.isrecommend);
         (products[0].ispopular).should.match(false);
 
         done();
