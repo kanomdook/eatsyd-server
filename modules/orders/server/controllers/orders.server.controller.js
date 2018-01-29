@@ -8,7 +8,7 @@ var path = require('path'),
   Order = mongoose.model('Order'),
   Product = mongoose.model('Product'),
   User = mongoose.model('User'),
-  Shop = mongoose.model('Shop'),  
+  Shop = mongoose.model('Shop'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   omise = require('omise')({
@@ -64,7 +64,6 @@ exports.create = function (req, res) {
           Shop.populate(orderRes2, {
             path: 'shop'
           }, function (err, orderRes3) {
-            console.log(orderRes3);
             res.jsonp(orderRes3);
           });
         });

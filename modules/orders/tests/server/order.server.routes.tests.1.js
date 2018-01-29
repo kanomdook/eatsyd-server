@@ -174,47 +174,73 @@ describe('Order omise create tests', function () {
     done();
   });
 
-  it('omise payment', function (done) {
-    var cardDetails = {
-      card: {
-        'name': 'JOHN DOE',
-        'city': 'Bangkok',
-        'postal_code': 10320,
-        'number': '4242424242424242',
-        'expiration_month': 2,
-        'expiration_year': 2018
-      }
-    };
 
-    omise.tokens.create(cardDetails).then(function (token1) {
-      order.omiseToken = token1.id;
-      order.payment.paymenttype = 'Credit Card';
-      agent.post('/api/orders')
-        .set('authorization', 'Bearer ' + token)
-        .send(order)
-        .expect(200)
-        .end(function (orderErr, orderRes) {
-          // Handle signin error
-          if (orderErr) {
-            return done(orderErr);
-          }
-          agent.get('/api/orders')
-            // .set('authorization', 'Bearer ' + token)
-            .end(function (order2Err, order2Res) {
-              // Handle signin error
-              if (order2Err) {
-                return done(order2Err);
+  it('payment order', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new Order
+        agent.post('/api/orders')
+          .send(order)
+          .expect(200)
+          .end(function (orderSaveErr, orderSaveRes) {
+            // Handle Order save error
+            if (orderSaveErr) {
+              return done(orderSaveErr);
+            }
+
+            // Update Order name
+            var cardDetails = {
+              card: {
+                'name': 'JOHN DOE',
+                'city': 'Bangkok',
+                'postal_code': 10320,
+                'number': '4242424242424242',
+                'expiration_month': 2,
+                'expiration_year': 2018
               }
-              var ord2 = order2Res.body;
-              (ord2.length).should.match(1);
-              done();
+            };
+            omise.tokens.create(cardDetails).then(function (token1) {
+              order.name = 'WHY YOU GOTTA BE SO MEAN?';
+              order.omiseToken = token1.id;
+              order.payment.paymenttype = 'Credit Card';
+              agent.put('/api/payorder/' + orderSaveRes.body._id)
+                .send(order)
+                .expect(200)
+                .end(function (orderUpdateErr, orderUpdateRes) {
+                  // Handle Order update error
+                  if (orderUpdateErr) {
+                    return done(orderUpdateErr);
+                  }
 
+                  // Set assertions
+                  agent.get('/api/orders')
+                    // .set('authorization', 'Bearer ' + token)
+                    .end(function (order2Err, order2Res) {
+                      // Handle signin error
+                      if (order2Err) {
+                        return done(order2Err);
+                      }
+                      var ord2 = order2Res.body;
+                      (ord2.length).should.match(1);
+                      done();
+
+                    });
+                });
             });
-        });
-    });
 
+          });
+      });
   });
-
 
   afterEach(function (done) {
     User.remove().exec(function () {
