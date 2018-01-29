@@ -92,8 +92,8 @@ exports.update = function (req, res) {
   product.name = req.body.name ? req.body.name : product.name;
   product.price = req.body.price ? req.body.price : product.price;
   product.promotionprice = req.body.promotionprice ? req.body.promotionprice : product.promotionprice;
-  product.ispromotionprice = req.body.ispromotionprice ? req.body.ispromotionprice : product.ispromotionprice;
-  product.isrecommend = req.body.isrecommend ? req.body.isrecommend : product.isrecommend;
+  product.ispromotionprice = req.body.ispromotionprice;
+  product.isrecommend = req.body.isrecommend;
   product.startdate = req.body.startdate ? req.body.startdate : product.startdate;
   product.expiredate = req.body.expiredate ? req.body.expiredate : product.expiredate;
 
