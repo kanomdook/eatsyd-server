@@ -232,6 +232,8 @@ describe('Order omise create tests', function () {
                       }
                       var ord2 = order2Res.body;
                       (ord2.length).should.match(1);
+                      (ord2[0].omiseresponse.capture).should.match(true);
+                      
                       done();
 
                     });
