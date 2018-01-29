@@ -50,6 +50,13 @@ var OrderSchema = new Schema({
   amount: Number,
   discount: Number,
   distance: String,
+  payment: {
+    paymenttype: String,
+    creditno: String,
+    creditname: String,
+    expdate: String,
+    creditcvc: String
+  },
   created: {
     type: Date,
     default: Date.now
