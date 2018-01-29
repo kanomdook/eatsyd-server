@@ -416,7 +416,7 @@ exports.resHomeShop = function (req, res) {
             name: i.name === 'default' ? '' : i.name,
             image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
             price: i.promotionprice ? i.promotionprice : i.price,
-            isrecomment: i.isrecomment,
+            isrecommend: i.isrecommend,
             ispromotionprice: true,
             startdate: startdate,
             expiredate: expiredate
@@ -427,7 +427,7 @@ exports.resHomeShop = function (req, res) {
             name: i.name === 'default' ? '' : i.name,
             image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
             price: i.name === 'default' ? null : i.price,
-            isrecomment: i.isrecomment,
+            isrecommend: i.isrecommend,
             ispromotionprice: false,
             startdate: startdate,
             expiredate: expiredate
@@ -440,7 +440,7 @@ exports.resHomeShop = function (req, res) {
           name: i.name === 'default' ? '' : i.name,
           image: i.images && i.images.length > 0 ? i.images[0] : './assets/imgs/add.jpg',
           price: i.name === 'default' ? null : i.price,
-          isrecomment: i.isrecomment,
+          isrecommend: i.isrecommend,
           ispromotionprice: false,
           startdate: null,
           expiredate: null

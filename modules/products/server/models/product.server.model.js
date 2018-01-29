@@ -40,7 +40,7 @@ var ProductSchema = new Schema({
     type: Boolean,
     default: false
   },
-  isrecomment: {
+  isrecommend: {
     type: Boolean,
     default: false
   },
