@@ -250,6 +250,7 @@ exports.getProductListByShop = function (req, res) {
 exports.productDetail = function (req, res) {
   var productDB = req.product ? req.product.toJSON() : {};
   var product = {
+    _id: productDB._id,
     name: productDB.name,
     images: productDB.images,
     price: productDB.price

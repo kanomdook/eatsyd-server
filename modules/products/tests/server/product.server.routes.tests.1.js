@@ -433,6 +433,7 @@ describe('Product CRUD tests with token', function () {
             var product = productsGetRes.body;
 
             // Set assertions
+            (product._id).should.match(productObj._id);            
             (product.name).should.match(productObj.name);
             (product.images[0]).should.match(productObj.images[0]);
             (product.images[1]).should.match(productObj.images[1]);
