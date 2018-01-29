@@ -20,6 +20,21 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/orders/:orderId',
       permissions: '*'
+    }, {
+      resources: '/api/payorder/:orderId',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['shop'],
+    allows: [{
+      resources: '/api/orders',
+      permissions: ['get', 'post']
+    }, {
+      resources: '/api/orders/:orderId',
+      permissions: ['get']
+    }, {
+      resources: '/api/payorder/:orderId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -29,6 +44,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/orders/:orderId',
       permissions: ['get']
+    }, {
+      resources: '/api/payorder/:orderId',
+      permissions: ['put']
     }]
   }, {
     roles: ['guest'],
