@@ -6,6 +6,9 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Order = mongoose.model('Order'),
+  Product = mongoose.model('Product'),
+  User = mongoose.model('User'),
+  Shop = mongoose.model('Shop'),  
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   omise = require('omise')({
@@ -52,7 +55,19 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(order);
+      Product.populate(order, {
+        path: 'items.product'
+      }, function (err, orderRes) {
+        User.populate(orderRes, {
+          path: 'user'
+        }, function (err, orderRes2) {
+          Shop.populate(orderRes2, {
+            path: 'shop'
+          }, function (err, orderRes3) {
+            res.jsonp(orderRes3);
+          });
+        });
+      });
     }
   });
 };
@@ -85,7 +100,19 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(order);
+      Product.populate(order, {
+        path: 'items.product'
+      }, function (err, orderRes) {
+        User.populate(orderRes, {
+          path: 'user'
+        }, function (err, orderRes2) {
+          Shop.populate(orderRes2, {
+            path: 'shop'
+          }, function (err, orderRes3) {
+            res.jsonp(orderRes3);
+          });
+        });
+      });
     }
   });
 };
