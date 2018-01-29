@@ -95,7 +95,7 @@ exports.update = function (req, res) {
   product.ispromotionprice = req.body.ispromotionprice ? req.body.ispromotionprice : product.ispromotionprice;
   product.isrecomment = req.body.isrecomment ? req.body.isrecomment : product.isrecomment;
   product.startdate = req.body.startdate ? req.body.startdate : product.startdate;
-  product.enddate = req.body.enddate ? req.body.enddate : product.enddate;
+  product.expiredate = req.body.expiredate ? req.body.expiredate : product.expiredate;
 
   product.save(function (err) {
     if (err) {
