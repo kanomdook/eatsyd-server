@@ -1111,6 +1111,7 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                   price: 1234,
                                   categories: shopchange.items[0].cate,
                                   isrecomment: true,
+                                  ispromotionprice: true,
                                   promotionprice: 900,
                                   startdate: new Date(),
                                   expiredate: new Date(),
@@ -1183,8 +1184,8 @@ describe('Shop CRUD edit and delete items token tests', function () {
                                                 (shopsres.products[0].name).should.match(shopsssx.items[0].products[0].name);
                                                 // (shopsres.products[1].name).should.match('1');
                                                 (shopsres.products[0].image).should.match('asdf2');
-                                                (shopsres.products[0].price).should.match(shopsssx.items[0].products[0].price);
-                                                (shopsres.products[0].ispromotion).should.match(false);
+                                                (shopsres.products[0].price).should.match(900);
+                                                (shopsres.products[0].ispromotion).should.match(true);
                                                 (shopsres.products[0].popularcount).should.match(0);
                                                 (shopsres.products[0].isrecommend).should.match(false);
 

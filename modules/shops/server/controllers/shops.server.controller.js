@@ -91,7 +91,21 @@ exports.read = function (req, res) {
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   shop.isCurrentUserOwner = req.user && shop.user && shop.user._id.toString() === req.user._id.toString();
-
+  shop.items.forEach(function (item) {
+    item.products.forEach(function (i) {
+      if (i.promotionprice) {
+        var startdate = new Date(i.startdate);
+        startdate.setHours(0, 0, 0);
+        var expiredate = new Date(i.expiredate);
+        expiredate.setDate(expiredate.getDate() + 1);
+        expiredate.setHours(0, 0, 0);
+        var today = new Date();
+        if (today > startdate && today < expiredate) {
+          i.price = i.promotionprice ? i.promotionprice : i.price;
+        }
+      }
+    });
+  });
   res.jsonp(shop);
 };
 
@@ -165,13 +179,13 @@ exports.shopByID = function (req, res, next, id) {
   Shop.findById(id).populate('user').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shop) {
     if (err) {
@@ -366,13 +380,13 @@ exports.cookingHomeShop = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -765,13 +779,13 @@ exports.addCateToShop = function (req, res, next) {
       Shop.findById(shop._id).populate('user').populate('categories').populate({
         path: 'items',
         populate: [{
-            path: 'cate',
-            model: 'Categoryproduct'
-          },
-          {
-            path: 'products',
-            model: 'Product'
-          }
+          path: 'cate',
+          model: 'Categoryproduct'
+        },
+        {
+          path: 'products',
+          model: 'Product'
+        }
         ]
       }).exec(function (err, shop) {
         if (err) {
@@ -928,13 +942,13 @@ exports.findShopUser = function (req, res, next) {
   }).sort('-created').populate('categories').populate({
     path: 'items',
     populate: [{
-        path: 'cate',
-        model: 'Categoryproduct'
-      },
-      {
-        path: 'products',
-        model: 'Product'
-      }
+      path: 'cate',
+      model: 'Categoryproduct'
+    },
+    {
+      path: 'products',
+      model: 'Product'
+    }
     ]
   }).exec(function (err, shops) {
     if (err) {
@@ -961,13 +975,13 @@ exports.updateShop = function (req, res, next) {
     .populate({
       path: 'items',
       populate: [{
-          path: 'cate',
-          model: 'Categoryproduct'
-        },
-        {
-          path: 'products',
-          model: 'Product'
-        }
+        path: 'cate',
+        model: 'Categoryproduct'
+      },
+      {
+        path: 'products',
+        model: 'Product'
+      }
       ]
     }).exec(function (err, shop) {
       if (err) {
@@ -1296,16 +1310,35 @@ exports.getProductsByShop = function (req, res, next) {
             if (products && products.length > 0) {
               products.forEach(function (prod) {
                 if (product._id.toString() === prod._id.toString()) {
-                  req.cusShopDetail.products.push({
-                    _id: prod._id,
-                    cateid: prod.categories,
-                    name: prod.name,
-                    image: prod.images ? prod.images[0] : 'no image',
-                    price: prod.price,
-                    ispromotion: false,
-                    popularcount: 0,
-                    isrecommend: false
-                  });
+                  var startdate = new Date(prod.startdate);
+                  startdate.setHours(0, 0, 0);
+                  var expiredate = new Date(prod.expiredate);
+                  expiredate.setDate(expiredate.getDate() + 1);
+                  expiredate.setHours(0, 0, 0);
+                  var today = new Date();
+                  if (prod.promotionprice && today > startdate && today < expiredate) {
+                    req.cusShopDetail.products.push({
+                      _id: prod._id,
+                      cateid: prod.categories,
+                      name: prod.name,
+                      image: prod.images ? prod.images[0] : 'no image',
+                      price: prod.promotionprice ? prod.promotionprice : prod.price,
+                      ispromotion: true,
+                      popularcount: 0,
+                      isrecommend: false
+                    });
+                  } else {
+                    req.cusShopDetail.products.push({
+                      _id: prod._id,
+                      cateid: prod.categories,
+                      name: prod.name,
+                      image: prod.images ? prod.images[0] : 'no image',
+                      price: prod.price,
+                      ispromotion: false,
+                      popularcount: 0,
+                      isrecommend: false
+                    });
+                  }
                 }
               });
             }
@@ -1406,23 +1439,23 @@ function countPage(shops) {
 function searchKeyword(keyWord) {
   var keyword = {
     $or: [{
-        'name': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'detail': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
-      },
-      {
-        'tel': {
-          '$regex': keyWord,
-          '$options': 'i'
-        }
+      'name': {
+        '$regex': keyWord,
+        '$options': 'i'
       }
+    },
+    {
+      'detail': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    },
+    {
+      'tel': {
+        '$regex': keyWord,
+        '$options': 'i'
+      }
+    }
     ]
   };
   return keyword;

@@ -24,6 +24,18 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/categoryproductsbyshop/:categorybyshopId',
       permissions: '*'
     }]
+  },{
+    roles: ['shop'],
+    allows: [{
+      resources: '/api/categoryproducts',
+      permissions: '*'
+    }, {
+      resources: '/api/categoryproducts/:categoryproductId',
+      permissions: '*'
+    }, {
+      resources: '/api/categoryproductsbyshop/:categorybyshopId',
+      permissions: '*'
+    }]
   }, {
     roles: ['user'],
     allows: [{
