@@ -114,9 +114,9 @@ describe('Product CRUD tests with token', function () {
             shop: shop,
             promotionprice: 40,
             isrecommend: false,
-            ispromotionprice: false,
+            ispromotionprice: true,
             startdate: new Date(),
-            enddate: new Date(),
+            expiredate: new Date(),
           };
         });
       });
@@ -433,7 +433,7 @@ describe('Product CRUD tests with token', function () {
             var product = productsGetRes.body;
 
             // Set assertions
-            (product._id).should.match(productObj._id);            
+            (product._id).should.match(productObj._id);
             (product.name).should.match(productObj.name);
             (product.images[0]).should.match(productObj.images[0]);
             (product.images[1]).should.match(productObj.images[1]);
@@ -445,6 +445,130 @@ describe('Product CRUD tests with token', function () {
 
   });
 
+  it('get products by id not expire', function (done) {
+    agent.post('/api/products')
+      .set('authorization', 'Bearer ' + token)
+      .send(product)
+      .expect(200)
+      .end(function (productSaveErr, productSaveRes) {
+        // Handle Product save error
+        if (productSaveErr) {
+          return done(productSaveErr);
+        }
+
+        var productObj = productSaveRes.body;
+        agent.get('/api/products/' + productSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .end(function (productGetErr, productsGetRes) {
+            // Handle Product save error
+            if (productGetErr) {
+              return done(productGetErr);
+            }
+            // Get Products list
+            var product = productsGetRes.body;
+
+            // Set assertions
+            (product._id).should.match(productObj._id);
+            (product.name).should.match(productObj.name);
+            (product.images[0]).should.match(productObj.images[0]);
+            (product.images[1]).should.match(productObj.images[1]);
+            (product.price).should.match(productObj.price);
+            (product.isrecommend).should.match(productObj.isrecommend);
+            (product.ispromotionprice).should.match(productObj.ispromotionprice);
+            (product.startdate).should.match(productObj.startdate);
+            (product.expiredate).should.match(productObj.expiredate);
+
+            done();
+          });
+      });
+
+  });
+
+  it('get products by id expired', function (done) {
+    product.startdate = new Date(09, 09, 2017);
+    product.expiredate = new Date(09, 09, 2017);
+    agent.post('/api/products')
+      .set('authorization', 'Bearer ' + token)
+      .send(product)
+      .expect(200)
+      .end(function (productSaveErr, productSaveRes) {
+        // Handle Product save error
+        if (productSaveErr) {
+          return done(productSaveErr);
+        }
+
+        var productObj = productSaveRes.body;
+        agent.get('/api/products/' + productSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .end(function (productGetErr, productsGetRes) {
+            // Handle Product save error
+            if (productGetErr) {
+              return done(productGetErr);
+            }
+            // Get Products list
+            var product2 = productsGetRes.body;
+
+            // Set assertions
+            (product2._id).should.match(productObj._id);
+            (product2.name).should.match(productObj.name);
+            (product2.images[0]).should.match(productObj.images[0]);
+            (product2.images[1]).should.match(productObj.images[1]);
+            (product2.price).should.match(productObj.price);
+            (product2.isrecommend).should.match(productObj.isrecommend);
+            (product2.ispromotionprice).should.match(false);
+            should.equal(product2.startdate, null);
+            should.equal(product2.expiredate, null);
+            // (product2.startdate).should.match('');
+            // (product2.expiredate).should.match('');
+
+            done();
+          });
+      });
+
+  });
+
+  it('update products by id ispromotionprice false', function (done) {
+    agent.post('/api/products')
+      .set('authorization', 'Bearer ' + token)
+      .send(product)
+      .expect(200)
+      .end(function (productSaveErr, productSaveRes) {
+        // Handle Product save error
+        if (productSaveErr) {
+          return done(productSaveErr);
+        }
+
+        var productObj = productSaveRes.body;
+        product.ispromotionprice = false;
+        agent.put('/api/products/' + productSaveRes.body._id)
+          .set('authorization', 'Bearer ' + token)
+          .send(product)
+          .end(function (productGetErr, productsGetRes) {
+            // Handle Product save error
+            if (productGetErr) {
+              return done(productGetErr);
+            }
+            // Get Products list
+            var product2 = productsGetRes.body;
+
+            // Set assertions
+            (product2._id).should.match(productObj._id);
+            (product2.name).should.match(productObj.name);
+            (product2.images[0]).should.match(productObj.images[0]);
+            (product2.images[1]).should.match(productObj.images[1]);
+            (product2.price).should.match(productObj.price);
+            (product2.isrecommend).should.match(productObj.isrecommend);
+            (product2.ispromotionprice).should.match(false);
+            should.equal(product2.startdate, null);
+            should.equal(product2.expiredate, null);
+            // (product2.startdate).should.match('');
+            // (product2.expiredate).should.match('');
+
+            done();
+          });
+      });
+
+  });
 
   afterEach(function (done) {
     User.remove().exec(function () {

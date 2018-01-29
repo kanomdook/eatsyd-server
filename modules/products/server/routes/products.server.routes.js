@@ -16,10 +16,10 @@ module.exports = function (app) {
     .post(products.create);
 
   app.route('/api/products/:productId').all(core.jwtCheck, productsPolicy.isAllowed)
-    .get(products.read);
+    .get(products.read, products.clearExpire);
 
   app.route('/api/products/:productId').all(core.jwtCheck, productsPolicy.isAllowed)
-    .put(products.update)
+    .put(products.isPromotionprice, products.update)
     .delete(products.delete);
 
   app.route('/api/productsbyshop/:productbyshopId').all(core.jwtCheck, productsPolicy.isAllowed)
