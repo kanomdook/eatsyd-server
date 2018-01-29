@@ -25,7 +25,7 @@ exports.omiseCard = function (req, res, next) {
     var money = order.amount * 100;
     var id = order.omiseToken;
     omise.charges.create({
-      'description': 'Charge for order ID: 888',
+      'description': 'Charge for order ID:' + order._id,
       'amount': money,
       'currency': 'thb',
       'capture': true,
@@ -36,6 +36,7 @@ exports.omiseCard = function (req, res, next) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        req.omiseresponse = resp;
         next();
       }
     });
@@ -93,7 +94,7 @@ exports.update = function (req, res) {
   var order = req.order;
 
   order = _.extend(order, req.body);
-
+  order.omiseresponse = req.omiseresponse;
   order.save(function (err) {
     if (err) {
       return res.status(400).send({
