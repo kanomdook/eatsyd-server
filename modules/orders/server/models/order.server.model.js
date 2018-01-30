@@ -57,9 +57,10 @@ var OrderSchema = new Schema({
     expdate: String,
     creditcvc: String
   },
-  omiseresponse: {
-
-  },
+  omiseresponse: {},
+  skootarresponse: {},
+  estimateprice: {},
+  netamount: Number,
   created: {
     type: Date,
     default: Date.now
